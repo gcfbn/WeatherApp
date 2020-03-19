@@ -36,22 +36,20 @@ class WeatherApp extends JFrame implements ActionListener
 	public static void main (String[] args) throws UnirestException, IOException
 	{
 		WeatherApp app = new WeatherApp("Weather app");
-		//APICaller.main(null);
+		APICaller.main(null);
 		app.setVisible(true);
 		app.setResizable(false);
 		app.pack();
 	}
 	
 	//declare visible components (used for sending a request)
-	private JLabel cityLabel, units, language, iconLabel, dateAndTime;
+	private JLabel cityLabel, units, language, iconLabel;
 	private	JTextField city, description;
 	private	JRadioButton metricUnits, imperialUnits;
 	private	ButtonGroup unitsGroup;
 	private	JRadioButton englishLanguage, polishLanguage;
 	public	ButtonGroup languageGroup;
 	public	BufferedImage icon;
-	public	JSpinner dateSpinner;
-	public	JSpinner.DateEditor dateEditor;
 	public	JButton search, reset;
 			
 	//declare hidden components (used for showing results)
@@ -157,25 +155,11 @@ class WeatherApp extends JFrame implements ActionListener
 		constraints.gridx = 2;
 		add(currentTemperature, constraints);
 		
-		dateAndTime = new JLabel("Date/Time:");
-		dateAndTime.setFont(new Font("Arial", Font.PLAIN, 20));
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.gridwidth = 2;
-		constraints.gridheight = 1;
-		constraints.gridx = 3;
-		constraints.gridy = 2;
-		add(dateAndTime, constraints);
-		
-		dateSpinner = new JSpinner(new SpinnerDateModel());
-		dateEditor = new JSpinner.DateEditor(dateSpinner, "dd.MM.yyyy");
-		dateSpinner.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 5;
-		add(dateSpinner, constraints);
-		
 		search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.BOLD, 32));
 		constraints.gridx = 3;
 		constraints.gridy = 3;
+		constraints.gridheight = 1;
 		constraints.gridwidth = 4;
 		add(search, constraints);
 		
@@ -371,7 +355,6 @@ class WeatherApp extends JFrame implements ActionListener
 		language.setText("Language:");
 		englishLanguage.setText("English");
 		polishLanguage.setText("Polish");
-		dateAndTime.setText("Date/Time");
 		search.setText("Search");
 		reset.setText("Reset");
 		minimalTemperatureLabel.setText("Minimal temperature:");
@@ -398,7 +381,6 @@ class WeatherApp extends JFrame implements ActionListener
 		language.setText("Jêzyk:");
 		englishLanguage.setText("Angielski");
 		polishLanguage.setText("Polski");
-		dateAndTime.setText("Data/Godzina");
 		search.setText("Szukaj");
 		reset.setText("Reset");
 		minimalTemperatureLabel.setText("Minimalna temperatura: ");
@@ -422,12 +404,6 @@ class WeatherApp extends JFrame implements ActionListener
 		englishLanguage.setSelected(true);
 		polishLanguage.setSelected(false);
 		city.setText("");
-		
-		//reset date and time in JSPinner
-		long unixTime = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-		java.util.Date currentDate = java.util.Date.from(Instant.ofEpochMilli(unixTime));
-		dateSpinner.setValue(currentDate);
-
 		setVisibilityOfResults(false);
 	}
 	
@@ -456,5 +432,18 @@ class WeatherApp extends JFrame implements ActionListener
 		overcastLabel.setVisible(bool);
 		overcastValue.setVisible(bool);
 		this.pack();
+	}
+	
+	private Query getQuery()
+	{
+		String cityName = new String(city.getText());
+		String units;
+		if (metricUnits.isSelected()) units = new String("metric");
+		else units = new String("imperial");
+		String language;
+		if (englishLanguage.isSelected()) language = new String("en");
+		else language = new String("pl");
+		Query query = new Query(cityName, units, language);
+		return query;
 	}
 }
