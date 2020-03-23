@@ -1,9 +1,18 @@
 public class Results
 {
 	public String icon;
-	public int currentTemperature;
+	public double currentTemperature;
 	public String descrpition;
-	public int minimal_temperature, maximal_temperature, feelsLike, pressure, humidity, windSpeed;
-	public String windDirection, sunrise, sunset;
+	public double minimal_temperature, maximal_temperature, feelsLike;
+	public int pressure, humidity, windDirection;
+	public double windSpeed;
+	public String sunrise, sunset;
 	public int overcast;
+	
+	@Override
+	public String toString()
+	{
+		return icon + " " + currentTemperature + " " + descrpition + " " + minimal_temperature + " " + maximal_temperature + " " + feelsLike + " " +
+				pressure + " " + humidity + " " + windDirection + " " + windSpeed + " " + sunrise + " " + sunset + " " + overcast; 
+	}
 }

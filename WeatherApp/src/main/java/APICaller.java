@@ -8,30 +8,65 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONException;
+
+import kong.unirest.json.JSONArray;
+import kong.unirest.json.JSONObject;
 
 public class APICaller
 {
-	public static void main(String[] args) throws UnirestException
+	APICaller()
 	{
-		/*
-		String test = new String("http://api.openweathermap.org/data/2.5/weather?q=Tokyo&units=metric&appid=a52958f9ad25d7d64c67d97957bc6119&lang=pl");
-		HttpResponse <JsonNode> response = Unirest.get(test).asJson();
-		//System.out.println(response.getBody().toString());
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonParser parser = new JsonParser();
-		JsonElement element = parser.parse(response.getBody().toString());
-		String prettyJsonString = gson.toJson(element);
-		System.out.println(prettyJsonString);
-		*/
+		/*try {
+			call(new Query("London", "metric", "pl"));
+		} catch (UnirestException e) {e.printStackTrace();}*/
 	}
-	/*
-	public Results call(Query query) throws UnirestException
+	
+	public static Results call(Query query) throws UnirestException
 	{
-		String URL = new String("http://api.openweathermap.org/data/2.5/weather");
-		URL.concat("?q=").concat(query.city);
-		URL.concat("?units=").concat(query.units);
-		URL.concat("&appid=a52958f9ad25d7d64c67d97957bc6119");
-		URL.concat("?lang=").concat(query.language);
+		String URL = "http://api.openweathermap.org/data/2.5/weather";
+		URL = URL + "?q=" + query.city;
+		URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";
+		URL = URL + "&units=" + query.units;
+		URL = URL + "&lang=" + query.language;
+		HttpResponse <JsonNode> response = Unirest.get(URL).asJson();
+		//TODO check if response status equals 201
+		System.out.println(URL);
+		JSONObject resultsObject = new JSONObject(response.getBody().toString());
+		//get data from JSONObject
+		Results results = new Results();
+		//temperature etc.
+		JSONObject temperatureObject = resultsObject.getJSONObject("main");
+		results.currentTemperature = temperatureObject.getDouble("temp");
+		results.minimal_temperature = temperatureObject.getDouble("temp_min");
+		results.maximal_temperature = temperatureObject.getDouble("temp_max");
+		results.humidity = temperatureObject.getInt("humidity");
+		results.pressure = temperatureObject.getInt("pressure");
+		results.feelsLike = temperatureObject.getDouble("feels_like");
+		
+		//overcast
+		results.overcast = resultsObject.getJSONObject("clouds").getInt("all");
+		System.out.println(results.overcast);
+		
+		//wind
+		JSONObject windObject = resultsObject.getJSONObject("wind");
+		results.windDirection = windObject.getInt("deg");
+		results.windSpeed = windObject.getDouble("speed");
+		
+		//sun
+		JSONObject sunObject = resultsObject.getJSONObject("sys");
+		results.sunrise = sunObject.getString("sunrise");
+		results.sunset = sunObject.getString("sunset");
+		
+		//icon & description
+		//"weather" key in returned JSON file is an array
+		//weather with index 0 is the prime weather and it will be shown
+		JSONArray iconArray = (JSONArray)resultsObject.get("weather");
+		JSONObject iconObject = (JSONObject) iconArray.get(0);
+		results.icon = iconObject.getString("icon");
+		results.descrpition = iconObject.getString("description");
+		
+		return results;
 	}
-	*/
+	
 }

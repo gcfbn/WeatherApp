@@ -36,7 +36,6 @@ class WeatherApp extends JFrame implements ActionListener
 	public static void main (String[] args) throws UnirestException, IOException
 	{
 		WeatherApp app = new WeatherApp("Weather app");
-		APICaller.main(null);
 		app.setVisible(true);
 		app.setResizable(false);
 		app.pack();
@@ -337,8 +336,13 @@ class WeatherApp extends JFrame implements ActionListener
 		}
 		else if (search == actionSource)
 		{
+			Results results = null;
+			try {
+				results = APICaller.call(getQuery());
+			} catch (UnirestException e) {e.printStackTrace();}
+			System.out.println(results.toString());
+			//TODO set values of textFields
 			setVisibilityOfResults(true);
-			//TODO call API etc...
 		}
 		else if (reset == actionSource)
 		{
