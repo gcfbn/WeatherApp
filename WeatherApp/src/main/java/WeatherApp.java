@@ -33,7 +33,7 @@ class WeatherApp extends JFrame implements ActionListener
 		WeatherApp app = new WeatherApp("Weather app");
 		app.setVisible(true);
 		app.setResizable(false);
-		app.pack();
+		app.pack(); //resizes the window
 	}
 	
 	//declare visible components (used for sending a request)
@@ -332,10 +332,11 @@ class WeatherApp extends JFrame implements ActionListener
 		}
 		else if (search == actionSource)
 		{
-			APICaller apiCaller = new APICaller();
 			Query query = getQuery();
+			APICaller apiCaller = new APICaller();
 			try 
 			{
+				//checks if query is correct
 				int status = apiCaller.getStatus(query);
 				if (status == 200)
 				{
@@ -374,6 +375,7 @@ class WeatherApp extends JFrame implements ActionListener
 						else windSpeedUnit = "mph";
 						if (results.windSpeed != -1.0) windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
 						
+						//sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
 						String windCompass = "";
 						if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30)) windCompass = "N";
 						else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
@@ -387,22 +389,22 @@ class WeatherApp extends JFrame implements ActionListener
 						
 						if (!results.sunrise.equals("error"))
 						{
-							Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000);
+							Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); //creates date from unix time (GMT)
 							Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
 							sunriseCalendar.setTime(sunriseDate);
 							String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
 							String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
-							if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes;
+							if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
 							sunriseValue.setText(hours + ":" + minutes);
 						}
 						if (!results.sunset.equals("error"))
 						{
-							Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000);
+							Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); //creates date from unix time (GMT)
 							Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
 							sunsetCalendar.setTime(sunsetDate);
 							String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
 							String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
-							if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes;
+							if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
 							sunsetValue.setText(hours + ":" + minutes);
 						}
 						
@@ -462,7 +464,7 @@ class WeatherApp extends JFrame implements ActionListener
 		sunriseLabel.setText("Sunrise:");
 		sunsetLabel.setText("Sunset:");
 		overcastLabel.setText("Overcast:");
-		this.pack();
+		this.pack(); //resizes the window
 	}
 	
 	private void setPolishLanguage()
@@ -488,7 +490,7 @@ class WeatherApp extends JFrame implements ActionListener
 		sunriseLabel.setText("Wschód s³oñca:");
 		sunsetLabel.setText("Zachód s³oñca:");
 		overcastLabel.setText("Zachmurzenie:");
-		this.pack();
+		this.pack(); //resizes the window
 	}
 	
 	private void resetApp()
@@ -526,13 +528,13 @@ class WeatherApp extends JFrame implements ActionListener
 		sunsetValue.setVisible(bool);
 		overcastLabel.setVisible(bool);
 		overcastValue.setVisible(bool);
-		this.pack();
+		this.pack(); //resizes the window
 	}
 	
 	private Query getQuery()
 	{
 		String cityName = new String(city.getText());
-		String noSpacesCityName = cityName.replaceAll("\\s+", "%20");
+		String noSpacesCityName = cityName.replaceAll("\\s+", "%20"); //replaces spaces with hexadecimal ASCII code of space (to create URL properly)
 		String units;
 		if (metricUnits.isSelected()) units = new String("metric");
 		else units = new String("imperial");
