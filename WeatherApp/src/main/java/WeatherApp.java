@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -9,25 +10,19 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
-import javax.print.attribute.standard.DateTimeAtCompleted;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SpinnerNumberModel;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -52,7 +47,7 @@ class WeatherApp extends JFrame implements ActionListener
 	public	JButton search, reset;
 			
 	//declare hidden components (used for showing results)
-	private	JLabel currentTemperature, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
+	private	JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
 	private	JTextField minimalTemperatureValue, maximalTemperatureValue, feelsLikeValue, pressureValue, humidityValue;
 	private	JLabel wind, windSpeedLabel, windDirectionLabel;
 	private	JTextField windSpeedValue, windDirectionValue;
@@ -145,14 +140,14 @@ class WeatherApp extends JFrame implements ActionListener
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		constraints.gridheight = 2;
-		constraints.gridwidth = 2;
+		constraints.gridwidth = 1;
 		add(iconLabel, constraints);
 		
-		currentTemperature = new JLabel();
-		currentTemperature.setFont(new Font ("Arial", Font.BOLD, 26));
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.gridx = 2;
-		add(currentTemperature, constraints);
+		currentTemperatureValue = new JLabel();
+		currentTemperatureValue.setFont(new Font ("Arial", Font.BOLD, 26));
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.gridx = 1;
+		add(currentTemperatureValue, constraints);
 		
 		search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.BOLD, 32));
@@ -307,7 +302,7 @@ class WeatherApp extends JFrame implements ActionListener
 		constraints.gridx = 6;
 		add(overcastValue, constraints);
 		
-		//add actionListeners to some objects
+		//add actionListeners to objects
 		englishLanguage.addActionListener(this);
 		polishLanguage.addActionListener(this);
 		search.addActionListener(this);
@@ -317,6 +312,7 @@ class WeatherApp extends JFrame implements ActionListener
 		setVisibilityOfResults(false);
 	}
 	
+	//set events
 	public void actionPerformed(ActionEvent arg0) 
 	{
 		Object actionSource = arg0.getSource();
@@ -336,13 +332,106 @@ class WeatherApp extends JFrame implements ActionListener
 		}
 		else if (search == actionSource)
 		{
-			Results results = null;
-			try {
-				results = APICaller.call(getQuery());
-			} catch (UnirestException e) {e.printStackTrace();}
-			System.out.println(results.toString());
-			//TODO set values of textFields
-			setVisibilityOfResults(true);
+			APICaller apiCaller = new APICaller();
+			Query query = getQuery();
+			try 
+			{
+				int status = apiCaller.getStatus(query);
+				if (status == 200)
+				{
+						Results results = apiCaller.call(getQuery());
+						
+						String temperatureUnit;
+						if (metricUnits.isSelected()) temperatureUnit = "C";
+						else temperatureUnit = "F";
+						
+						if (results.currentTemperature != -273.15) currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
+						if (results.minimalTemperature != -273.15) minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
+						if (results.maximalTemperature != -273.15) maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
+						if (results.feelsLike != -273.15) feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
+						
+						if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
+						if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
+						
+						if (!results.description.equals("error")) description.setText(results.description);
+						if (!results.icon.equals("error"))
+						{
+							try 
+							{
+								BufferedImage currentIcon = ImageIO.read(new File("src/main/resources/" + results.icon + ".png"));
+								iconLabel.setIcon(new ImageIcon(currentIcon));
+								iconLabel.setVisible(true);
+							} 
+							catch (IOException e) 
+							{
+								System.err.println("Image not found");
+								e.printStackTrace();
+							}
+						}
+						
+						String windSpeedUnit;
+						if (metricUnits.isSelected()) windSpeedUnit = "m/s";
+						else windSpeedUnit = "mph";
+						if (results.windSpeed != -1.0) windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
+						
+						String windCompass = "";
+						if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30)) windCompass = "N";
+						else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
+						else if (results.windDirection >= 60 && results.windDirection < 120) windCompass = "E";
+						else if (results.windDirection >= 120 && results.windDirection < 150) windCompass = "SE";
+						else if (results.windDirection >= 150 && results.windDirection < 210) windCompass = "S";
+						else if (results.windDirection >= 210 && results.windDirection < 240) windCompass = "SW";
+						else if (results.windDirection >= 240 && results.windDirection < 300) windCompass = "W";
+						else if (results.windDirection >= 300 && results.windDirection < 330) windCompass = "NW";
+						windDirectionValue.setText(windCompass);
+						
+						if (!results.sunrise.equals("error"))
+						{
+							Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000);
+							Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+							sunriseCalendar.setTime(sunriseDate);
+							String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
+							String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
+							if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes;
+							sunriseValue.setText(hours + ":" + minutes);
+						}
+						if (!results.sunset.equals("error"))
+						{
+							Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000);
+							Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+							sunsetCalendar.setTime(sunsetDate);
+							String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
+							String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
+							if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes;
+							sunsetValue.setText(hours + ":" + minutes);
+						}
+						
+						if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
+						setVisibilityOfResults(true);
+				}
+				else if (status == 400 || status == 404) //invalid request
+				{
+					String error;
+					if (englishLanguage.isSelected()) error = "Inavlid city name";
+					else error = "Nieprawid³owe miasto";
+					JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+				}
+				else if (status == 401 || status == 403) //authentication error
+				{
+					String error;
+					if (englishLanguage.isSelected()) error = "Authentication error";
+					else error = "B³¹d autoryzacji";
+					JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+				}
+				else //server error
+				{
+					String error;
+					if (englishLanguage.isSelected()) error = "Server error";
+					else error = "B³¹d serwera";
+					JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			catch (UnirestException e) {e.printStackTrace();}
 		}
 		else if (reset == actionSource)
 		{
@@ -413,6 +502,8 @@ class WeatherApp extends JFrame implements ActionListener
 	
 	private void setVisibilityOfResults(boolean bool)
 	{
+		iconLabel.setVisible(bool);
+		currentTemperatureValue.setVisible(bool);
 		minimalTemperatureLabel.setVisible(bool);
 		minimalTemperatureValue.setVisible(bool);
 		maximalTemperatureLabel.setVisible(bool);
@@ -441,13 +532,13 @@ class WeatherApp extends JFrame implements ActionListener
 	private Query getQuery()
 	{
 		String cityName = new String(city.getText());
+		String noSpacesCityName = cityName.replaceAll("\\s+", "%20");
 		String units;
 		if (metricUnits.isSelected()) units = new String("metric");
 		else units = new String("imperial");
 		String language;
 		if (englishLanguage.isSelected()) language = new String("en");
 		else language = new String("pl");
-		Query query = new Query(cityName, units, language);
-		return query;
+		return new Query(noSpacesCityName, units, language);
 	}
 }
