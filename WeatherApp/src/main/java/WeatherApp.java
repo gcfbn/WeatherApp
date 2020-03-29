@@ -32,8 +32,8 @@ class WeatherApp extends JFrame implements ActionListener
 	{
 		WeatherApp app = new WeatherApp("Weather app");
 		app.setVisible(true);
-		app.setResizable(false);
-		app.pack(); //resizes the window
+		//app.pack(); //resizes the window
+		app.pack();
 	}
 	
 	//declare visible components (used for sending a request)
@@ -57,6 +57,7 @@ class WeatherApp extends JFrame implements ActionListener
 	WeatherApp(String title) throws IOException
 	{
 		//set properties of the main frame
+		this.setResizable(true);
 		this.setTitle(title);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocation(700, 450);
@@ -499,6 +500,7 @@ class WeatherApp extends JFrame implements ActionListener
 		englishLanguage.setSelected(true);
 		polishLanguage.setSelected(false);
 		city.setText("");
+		description.setText("");
 		setVisibilityOfResults(false);
 	}
 	
