@@ -77,8 +77,7 @@ public class APICaller
 	{
 		String URL = getURL(query);
 		HttpResponse <JsonNode> response = Unirest.get(URL).asJson();
-		int status = response.getStatus();
-		return status;
+		return response.getStatus();
 	}
 	
 	private String getURL(Query query)

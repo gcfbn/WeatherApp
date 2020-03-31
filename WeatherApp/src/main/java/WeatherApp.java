@@ -7,7 +7,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.Calendar;
@@ -42,9 +45,10 @@ class WeatherApp extends JFrame implements ActionListener
 	private	JRadioButton metricUnits, imperialUnits;
 	private	ButtonGroup unitsGroup;
 	private	JRadioButton englishLanguage, polishLanguage;
-	public	ButtonGroup languageGroup;
-	public	BufferedImage icon;
-	public	JButton search, reset;
+	private	ButtonGroup languageGroup;
+	private	BufferedImage icon;
+	private	JButton searchButton, reset, lastSearch;
+	private File lastSearchFile;
 			
 	//declare hidden components (used for showing results)
 	private	JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
@@ -149,13 +153,13 @@ class WeatherApp extends JFrame implements ActionListener
 		constraints.gridx = 1;
 		add(currentTemperatureValue, constraints);
 		
-		search = new JButton("Search");
-		search.setFont(new Font("Arial", Font.BOLD, 32));
+		searchButton = new JButton("Search");
+		searchButton.setFont(new Font("Arial", Font.BOLD, 32));
 		constraints.gridx = 3;
 		constraints.gridy = 3;
 		constraints.gridheight = 1;
 		constraints.gridwidth = 4;
-		add(search, constraints);
+		add(searchButton, constraints);
 		
 		description = new JTextField();
 		description.setEditable(false);
@@ -168,8 +172,14 @@ class WeatherApp extends JFrame implements ActionListener
 		reset = new JButton("Reset");
 		reset.setFont(new Font("Arial", Font.BOLD, 32));
 		constraints.gridx = 3;
-		constraints.gridwidth = 4;
+		constraints.gridwidth = 2;
 		add(reset, constraints);
+		
+		lastSearch = new JButton("Last search");
+		lastSearch.setFont(new Font("Arial", Font.BOLD, 32));
+		constraints.gridx = 5;
+		constraints.gridwidth = 2;
+		add(lastSearch, constraints);
 		
 		minimalTemperatureLabel = new JLabel("Minimal temperature:");
 		minimalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -305,11 +315,15 @@ class WeatherApp extends JFrame implements ActionListener
 		//add actionListeners to objects
 		englishLanguage.addActionListener(this);
 		polishLanguage.addActionListener(this);
-		search.addActionListener(this);
+		searchButton.addActionListener(this);
 		reset.addActionListener(this);
+		lastSearch.addActionListener(this);
 		
 		//hide components that show results
 		setVisibilityOfResults(false);
+		
+		//open file with last searched city
+		lastSearchFile = new File("src/main/resources/lastSearch.txt");
 	}
 	
 	//set events
@@ -330,114 +344,30 @@ class WeatherApp extends JFrame implements ActionListener
 					setPolishLanguage();
 				}
 		}
-		else if (search == actionSource)
+		else if (searchButton == actionSource)
 		{
-			Query query = getQuery();
-			APICaller apiCaller = new APICaller();
-			try 
-			{
-				//checks if query is correct
-				int status = apiCaller.getStatus(query);
-				if (status == 200)
-				{
-						Results results = apiCaller.call(getQuery());
-						
-						String temperatureUnit;
-						if (metricUnits.isSelected()) temperatureUnit = "C";
-						else temperatureUnit = "F";
-						
-						if (results.currentTemperature != -273.15) currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
-						if (results.minimalTemperature != -273.15) minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
-						if (results.maximalTemperature != -273.15) maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
-						if (results.feelsLike != -273.15) feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
-						
-						if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
-						if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
-						
-						if (!results.description.equals("error")) description.setText(results.description);
-						if (!results.icon.equals("error"))
-						{
-							try 
-							{
-								BufferedImage currentIcon = ImageIO.read(new File("src/main/resources/" + results.icon + ".png"));
-								iconLabel.setIcon(new ImageIcon(currentIcon));
-								iconLabel.setVisible(true);
-							} 
-							catch (IOException e) 
-							{
-								System.err.println("Image not found");
-								e.printStackTrace();
-							}
-						}
-						
-						String windSpeedUnit;
-						if (metricUnits.isSelected()) windSpeedUnit = "m/s";
-						else windSpeedUnit = "mph";
-						if (results.windSpeed != -1.0) windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
-						
-						//sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
-						String windCompass = "";
-						if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30)) windCompass = "N";
-						else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
-						else if (results.windDirection >= 60 && results.windDirection < 120) windCompass = "E";
-						else if (results.windDirection >= 120 && results.windDirection < 150) windCompass = "SE";
-						else if (results.windDirection >= 150 && results.windDirection < 210) windCompass = "S";
-						else if (results.windDirection >= 210 && results.windDirection < 240) windCompass = "SW";
-						else if (results.windDirection >= 240 && results.windDirection < 300) windCompass = "W";
-						else if (results.windDirection >= 300 && results.windDirection < 330) windCompass = "NW";
-						windDirectionValue.setText(windCompass);
-						
-						if (!results.sunrise.equals("error"))
-						{
-							Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); //creates date from unix time (GMT)
-							Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-							sunriseCalendar.setTime(sunriseDate);
-							String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
-							String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
-							if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
-							sunriseValue.setText(hours + ":" + minutes);
-						}
-						if (!results.sunset.equals("error"))
-						{
-							Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); //creates date from unix time (GMT)
-							Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-							sunsetCalendar.setTime(sunsetDate);
-							String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
-							String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
-							if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
-							sunsetValue.setText(hours + ":" + minutes);
-						}
-						
-						if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
-						setVisibilityOfResults(true);
-				}
-				else if (status == 400 || status == 404) //invalid request
-				{
-					String error;
-					if (englishLanguage.isSelected()) error = "Inavlid city name";
-					else error = "Nieprawid³owe miasto";
-					JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-				}
-				else if (status == 401 || status == 403) //authentication error
-				{
-					String error;
-					if (englishLanguage.isSelected()) error = "Authentication error";
-					else error = "B³¹d autoryzacji";
-					JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-				}
-				else //server error
-				{
-					String error;
-					if (englishLanguage.isSelected()) error = "Server error";
-					else error = "B³¹d serwera";
-					JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			catch (UnirestException e) {e.printStackTrace();}
+			search(getQuery());
 		}
 		else if (reset == actionSource)
 		{
 			resetApp();
+		}
+		else if (lastSearch == actionSource)
+		{
+			String lastSearchCity;
+			try 
+			{
+				//TODO SOMEWHERE HERE IS THE REASON OF NullPointerException
+				BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
+				lastSearchCity = bufferedReader.readLine();
+				bufferedReader.close();
+				String noSpacesLastSearchCity = lastSearchCity.replaceAll("//s+", "%20"); //replaces spaces with hexadecimal ASCII code of space (to create URL properly)
+				System.out.println(noSpacesLastSearchCity);
+				search(new Query(noSpacesLastSearchCity, getUnits(), getLanguage()));
+			} 
+			catch (FileNotFoundException e) {e.printStackTrace();}
+			catch (IOException f) {f.printStackTrace();}
+			
 		}
 	}
 	
@@ -450,7 +380,7 @@ class WeatherApp extends JFrame implements ActionListener
 		language.setText("Language:");
 		englishLanguage.setText("English");
 		polishLanguage.setText("Polish");
-		search.setText("Search");
+		searchButton.setText("Search");
 		reset.setText("Reset");
 		minimalTemperatureLabel.setText("Minimal temperature:");
 		maximalTemperatureLabel.setText("Maximal temperature:");
@@ -476,7 +406,7 @@ class WeatherApp extends JFrame implements ActionListener
 		language.setText("Jêzyk:");
 		englishLanguage.setText("Angielski");
 		polishLanguage.setText("Polski");
-		search.setText("Szukaj");
+		searchButton.setText("Szukaj");
 		reset.setText("Reset");
 		minimalTemperatureLabel.setText("Minimalna temperatura: ");
 		maximalTemperatureLabel.setText("Maksymalna temperatura:");
@@ -535,12 +465,124 @@ class WeatherApp extends JFrame implements ActionListener
 	{
 		String cityName = new String(city.getText());
 		String noSpacesCityName = cityName.replaceAll("\\s+", "%20"); //replaces spaces with hexadecimal ASCII code of space (to create URL properly)
-		String units;
-		if (metricUnits.isSelected()) units = new String("metric");
-		else units = new String("imperial");
-		String language;
-		if (englishLanguage.isSelected()) language = new String("en");
-		else language = new String("pl");
-		return new Query(noSpacesCityName, units, language);
+		return new Query(noSpacesCityName, getUnits(), getLanguage());
+	}
+	
+	private String getLanguage()
+	{
+		if (englishLanguage.isSelected()) return "en";
+		else return "pl";
+	}
+	
+	private String getUnits()
+	{
+		if (metricUnits.isSelected()) return "metric";
+		else return "imperial";
+	}
+	
+	private void search(Query query)
+	{
+		APICaller apiCaller = new APICaller();
+		try 
+		{
+			System.out.println(query.toString());
+			//checks if query is correct
+			int status = apiCaller.getStatus(query);
+			if (status == 200)
+			{
+					Results results = apiCaller.call(getQuery());
+					
+					String temperatureUnit;
+					if (query.units.equals("metric")) temperatureUnit = "C";
+					else temperatureUnit = "F";
+					
+					if (results.currentTemperature != -273.15) currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
+					if (results.minimalTemperature != -273.15) minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
+					if (results.maximalTemperature != -273.15) maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
+					if (results.feelsLike != -273.15) feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
+					
+					if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
+					if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
+					
+					if (!results.description.equals("error")) description.setText(results.description);
+					if (!results.icon.equals("error"))
+					{
+						try 
+						{
+							BufferedImage currentIcon = ImageIO.read(new File("src/main/resources/" + results.icon + ".png"));
+							iconLabel.setIcon(new ImageIcon(currentIcon));
+							iconLabel.setVisible(true);
+						} 
+						catch (IOException e) 
+						{
+							System.err.println("Image not found");
+							e.printStackTrace();
+						}
+					}
+					
+					String windSpeedUnit;
+					if (query.units.equals("metric")) windSpeedUnit = "m/s";
+					else windSpeedUnit = "mph";
+					if (results.windSpeed != -1.0) windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
+					
+					//sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
+					String windCompass = "";
+					if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30)) windCompass = "N";
+					else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
+					else if (results.windDirection >= 60 && results.windDirection < 120) windCompass = "E";
+					else if (results.windDirection >= 120 && results.windDirection < 150) windCompass = "SE";
+					else if (results.windDirection >= 150 && results.windDirection < 210) windCompass = "S";
+					else if (results.windDirection >= 210 && results.windDirection < 240) windCompass = "SW";
+					else if (results.windDirection >= 240 && results.windDirection < 300) windCompass = "W";
+					else if (results.windDirection >= 300 && results.windDirection < 330) windCompass = "NW";
+					windDirectionValue.setText(windCompass);
+					
+					if (!results.sunrise.equals("error"))
+					{
+						Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); //creates date from unix time (GMT)
+						Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+						sunriseCalendar.setTime(sunriseDate);
+						String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
+						String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
+						if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
+						sunriseValue.setText(hours + ":" + minutes);
+					}
+					if (!results.sunset.equals("error"))
+					{
+						Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); //creates date from unix time (GMT)
+						Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+						sunsetCalendar.setTime(sunsetDate);
+						String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
+						String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
+						if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
+						sunsetValue.setText(hours + ":" + minutes);
+					}
+					
+					if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
+					setVisibilityOfResults(true);
+			}
+			else if (status == 400 || status == 404) //invalid request
+			{
+				String error;
+				if (englishLanguage.isSelected()) error = "Inavlid city name";
+				else error = "Nieprawid³owe miasto";
+				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+			}
+			else if (status == 401 || status == 403) //authentication error
+			{
+				String error;
+				if (englishLanguage.isSelected()) error = "Authentication error";
+				else error = "B³¹d autoryzacji";
+				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+			}
+			else //server error
+			{
+				String error;
+				if (englishLanguage.isSelected()) error = "Server error";
+				else error = "B³¹d serwera";
+				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		catch (UnirestException e) {e.printStackTrace();}
 	}
 }
