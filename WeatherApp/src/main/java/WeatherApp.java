@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.Calendar;
@@ -28,6 +29,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+
+
+//TODO redesign the code
 
 class WeatherApp extends JFrame implements ActionListener
 {
@@ -357,17 +361,17 @@ class WeatherApp extends JFrame implements ActionListener
 			String lastSearchCity;
 			try 
 			{
-				//TODO SOMEWHERE HERE IS THE REASON OF NullPointerException
 				BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
-				lastSearchCity = bufferedReader.readLine();
-				bufferedReader.close();
-				String noSpacesLastSearchCity = lastSearchCity.replaceAll("//s+", "%20"); //replaces spaces with hexadecimal ASCII code of space (to create URL properly)
-				System.out.println(noSpacesLastSearchCity);
-				search(new Query(noSpacesLastSearchCity, getUnits(), getLanguage()));
+				if ((lastSearchCity = bufferedReader.readLine()) != null)
+				{
+					bufferedReader.close();
+					search(new Query(lastSearchCity, getUnits(), getLanguage()));
+					String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); //converts spaces in ASCII code to visible spaces
+					city.setText(cityWithSpaces);
+				}
 			} 
 			catch (FileNotFoundException e) {e.printStackTrace();}
 			catch (IOException f) {f.printStackTrace();}
-			
 		}
 	}
 	
@@ -465,7 +469,8 @@ class WeatherApp extends JFrame implements ActionListener
 	{
 		String cityName = new String(city.getText());
 		String noSpacesCityName = cityName.replaceAll("\\s+", "%20"); //replaces spaces with hexadecimal ASCII code of space (to create URL properly)
-		return new Query(noSpacesCityName, getUnits(), getLanguage());
+		Query query = new Query(noSpacesCityName, getUnits(), getLanguage());
+		return query;
 	}
 	
 	private String getLanguage()
@@ -485,12 +490,11 @@ class WeatherApp extends JFrame implements ActionListener
 		APICaller apiCaller = new APICaller();
 		try 
 		{
-			System.out.println(query.toString());
 			//checks if query is correct
 			int status = apiCaller.getStatus(query);
 			if (status == 200)
 			{
-					Results results = apiCaller.call(getQuery());
+					Results results = apiCaller.call(query);
 					
 					String temperatureUnit;
 					if (query.units.equals("metric")) temperatureUnit = "C";
@@ -515,7 +519,6 @@ class WeatherApp extends JFrame implements ActionListener
 						} 
 						catch (IOException e) 
 						{
-							System.err.println("Image not found");
 							e.printStackTrace();
 						}
 					}
@@ -559,6 +562,14 @@ class WeatherApp extends JFrame implements ActionListener
 					}
 					
 					if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
+					FileWriter fileWriter;
+					try 
+					{
+						fileWriter = new FileWriter(lastSearchFile);
+						fileWriter.write(query.city);
+						fileWriter.close();
+					} 
+					catch (IOException e) {e.printStackTrace();}
 					setVisibilityOfResults(true);
 			}
 			else if (status == 400 || status == 404) //invalid request

@@ -8,9 +8,4 @@ public class Query
 		this.units = units;
 		this.language = language;
 	}
-	@Override
-	public String toString()
-	{
-		return (city + " " + units + " " + language);
-	}
 }
