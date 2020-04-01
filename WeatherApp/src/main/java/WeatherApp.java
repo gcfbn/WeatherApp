@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,7 +17,6 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,9 +27,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-
-
-//TODO redesign the code
 
 class WeatherApp extends JFrame implements ActionListener
 {
@@ -331,6 +326,8 @@ class WeatherApp extends JFrame implements ActionListener
 		
 		//set path to file with last searched city
 		lastSearchFile = new File("src/main/resources/lastSearch.txt");
+		
+		//check if the file exists
 		if (lastSearchFile.exists())
 		{
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
@@ -350,26 +347,17 @@ class WeatherApp extends JFrame implements ActionListener
 		Object actionSource = arg0.getSource();
 		if (englishLanguage == actionSource)
 		{
-			if (englishLanguage.isSelected()) 
-				{
-					setEnglishLanguage();
-				}
+			if (englishLanguage.isSelected()) setEnglishLanguage();
 		}
 		else if (polishLanguage == actionSource)
 		{
-			if (polishLanguage.isSelected()) 
-				{
-					setPolishLanguage();
-				}
+			if (polishLanguage.isSelected()) setPolishLanguage();
 		}
-		else if (searchButton == actionSource)
-		{
-			search(getQuery());
-		}
-		else if (reset == actionSource)
-		{
-			resetApp();
-		}
+		
+		else if (searchButton == actionSource) search(getQuery());
+		
+		else if (reset == actionSource) resetApp();
+		
 		else if (lastSearch == actionSource)
 		{
 			search(new Query(lastSearchCity, getUnits(), getLanguage()));
@@ -471,6 +459,124 @@ class WeatherApp extends JFrame implements ActionListener
 		this.pack(); //resizes the window
 	}
 	
+	private void search(Query query)
+	{
+		APICaller apiCaller = new APICaller();
+		try 
+		{
+			//checks if query is correct
+			int status = apiCaller.getStatus(query);
+			if (status == 200) //query is correct
+			{
+					Results results = apiCaller.call(query);
+					
+					String temperatureUnit;
+					if (query.units.equals("metric")) temperatureUnit = "C";
+					else temperatureUnit = "F";
+					
+					//checks if apiCaller returned value that means there is no such data in RESTapi
+					{
+						if (results.currentTemperature != -273.15) currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
+						if (results.minimalTemperature != -273.15) minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
+						if (results.maximalTemperature != -273.15) maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
+						if (results.feelsLike != -273.15) feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
+						
+						if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
+						if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
+						
+						if (!results.description.equals("error")) description.setText(results.description);
+						if (!results.icon.equals("error"))
+						{
+							try 
+							{
+								//read icon file and show it in GUI
+								BufferedImage currentIcon = ImageIO.read(new File("src/main/resources/" + results.icon + ".png"));
+								iconLabel.setIcon(new ImageIcon(currentIcon));
+								iconLabel.setVisible(true);
+							} 
+							catch (IOException e) {e.printStackTrace();}
+						}
+						
+						String windSpeedUnit;
+						if (query.units.equals("metric")) windSpeedUnit = "m/s";
+						else windSpeedUnit = "mph";
+						if (results.windSpeed != -1.0) windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
+						
+						//sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
+						String windCompass = "";
+						if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30)) windCompass = "N";
+						else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
+						else if (results.windDirection >= 60 && results.windDirection < 120) windCompass = "E";
+						else if (results.windDirection >= 120 && results.windDirection < 150) windCompass = "SE";
+						else if (results.windDirection >= 150 && results.windDirection < 210) windCompass = "S";
+						else if (results.windDirection >= 210 && results.windDirection < 240) windCompass = "SW";
+						else if (results.windDirection >= 240 && results.windDirection < 300) windCompass = "W";
+						else if (results.windDirection >= 300 && results.windDirection < 330) windCompass = "NW";
+						windDirectionValue.setText(windCompass);
+						
+						if (!results.sunrise.equals("error"))
+						{
+							Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); //creates date from unix time (GMT)
+							Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+							sunriseCalendar.setTime(sunriseDate);
+							String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
+							String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
+							if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
+							sunriseValue.setText(hours + ":" + minutes);
+						}
+						if (!results.sunset.equals("error"))
+						{
+							Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); //creates date from unix time (GMT)
+							Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+							sunsetCalendar.setTime(sunsetDate);
+							String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
+							String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
+							if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
+							sunsetValue.setText(hours + ":" + minutes);
+						}
+						
+						if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
+					}
+					
+					//write name of the city in file with last search
+					FileWriter fileWriter;
+					try 
+					{
+						fileWriter = new FileWriter(lastSearchFile);
+						fileWriter.write(query.city);
+						fileWriter.close();
+						lastSearch.setEnabled(true);
+						lastSearchCity = query.city;
+					} 
+					catch (IOException e) {e.printStackTrace();}
+					
+					setVisibilityOfResults(true);
+			}
+			else if (status == 400 || status == 404) //invalid request
+			{
+				String error;
+				if (query.language.equals("en")) error = "Inavlid city name";
+				else error = "Nieprawid³owe miasto";
+				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+			}
+			else if (status == 401 || status == 403) //authentication error
+			{
+				String error;
+				if (query.language.equals("en")) error = "Authentication error";
+				else error = "B³¹d autoryzacji";
+				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+			}
+			else //server error
+			{
+				String error;
+				if (query.language.equals("en")) error = "Server error";
+				else error = "B³¹d serwera";
+				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		catch (UnirestException e) {e.printStackTrace();}
+	}
+	
 	private Query getQuery()
 	{
 		String cityName = new String(city.getText());
@@ -489,121 +595,5 @@ class WeatherApp extends JFrame implements ActionListener
 	{
 		if (metricUnits.isSelected()) return "metric";
 		else return "imperial";
-	}
-	
-	private void search(Query query)
-	{
-		APICaller apiCaller = new APICaller();
-		try 
-		{
-			//checks if query is correct
-			int status = apiCaller.getStatus(query);
-			if (status == 200)
-			{
-					Results results = apiCaller.call(query);
-					
-					String temperatureUnit;
-					if (query.units.equals("metric")) temperatureUnit = "C";
-					else temperatureUnit = "F";
-					
-					if (results.currentTemperature != -273.15) currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
-					if (results.minimalTemperature != -273.15) minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
-					if (results.maximalTemperature != -273.15) maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
-					if (results.feelsLike != -273.15) feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
-					
-					if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
-					if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
-					
-					if (!results.description.equals("error")) description.setText(results.description);
-					if (!results.icon.equals("error"))
-					{
-						try 
-						{
-							BufferedImage currentIcon = ImageIO.read(new File("src/main/resources/" + results.icon + ".png"));
-							iconLabel.setIcon(new ImageIcon(currentIcon));
-							iconLabel.setVisible(true);
-						} 
-						catch (IOException e) 
-						{
-							e.printStackTrace();
-						}
-					}
-					
-					String windSpeedUnit;
-					if (query.units.equals("metric")) windSpeedUnit = "m/s";
-					else windSpeedUnit = "mph";
-					if (results.windSpeed != -1.0) windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
-					
-					//sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
-					String windCompass = "";
-					if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30)) windCompass = "N";
-					else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
-					else if (results.windDirection >= 60 && results.windDirection < 120) windCompass = "E";
-					else if (results.windDirection >= 120 && results.windDirection < 150) windCompass = "SE";
-					else if (results.windDirection >= 150 && results.windDirection < 210) windCompass = "S";
-					else if (results.windDirection >= 210 && results.windDirection < 240) windCompass = "SW";
-					else if (results.windDirection >= 240 && results.windDirection < 300) windCompass = "W";
-					else if (results.windDirection >= 300 && results.windDirection < 330) windCompass = "NW";
-					windDirectionValue.setText(windCompass);
-					
-					
-					if (!results.sunrise.equals("error"))
-					{
-						Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); //creates date from unix time (GMT)
-						Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-						sunriseCalendar.setTime(sunriseDate);
-						String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
-						String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
-						if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
-						sunriseValue.setText(hours + ":" + minutes);
-					}
-					if (!results.sunset.equals("error"))
-					{
-						Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); //creates date from unix time (GMT)
-						Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-						sunsetCalendar.setTime(sunsetDate);
-						String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
-						String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
-						if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
-						sunsetValue.setText(hours + ":" + minutes);
-					}
-					
-					if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
-					FileWriter fileWriter;
-					try 
-					{
-						fileWriter = new FileWriter(lastSearchFile);
-						fileWriter.write(query.city);
-						fileWriter.close();
-						lastSearch.setEnabled(true);
-						lastSearchCity = query.city;
-					} 
-					catch (IOException e) {e.printStackTrace();}
-					
-					setVisibilityOfResults(true);
-			}
-			else if (status == 400 || status == 404) //invalid request
-			{
-				String error;
-				if (englishLanguage.isSelected()) error = "Inavlid city name";
-				else error = "Nieprawid³owe miasto";
-				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-			}
-			else if (status == 401 || status == 403) //authentication error
-			{
-				String error;
-				if (englishLanguage.isSelected()) error = "Authentication error";
-				else error = "B³¹d autoryzacji";
-				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-			}
-			else //server error
-			{
-				String error;
-				if (englishLanguage.isSelected()) error = "Server error";
-				else error = "B³¹d serwera";
-				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-			}
-		}
-		catch (UnirestException e) {e.printStackTrace();}
 	}
 }

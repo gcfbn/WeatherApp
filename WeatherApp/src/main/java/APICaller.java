@@ -15,6 +15,7 @@ public class APICaller
 		JSONObject resultsObject = new JSONObject(response.getBody().toString());
 		//get data from JSONObject
 		Results results = new Results();
+		
 		//temperature etc.
 		if (resultsObject.has("main")) 
 		{

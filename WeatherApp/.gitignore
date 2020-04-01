@@ -1,4 +1,4 @@
 /target/
 .settings
 .project
-/src/main/resources/lastSerach.txt
+lastSearch.txt
