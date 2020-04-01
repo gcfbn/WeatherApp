@@ -32,7 +32,6 @@ class WeatherApp extends JFrame implements ActionListener
 	{
 		WeatherApp app = new WeatherApp("Weather app");
 		app.setVisible(true);
-		//app.pack(); //resizes the window
 		app.pack();
 	}
 	
@@ -57,7 +56,7 @@ class WeatherApp extends JFrame implements ActionListener
 	WeatherApp(String title) throws IOException
 	{
 		//set properties of the main frame
-		this.setResizable(true);
+		this.setResizable(false);
 		this.setTitle(title);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocation(700, 450);
