@@ -51,7 +51,6 @@ class WeatherApp extends JFrame implements ActionListener
 	private	ButtonGroup languageGroup;
 	private	BufferedImage icon;
 	private	JButton searchButton, reset, lastSearch;
-	private File lastSearchFile;
 			
 	//declare hidden components (used for showing results)
 	private	JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
@@ -60,6 +59,10 @@ class WeatherApp extends JFrame implements ActionListener
 	private	JTextField windSpeedValue, windDirectionValue;
 	private	JLabel sky, sunriseLabel, sunsetLabel, overcastLabel;
 	private	JTextField sunriseValue, sunsetValue, overcastValue;
+	
+	//variables used for loading last search
+	private File lastSearchFile;
+	private String lastSearchCity;
 	
 	WeatherApp(String title) throws IOException
 	{
@@ -326,8 +329,19 @@ class WeatherApp extends JFrame implements ActionListener
 		//hide components that show results
 		setVisibilityOfResults(false);
 		
-		//open file with last searched city
+		//set path to file with last searched city
 		lastSearchFile = new File("src/main/resources/lastSearch.txt");
+		if (lastSearchFile.exists())
+		{
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
+			if ((lastSearchCity = bufferedReader.readLine()) == null) lastSearch.setEnabled(false);
+			bufferedReader.close();
+		}
+		else 
+		{
+			lastSearch.setEnabled(false);
+			lastSearchFile.createNewFile();
+		}
 	}
 	
 	//set events
@@ -358,20 +372,9 @@ class WeatherApp extends JFrame implements ActionListener
 		}
 		else if (lastSearch == actionSource)
 		{
-			String lastSearchCity;
-			try 
-			{
-				BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
-				if ((lastSearchCity = bufferedReader.readLine()) != null)
-				{
-					bufferedReader.close();
-					search(new Query(lastSearchCity, getUnits(), getLanguage()));
-					String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); //converts spaces in ASCII code to visible spaces
-					city.setText(cityWithSpaces);
-				}
-			} 
-			catch (FileNotFoundException e) {e.printStackTrace();}
-			catch (IOException f) {f.printStackTrace();}
+			search(new Query(lastSearchCity, getUnits(), getLanguage()));
+			String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); //converts spaces in ASCII code to visible spaces
+			city.setText(cityWithSpaces);
 		}
 	}
 	
@@ -386,6 +389,7 @@ class WeatherApp extends JFrame implements ActionListener
 		polishLanguage.setText("Polish");
 		searchButton.setText("Search");
 		reset.setText("Reset");
+		lastSearch.setText("Last search");
 		minimalTemperatureLabel.setText("Minimal temperature:");
 		maximalTemperatureLabel.setText("Maximal temperature:");
 		feelsLikeLabel.setText("Feels like: ");
@@ -412,6 +416,7 @@ class WeatherApp extends JFrame implements ActionListener
 		polishLanguage.setText("Polski");
 		searchButton.setText("Szukaj");
 		reset.setText("Reset");
+		lastSearch.setText("Ostatania lokalizacja");
 		minimalTemperatureLabel.setText("Minimalna temperatura: ");
 		maximalTemperatureLabel.setText("Maksymalna temperatura:");
 		feelsLikeLabel.setText("Odczuwalna temperatura:");
@@ -541,6 +546,7 @@ class WeatherApp extends JFrame implements ActionListener
 					else if (results.windDirection >= 300 && results.windDirection < 330) windCompass = "NW";
 					windDirectionValue.setText(windCompass);
 					
+					
 					if (!results.sunrise.equals("error"))
 					{
 						Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); //creates date from unix time (GMT)
@@ -569,8 +575,11 @@ class WeatherApp extends JFrame implements ActionListener
 						fileWriter = new FileWriter(lastSearchFile);
 						fileWriter.write(query.city);
 						fileWriter.close();
+						lastSearch.setEnabled(true);
+						lastSearchCity = query.city;
 					} 
 					catch (IOException e) {e.printStackTrace();}
+					
 					setVisibilityOfResults(true);
 			}
 			else if (status == 400 || status == 404) //invalid request
