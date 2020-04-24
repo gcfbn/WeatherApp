@@ -1,4 +1,5 @@
-import java.awt.Color;
+package app;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -28,7 +29,7 @@ import javax.swing.JTextField;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-class WeatherApp extends JFrame implements ActionListener
+public class WeatherApp extends JFrame implements ActionListener
 {
 	public static void main (String[] args) throws UnirestException, IOException
 	{
@@ -56,7 +57,7 @@ class WeatherApp extends JFrame implements ActionListener
 	private	JTextField sunriseValue, sunsetValue, overcastValue;
 	
 	//variables used for loading last search
-	private File lastSearchFile;
+	public File lastSearchFile;
 	private String lastSearchCity;
 	
 	WeatherApp(String title) throws IOException
@@ -141,7 +142,7 @@ class WeatherApp extends JFrame implements ActionListener
 		languageGroup.add(polishLanguage);
 		languageGroup.add(englishLanguage);
 		
-		icon = ImageIO.read(new File("src/main/resources/empty.png"));
+		icon = ImageIO.read(WeatherApp.class.getResourceAsStream("/empty.png"));
 		iconLabel = new JLabel(new ImageIcon(icon));
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -325,7 +326,7 @@ class WeatherApp extends JFrame implements ActionListener
 		setVisibilityOfResults(false);
 		
 		//set path to file with last searched city
-		lastSearchFile = new File("src/main/resources/lastSearch.txt");
+		lastSearchFile = new File(WeatherApp.class.getResourceAsStream("/lastSearch.txt").toString());
 		
 		//check if the file exists
 		if (lastSearchFile.exists())
@@ -490,7 +491,7 @@ class WeatherApp extends JFrame implements ActionListener
 							try 
 							{
 								//read icon file and show it in GUI
-								BufferedImage currentIcon = ImageIO.read(new File("src/main/resources/" + results.icon + ".png"));
+								BufferedImage currentIcon = ImageIO.read(WeatherApp.class.getResourceAsStream("/" + results.icon + ".png"));
 								iconLabel.setIcon(new ImageIcon(currentIcon));
 								iconLabel.setVisible(true);
 							} 

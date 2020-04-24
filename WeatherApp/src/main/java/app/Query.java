@@ -1,3 +1,5 @@
+package app;
+
 public class Query
 {
 	public String city, units, language;
