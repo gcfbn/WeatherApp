@@ -31,7 +31,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class WeatherApp extends JFrame implements ActionListener {
 
-    public static void main(String[] args) throws UnirestException, IOException {
+    public static void main(String[] args){
         WeatherApp app = new WeatherApp();
         app.setVisible(true);
         app.pack();
