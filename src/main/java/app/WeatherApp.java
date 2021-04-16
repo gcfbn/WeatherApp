@@ -475,13 +475,13 @@ public class WeatherApp extends JFrame {
                 // checks if apiCaller returned value that means there is no such data in RESTapi
                 {
                     if (results.currentTemperature != -273.15)
-                        currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " �" + temperatureUnit);
+                        currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
                     if (results.minimalTemperature != -273.15)
-                        minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " �" + temperatureUnit);
+                        minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
                     if (results.maximalTemperature != -273.15)
-                        maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " �" + temperatureUnit);
+                        maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
                     if (results.feelsLike != -273.15)
-                        feelsLikeValue.setText(Double.toString(results.feelsLike) + " �" + temperatureUnit);
+                        feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
 
                     if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
                     if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
@@ -558,17 +558,17 @@ public class WeatherApp extends JFrame {
             } else if (status == 400 || status == 404) { // invalid request
                 String error;
                 if (query.language.equals("en")) error = "Inavlid city name";
-                else error = "Nieprawid�owe miasto";
+                else error = "Nieprawidłowe miasto";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             } else if (status == 401 || status == 403) { // authentication error
                 String error;
                 if (query.language.equals("en")) error = "Authentication error";
-                else error = "B��d autoryzacji";
+                else error = "Błąd autoryzacji";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             } else { // server error
                 String error;
                 if (query.language.equals("en")) error = "Server error";
-                else error = "B��d serwera";
+                else error = "Błąd serwera";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             }
         } catch (UnirestException e) {
