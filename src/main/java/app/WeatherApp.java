@@ -83,6 +83,12 @@ public class WeatherApp extends JFrame {
 
         setLayout(new GridBagLayout());
 
+        //TODO create font(s)
+        //TODO divide everything into classes
+        //TODO code duplicates
+        //TODO repair weird things like String x = new String()
+        //TODO MVC?
+
         // set spaces between components
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(5, 3, 3, 5);
