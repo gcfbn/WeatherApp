@@ -32,43 +32,48 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 public class WeatherApp extends JFrame implements ActionListener {
 
     public static void main(String[] args) throws UnirestException, IOException {
-        WeatherApp app = new WeatherApp("Weather app");
+        WeatherApp app = new WeatherApp();
         app.setVisible(true);
         app.pack();
     }
 
     // declare visible components (used for sending a request)
-    private final JLabel cityLabel, units, language, iconLabel;
-    private final JTextField city, description;
-    private final JRadioButton metricUnits, imperialUnits;
-    private final ButtonGroup unitsGroup;
-    private final JRadioButton englishLanguage, polishLanguage;
-    private final ButtonGroup languageGroup;
-    private final BufferedImage icon;
-    private final JButton searchButton, reset, lastSearch;
+    private JLabel cityLabel, units, language, iconLabel;
+    private JTextField city, description;
+    private JRadioButton metricUnits, imperialUnits;
+    private ButtonGroup unitsGroup;
+    private JRadioButton englishLanguage, polishLanguage;
+    private ButtonGroup languageGroup;
+    private JButton searchButton, reset, lastSearch;
 
     // declare hidden components (used for showing results)
-    private final JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
-    private final JTextField minimalTemperatureValue, maximalTemperatureValue, feelsLikeValue, pressureValue, humidityValue;
-    private final JLabel wind, windSpeedLabel, windDirectionLabel;
-    private final JTextField windSpeedValue, windDirectionValue;
-    private final JLabel sky, sunriseLabel, sunsetLabel, overcastLabel;
-    private final JTextField sunriseValue, sunsetValue, overcastValue;
+    private JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
+    private JTextField minimalTemperatureValue, maximalTemperatureValue, feelsLikeValue, pressureValue, humidityValue;
+    private JLabel wind, windSpeedLabel, windDirectionLabel;
+    private JTextField windSpeedValue, windDirectionValue;
+    private JLabel sky, sunriseLabel, sunsetLabel, overcastLabel;
+    private JTextField sunriseValue, sunsetValue, overcastValue;
 
     // variables used for loading last search
     public File lastSearchFile;
     private String lastSearchCity;
 
-    WeatherApp(String title) throws IOException {
+    WeatherApp() {
 
         // set properties of the main frame
         this.setResizable(false);
-        this.setTitle(title);
+        this.setTitle("Weather app");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLocation(700, 450);
         setLayout(new GridBagLayout());
+        prepareGUI();
+    }
 
-        {
+    /**
+     * Initialize GUI components and add them to the main frame
+     * @return false if could not load some of the resources or true in other case
+     */
+    private boolean prepareGUI(){
             // set spaces between components
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.insets = new Insets(5, 3, 3, 5);
@@ -142,13 +147,26 @@ public class WeatherApp extends JFrame implements ActionListener {
             languageGroup.add(polishLanguage);
             languageGroup.add(englishLanguage);
 
-            icon = ImageIO.read(WeatherApp.class.getResourceAsStream("/empty.png"));
-            iconLabel = new JLabel(new ImageIcon(icon));
             constraints.gridx = 0;
             constraints.gridy = 2;
             constraints.gridheight = 2;
             constraints.gridwidth = 1;
-            add(iconLabel, constraints);
+
+            // try to read empty icon from resources
+            try {
+                BufferedImage icon = ImageIO.read(new File("/empty.png"));
+                iconLabel = new JLabel(new ImageIcon(icon));
+                add(iconLabel, constraints);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Could not load resources.", "Resources error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            constraints.gridx = 0;
+            constraints.gridy = 2;
+            constraints.gridheight = 2;
+            constraints.gridwidth = 1;
+
 
             currentTemperatureValue = new JLabel();
             currentTemperatureValue.setFont(new Font("Arial", Font.BOLD, 26));
@@ -182,6 +200,7 @@ public class WeatherApp extends JFrame implements ActionListener {
             lastSearch.setFont(new Font("Arial", Font.BOLD, 32));
             constraints.gridx = 5;
             constraints.gridwidth = 2;
+            lastSearch.setEnabled(false);
             add(lastSearch, constraints);
 
             minimalTemperatureLabel = new JLabel("Minimal temperature:");
@@ -324,20 +343,24 @@ public class WeatherApp extends JFrame implements ActionListener {
 
             // hide components that show results
             setVisibilityOfResults(false);
-        }
+
 
         // set path to file with last searched city
         lastSearchFile = new File("../lastSearch.txt");
-        lastSearchFile.createNewFile();
 
-        // check if the file exists
+        // create file if it doesn't exist
+        // in other case, try to read from file
         if (lastSearchFile.exists()) {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
-            if ((lastSearchCity = bufferedReader.readLine()) == null) lastSearch.setEnabled(false);
-            bufferedReader.close();
-        } else {
-            lastSearch.setEnabled(false);
+
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile))) {
+                if ((lastSearchCity = bufferedReader.readLine()) == null) lastSearch.setEnabled(false);
+                lastSearch.setEnabled(true);
+            } catch (IOException e) {
+                // TODO show an error
+            }
         }
+
+        return true;
     }
 
     // set events
