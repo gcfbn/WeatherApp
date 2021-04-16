@@ -15,10 +15,10 @@ public class APICaller
 		String URL = getURL(query);
 		HttpResponse <JsonNode> response = Unirest.get(URL).asJson();
 		JSONObject resultsObject = new JSONObject(response.getBody().toString());
-		//get data from JSONObject
+		// get data from JSONObject
 		Results results = new Results();
 		
-		//temperature etc.
+		// temperature etc.
 		if (resultsObject.has("main")) 
 		{
 			JSONObject temperatureObject = resultsObject.getJSONObject("main");
@@ -36,11 +36,11 @@ public class APICaller
 			else results.feelsLike = -273.15;
 		}
 		
-		//overcast
+		// overcast
 		if (resultsObject.has("clouds")) results.overcast = resultsObject.getJSONObject("clouds").getInt("all");
 		else results.overcast = -1;
 		
-		//wind
+		// wind
 		if (resultsObject.has("wind"))
 		{
 			JSONObject windObject = resultsObject.getJSONObject("wind");
@@ -51,7 +51,7 @@ public class APICaller
 		}
 		
 		
-		//sun
+		// sun
 		if (resultsObject.has("sys"))
 		{
 			JSONObject sunObject = resultsObject.getJSONObject("sys");
@@ -61,9 +61,9 @@ public class APICaller
 			else results.sunset = "error";
 		}
 		
-		//icon & description
-		//"weather" key in returned JSON file is an array
-		//weather with index 0 is the prime weather and it will be shown
+		// icon & description
+		// "weather" key in returned JSON file is an array
+		// weather with index 0 is the prime weather and it will be shown
 		if (resultsObject.has("weather"))
 		{
 			JSONArray iconArray = (JSONArray)resultsObject.get("weather");

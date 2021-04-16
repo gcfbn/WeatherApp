@@ -38,7 +38,7 @@ public class WeatherApp extends JFrame implements ActionListener
 		app.pack();
 	}
 	
-	//declare visible components (used for sending a request)
+	// declare visible components (used for sending a request)
 	private final JLabel cityLabel, units, language, iconLabel;
 	private final JTextField city, description;
 	private final JRadioButton metricUnits, imperialUnits;
@@ -48,7 +48,7 @@ public class WeatherApp extends JFrame implements ActionListener
 	private	final BufferedImage icon;
 	private	final JButton searchButton, reset, lastSearch;
 			
-	//declare hidden components (used for showing results)
+	// declare hidden components (used for showing results)
 	private	final JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
 	private	final JTextField minimalTemperatureValue, maximalTemperatureValue, feelsLikeValue, pressureValue, humidityValue;
 	private	final JLabel wind, windSpeedLabel, windDirectionLabel;
@@ -56,13 +56,13 @@ public class WeatherApp extends JFrame implements ActionListener
 	private	final JLabel sky, sunriseLabel, sunsetLabel, overcastLabel;
 	private	final JTextField sunriseValue, sunsetValue, overcastValue;
 	
-	//variables used for loading last search
+	// variables used for loading last search
 	public File lastSearchFile;
 	private String lastSearchCity;
 	
 	WeatherApp(String title) throws IOException
 	{
-		//set properties of the main frame
+		// set properties of the main frame
 		this.setResizable(false);
 		this.setTitle(title);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -327,11 +327,11 @@ public class WeatherApp extends JFrame implements ActionListener
 			setVisibilityOfResults(false);
 		}
 		
-		//set path to file with last searched city
+		// set path to file with last searched city
 		lastSearchFile = new File("../lastSearch.txt");
 		lastSearchFile.createNewFile();
 
-		//check if the file exists
+		// check if the file exists
 		if (lastSearchFile.exists())
 		{
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
@@ -344,7 +344,7 @@ public class WeatherApp extends JFrame implements ActionListener
 		}
 	}
 	
-	//set events
+	// set events
 	public void actionPerformed(ActionEvent arg0) 
 	{
 		Object actionSource = arg0.getSource();
@@ -364,7 +364,7 @@ public class WeatherApp extends JFrame implements ActionListener
 		else if (lastSearch == actionSource)
 		{
 			search(new Query(lastSearchCity, getUnits(), getLanguage()));
-			String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); //converts spaces in ASCII code to visible spaces
+			String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); // converts spaces in ASCII code to visible spaces
 			city.setText(cityWithSpaces);
 		}
 	}
@@ -393,7 +393,7 @@ public class WeatherApp extends JFrame implements ActionListener
 		sunriseLabel.setText("Sunrise:");
 		sunsetLabel.setText("Sunset:");
 		overcastLabel.setText("Overcast:");
-		this.pack(); //resizes the window
+		this.pack(); // resizes the window
 	}
 	
 	private void setPolishLanguage()
@@ -420,7 +420,7 @@ public class WeatherApp extends JFrame implements ActionListener
 		sunriseLabel.setText("Wschód s³oñca:");
 		sunsetLabel.setText("Zachód s³oñca:");
 		overcastLabel.setText("Zachmurzenie:");
-		this.pack(); //resizes the window
+		this.pack(); // resizes the window
 	}
 	
 	private void resetApp()
@@ -459,7 +459,7 @@ public class WeatherApp extends JFrame implements ActionListener
 		sunsetValue.setVisible(bool);
 		overcastLabel.setVisible(bool);
 		overcastValue.setVisible(bool);
-		this.pack(); //resizes the window
+		this.pack(); // resizes the window
 	}
 	
 	private void search(Query query)
@@ -467,9 +467,9 @@ public class WeatherApp extends JFrame implements ActionListener
 		APICaller apiCaller = new APICaller();
 		try 
 		{
-			//checks if query is correct
+			// checks if query is correct
 			int status = apiCaller.getStatus(query);
-			if (status == 200) //query is correct
+			if (status == 200) // query is correct
 			{
 					Results results = apiCaller.call(query);
 					
@@ -477,7 +477,7 @@ public class WeatherApp extends JFrame implements ActionListener
 					if (query.units.equals("metric")) temperatureUnit = "C";
 					else temperatureUnit = "F";
 					
-					//checks if apiCaller returned value that means there is no such data in RESTapi
+					// checks if apiCaller returned value that means there is no such data in RESTapi
 					{
 						if (results.currentTemperature != -273.15) currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
 						if (results.minimalTemperature != -273.15) minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
@@ -492,7 +492,7 @@ public class WeatherApp extends JFrame implements ActionListener
 						{
 							try 
 							{
-								//read icon file and show it in GUI
+								// read icon file and show it in GUI
 								BufferedImage currentIcon = ImageIO.read(WeatherApp.class.getResourceAsStream("/" + results.icon + ".png"));
 								iconLabel.setIcon(new ImageIcon(currentIcon));
 								iconLabel.setVisible(true);
@@ -505,7 +505,7 @@ public class WeatherApp extends JFrame implements ActionListener
 						else windSpeedUnit = "mph";
 						if (results.windSpeed != -1.0) windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
 						
-						//sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
+						// sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
 						String windCompass = "";
 						if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30)) windCompass = "N";
 						else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
@@ -519,29 +519,29 @@ public class WeatherApp extends JFrame implements ActionListener
 						
 						if (!results.sunrise.equals("error"))
 						{
-							Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); //creates date from unix time (GMT)
+							Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); // creates date from unix time (GMT)
 							Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
 							sunriseCalendar.setTime(sunriseDate);
 							String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
 							String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
-							if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
+							if (sunriseCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; // adds '0' to begin of minutes
 							sunriseValue.setText(hours + ":" + minutes);
 						}
 						if (!results.sunset.equals("error"))
 						{
-							Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); //creates date from unix time (GMT)
+							Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); // creates date from unix time (GMT)
 							Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
 							sunsetCalendar.setTime(sunsetDate);
 							String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
 							String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
-							if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; //adds '0' to begin of minutes
+							if (sunsetCalendar.get(Calendar.MINUTE) < 10) minutes = "0" + minutes; // adds '0' to begin of minutes
 							sunsetValue.setText(hours + ":" + minutes);
 						}
 						
 						if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
 					}
 					
-					//write name of the city in file with last search
+					// write name of the city in file with last search
 					FileWriter fileWriter;
 					try 
 					{
@@ -555,21 +555,21 @@ public class WeatherApp extends JFrame implements ActionListener
 					
 					setVisibilityOfResults(true);
 			}
-			else if (status == 400 || status == 404) //invalid request
+			else if (status == 400 || status == 404) // invalid request
 			{
 				String error;
 				if (query.language.equals("en")) error = "Inavlid city name";
 				else error = "Nieprawid³owe miasto";
 				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
 			}
-			else if (status == 401 || status == 403) //authentication error
+			else if (status == 401 || status == 403) // authentication error
 			{
 				String error;
 				if (query.language.equals("en")) error = "Authentication error";
 				else error = "B³¹d autoryzacji";
 				JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
 			}
-			else //server error
+			else // server error
 			{
 				String error;
 				if (query.language.equals("en")) error = "Server error";
@@ -583,7 +583,7 @@ public class WeatherApp extends JFrame implements ActionListener
 	private Query getQuery()
 	{
 		String cityName = new String(city.getText());
-		String noSpacesCityName = cityName.replaceAll("\\s+", "%20"); //replaces spaces with hexadecimal ASCII code of space (to create URL properly)
+		String noSpacesCityName = cityName.replaceAll("\\s+", "%20"); // replaces spaces with hexadecimal ASCII code of space (to create URL properly)
 		Query query = new Query(noSpacesCityName, getUnits(), getLanguage());
 		return query;
 	}
