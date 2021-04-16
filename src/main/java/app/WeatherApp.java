@@ -31,10 +31,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class WeatherApp extends JFrame implements ActionListener {
 
-    public static void main(String[] args){
-        WeatherApp app = new WeatherApp();
-        app.setVisible(true);
-        app.pack();
+    public static void main(String[] args) {
+        new WeatherApp();
     }
 
     // declare visible components (used for sending a request)
@@ -60,289 +58,303 @@ public class WeatherApp extends JFrame implements ActionListener {
 
     WeatherApp() {
 
-        // set properties of the main frame
-        this.setResizable(false);
-        this.setTitle("Weather app");
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLocation(700, 450);
-        setLayout(new GridBagLayout());
-        prepareGUI();
+        if (!prepareGUI()) { // if something go wrong loading resources
+            JOptionPane.showMessageDialog(this, "Could not load resources", "Resources error", JOptionPane.ERROR_MESSAGE);
+            dispose();  // closes app
+        }
+        else {  // everything works
+            // set properties of the main frame
+            this.setResizable(false);
+            this.setTitle("Weather app");
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.setLocation(700, 450);
+
+            // resize window to fir the components
+            pack();
+            // show main window
+            setVisible(true);
+        }
     }
 
     /**
      * Initialize GUI components and add them to the main frame
+     *
      * @return false if could not load some of the resources or true in other case
      */
-    private boolean prepareGUI(){
-            // set spaces between components
-            GridBagConstraints constraints = new GridBagConstraints();
-            constraints.insets = new Insets(5, 3, 3, 5);
-            constraints.fill = GridBagConstraints.HORIZONTAL;
+    private boolean prepareGUI() {
 
-            // initialize components, set their properties and add them to the main frame
-            cityLabel = new JLabel("City:");
-            cityLabel.setFont(new Font("Arial", Font.PLAIN, 26));
-            constraints.gridwidth = 2;
-            constraints.gridx = 0;
-            constraints.gridy = 0;
-            add(cityLabel, constraints);
+        setLayout(new GridBagLayout());
 
-            city = new JTextField();
-            city.setFont(new Font("Arial", Font.PLAIN, 32));
-            city.setPreferredSize(new Dimension(250, 40));
-            constraints.gridheight = 1;
-            constraints.gridwidth = 3;
-            constraints.gridx = 0;
-            constraints.gridy = 1;
-            add(city, constraints);
+        // set spaces between components
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 3, 3, 5);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
 
-            units = new JLabel("Units:");
-            units.setFont(new Font("Arial", Font.PLAIN, 20));
-            constraints.gridwidth = 2;
-            constraints.gridx = 3;
-            constraints.gridy = 0;
-            constraints.fill = GridBagConstraints.CENTER;
-            add(units, constraints);
+        // initialize components, set their properties and add them to the main frame
 
-            metricUnits = new JRadioButton("Metric");
-            metricUnits.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.fill = GridBagConstraints.HORIZONTAL;
-            constraints.gridy = 1;
-            constraints.gridwidth = 1;
-            metricUnits.setSelected(true);
-            add(metricUnits, constraints);
+        cityLabel = new JLabel("City:");
+        cityLabel.setFont(new Font("Arial", Font.PLAIN, 26));
+        constraints.gridwidth = 2;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        add(cityLabel, constraints);
 
-            imperialUnits = new JRadioButton("Imperial");
-            imperialUnits.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 4;
-            constraints.gridwidth = 1;
-            add(imperialUnits, constraints);
+        city = new JTextField();
+        city.setFont(new Font("Arial", Font.PLAIN, 32));
+        city.setPreferredSize(new Dimension(250, 40));
+        constraints.gridheight = 1;
+        constraints.gridwidth = 3;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        add(city, constraints);
 
-            unitsGroup = new ButtonGroup();
-            unitsGroup.add(metricUnits);
-            unitsGroup.add(imperialUnits);
+        units = new JLabel("Units:");
+        units.setFont(new Font("Arial", Font.PLAIN, 20));
+        constraints.gridwidth = 2;
+        constraints.gridx = 3;
+        constraints.gridy = 0;
+        constraints.fill = GridBagConstraints.CENTER;
+        add(units, constraints);
 
-            language = new JLabel("Language:");
-            language.setFont(new Font("Arial", Font.PLAIN, 20));
-            constraints.gridwidth = 2;
-            constraints.gridx = 5;
-            constraints.gridy = 0;
-            constraints.fill = GridBagConstraints.CENTER;
-            add(language, constraints);
+        metricUnits = new JRadioButton("Metric");
+        metricUnits.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        metricUnits.setSelected(true);
+        add(metricUnits, constraints);
 
-            englishLanguage = new JRadioButton("English");
-            englishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridy = 1;
-            constraints.gridwidth = 1;
-            englishLanguage.setSelected(true);
-            add(englishLanguage, constraints);
+        imperialUnits = new JRadioButton("Imperial");
+        imperialUnits.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 4;
+        constraints.gridwidth = 1;
+        add(imperialUnits, constraints);
 
-            polishLanguage = new JRadioButton("Polish");
-            polishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.fill = GridBagConstraints.HORIZONTAL;
-            constraints.gridx = 6;
-            add(polishLanguage, constraints);
+        unitsGroup = new ButtonGroup();
+        unitsGroup.add(metricUnits);
+        unitsGroup.add(imperialUnits);
 
-            languageGroup = new ButtonGroup();
-            languageGroup.add(polishLanguage);
-            languageGroup.add(englishLanguage);
+        language = new JLabel("Language:");
+        language.setFont(new Font("Arial", Font.PLAIN, 20));
+        constraints.gridwidth = 2;
+        constraints.gridx = 5;
+        constraints.gridy = 0;
+        constraints.fill = GridBagConstraints.CENTER;
+        add(language, constraints);
 
-            constraints.gridx = 0;
-            constraints.gridy = 2;
-            constraints.gridheight = 2;
-            constraints.gridwidth = 1;
+        englishLanguage = new JRadioButton("English");
+        englishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        englishLanguage.setSelected(true);
+        add(englishLanguage, constraints);
 
-            // try to read empty icon from resources
-            try {
-                BufferedImage icon = ImageIO.read(new File("/empty.png"));
-                iconLabel = new JLabel(new ImageIcon(icon));
-                add(iconLabel, constraints);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Could not load resources.", "Resources error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
+        polishLanguage = new JRadioButton("Polish");
+        polishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 6;
+        add(polishLanguage, constraints);
 
-            constraints.gridx = 0;
-            constraints.gridy = 2;
-            constraints.gridheight = 2;
-            constraints.gridwidth = 1;
+        languageGroup = new ButtonGroup();
+        languageGroup.add(polishLanguage);
+        languageGroup.add(englishLanguage);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridheight = 2;
+        constraints.gridwidth = 1;
+
+        // try to read empty icon from resources
+        try {
+            BufferedImage icon = ImageIO.read(new File("/empty.png"));
+            iconLabel = new JLabel(new ImageIcon(icon));
+            add(iconLabel, constraints);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Could not load resources.", "Resources error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridheight = 2;
+        constraints.gridwidth = 1;
 
 
-            currentTemperatureValue = new JLabel();
-            currentTemperatureValue.setFont(new Font("Arial", Font.BOLD, 26));
-            constraints.anchor = GridBagConstraints.CENTER;
-            constraints.gridx = 1;
-            add(currentTemperatureValue, constraints);
+        currentTemperatureValue = new JLabel();
+        currentTemperatureValue.setFont(new Font("Arial", Font.BOLD, 26));
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.gridx = 1;
+        add(currentTemperatureValue, constraints);
 
-            searchButton = new JButton("Search");
-            searchButton.setFont(new Font("Arial", Font.BOLD, 32));
-            constraints.gridx = 3;
-            constraints.gridy = 3;
-            constraints.gridheight = 1;
-            constraints.gridwidth = 4;
-            add(searchButton, constraints);
+        searchButton = new JButton("Search");
+        searchButton.setFont(new Font("Arial", Font.BOLD, 32));
+        constraints.gridx = 3;
+        constraints.gridy = 3;
+        constraints.gridheight = 1;
+        constraints.gridwidth = 4;
+        add(searchButton, constraints);
 
-            description = new JTextField();
-            description.setEditable(false);
-            description.setFont(new Font("Arial", Font.PLAIN, 20));
-            constraints.gridx = 0;
-            constraints.gridy = 4;
-            constraints.gridwidth = 3;
-            add(description, constraints);
+        description = new JTextField();
+        description.setEditable(false);
+        description.setFont(new Font("Arial", Font.PLAIN, 20));
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        constraints.gridwidth = 3;
+        add(description, constraints);
 
-            reset = new JButton("Reset");
-            reset.setFont(new Font("Arial", Font.BOLD, 32));
-            constraints.gridx = 3;
-            constraints.gridwidth = 2;
-            add(reset, constraints);
+        reset = new JButton("Reset");
+        reset.setFont(new Font("Arial", Font.BOLD, 32));
+        constraints.gridx = 3;
+        constraints.gridwidth = 2;
+        add(reset, constraints);
 
-            lastSearch = new JButton("Last search");
-            lastSearch.setFont(new Font("Arial", Font.BOLD, 32));
-            constraints.gridx = 5;
-            constraints.gridwidth = 2;
-            lastSearch.setEnabled(false);
-            add(lastSearch, constraints);
+        lastSearch = new JButton("Last search");
+        lastSearch.setFont(new Font("Arial", Font.BOLD, 32));
+        constraints.gridx = 5;
+        constraints.gridwidth = 2;
+        lastSearch.setEnabled(false);
+        add(lastSearch, constraints);
 
-            minimalTemperatureLabel = new JLabel("Minimal temperature:");
-            minimalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridwidth = 1;
-            constraints.gridx = 0;
-            constraints.gridy = 5;
-            add(minimalTemperatureLabel, constraints);
+        minimalTemperatureLabel = new JLabel("Minimal temperature:");
+        minimalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridwidth = 1;
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        add(minimalTemperatureLabel, constraints);
 
-            minimalTemperatureValue = new JTextField();
-            minimalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            minimalTemperatureValue.setEditable(false);
-            constraints.gridx = 1;
-            add(minimalTemperatureValue, constraints);
+        minimalTemperatureValue = new JTextField();
+        minimalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        minimalTemperatureValue.setEditable(false);
+        constraints.gridx = 1;
+        add(minimalTemperatureValue, constraints);
 
-            maximalTemperatureLabel = new JLabel("Maximal temperature:");
-            maximalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 0;
-            constraints.gridy = 6;
-            add(maximalTemperatureLabel, constraints);
+        maximalTemperatureLabel = new JLabel("Maximal temperature:");
+        maximalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        add(maximalTemperatureLabel, constraints);
 
-            maximalTemperatureValue = new JTextField();
-            maximalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            maximalTemperatureValue.setEditable(false);
-            constraints.gridx = 1;
-            add(maximalTemperatureValue, constraints);
+        maximalTemperatureValue = new JTextField();
+        maximalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        maximalTemperatureValue.setEditable(false);
+        constraints.gridx = 1;
+        add(maximalTemperatureValue, constraints);
 
-            feelsLikeLabel = new JLabel("Feels like:");
-            feelsLikeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 0;
-            constraints.gridy = 7;
-            add(feelsLikeLabel, constraints);
+        feelsLikeLabel = new JLabel("Feels like:");
+        feelsLikeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 0;
+        constraints.gridy = 7;
+        add(feelsLikeLabel, constraints);
 
-            feelsLikeValue = new JTextField();
-            feelsLikeValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            feelsLikeValue.setEditable(false);
-            constraints.gridx = 1;
-            add(feelsLikeValue, constraints);
+        feelsLikeValue = new JTextField();
+        feelsLikeValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        feelsLikeValue.setEditable(false);
+        constraints.gridx = 1;
+        add(feelsLikeValue, constraints);
 
-            pressureLabel = new JLabel("Atmospheric pressure: ");
-            pressureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 0;
-            constraints.gridy = 8;
-            add(pressureLabel, constraints);
+        pressureLabel = new JLabel("Atmospheric pressure: ");
+        pressureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 0;
+        constraints.gridy = 8;
+        add(pressureLabel, constraints);
 
-            pressureValue = new JTextField();
-            pressureValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            pressureValue.setEditable(false);
-            constraints.gridx = 1;
-            add(pressureValue, constraints);
+        pressureValue = new JTextField();
+        pressureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        pressureValue.setEditable(false);
+        constraints.gridx = 1;
+        add(pressureValue, constraints);
 
-            humidityLabel = new JLabel("Humidity: ");
-            humidityLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 0;
-            constraints.gridy = 9;
-            add(humidityLabel, constraints);
+        humidityLabel = new JLabel("Humidity: ");
+        humidityLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 0;
+        constraints.gridy = 9;
+        add(humidityLabel, constraints);
 
-            humidityValue = new JTextField();
-            humidityValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            humidityValue.setEditable(false);
-            constraints.gridx = 1;
-            add(humidityValue, constraints);
+        humidityValue = new JTextField();
+        humidityValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        humidityValue.setEditable(false);
+        constraints.gridx = 1;
+        add(humidityValue, constraints);
 
-            wind = new JLabel("Wind:");
-            wind.setFont(new Font("Arial", Font.BOLD, 20));
-            constraints.gridx = 3;
-            constraints.gridy = 5;
-            add(wind, constraints);
+        wind = new JLabel("Wind:");
+        wind.setFont(new Font("Arial", Font.BOLD, 20));
+        constraints.gridx = 3;
+        constraints.gridy = 5;
+        add(wind, constraints);
 
-            windSpeedLabel = new JLabel("Speed:");
-            windSpeedLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridy = 6;
-            add(windSpeedLabel, constraints);
+        windSpeedLabel = new JLabel("Speed:");
+        windSpeedLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridy = 6;
+        add(windSpeedLabel, constraints);
 
-            windSpeedValue = new JTextField();
-            windSpeedValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            windSpeedValue.setEditable(false);
-            constraints.gridx = 4;
-            add(windSpeedValue, constraints);
+        windSpeedValue = new JTextField();
+        windSpeedValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        windSpeedValue.setEditable(false);
+        constraints.gridx = 4;
+        add(windSpeedValue, constraints);
 
-            windDirectionLabel = new JLabel("Direction:");
-            windDirectionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 3;
-            constraints.gridy = 7;
-            add(windDirectionLabel, constraints);
+        windDirectionLabel = new JLabel("Direction:");
+        windDirectionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 3;
+        constraints.gridy = 7;
+        add(windDirectionLabel, constraints);
 
-            windDirectionValue = new JTextField();
-            windDirectionValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            windDirectionValue.setEditable(false);
-            constraints.gridx = 4;
-            add(windDirectionValue, constraints);
+        windDirectionValue = new JTextField();
+        windDirectionValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        windDirectionValue.setEditable(false);
+        constraints.gridx = 4;
+        add(windDirectionValue, constraints);
 
-            sky = new JLabel("Sky:");
-            sky.setFont(new Font("Arial", Font.BOLD, 20));
-            constraints.gridx = 5;
-            constraints.gridy = 5;
-            add(sky, constraints);
+        sky = new JLabel("Sky:");
+        sky.setFont(new Font("Arial", Font.BOLD, 20));
+        constraints.gridx = 5;
+        constraints.gridy = 5;
+        add(sky, constraints);
 
-            sunriseLabel = new JLabel("Sunrise:");
-            sunriseLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridy = 6;
-            add(sunriseLabel, constraints);
+        sunriseLabel = new JLabel("Sunrise:");
+        sunriseLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridy = 6;
+        add(sunriseLabel, constraints);
 
-            sunriseValue = new JTextField();
-            sunriseValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            sunriseValue.setEditable(false);
-            constraints.gridx = 6;
-            add(sunriseValue, constraints);
+        sunriseValue = new JTextField();
+        sunriseValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        sunriseValue.setEditable(false);
+        constraints.gridx = 6;
+        add(sunriseValue, constraints);
 
-            sunsetLabel = new JLabel("Sunset:");
-            sunsetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 5;
-            constraints.gridy = 7;
-            add(sunsetLabel, constraints);
+        sunsetLabel = new JLabel("Sunset:");
+        sunsetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 5;
+        constraints.gridy = 7;
+        add(sunsetLabel, constraints);
 
-            sunsetValue = new JTextField();
-            sunsetValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            sunsetValue.setEditable(false);
-            constraints.gridx = 6;
-            add(sunsetValue, constraints);
+        sunsetValue = new JTextField();
+        sunsetValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        sunsetValue.setEditable(false);
+        constraints.gridx = 6;
+        add(sunsetValue, constraints);
 
-            overcastLabel = new JLabel("Overcast:");
-            overcastLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-            constraints.gridx = 5;
-            constraints.gridy = 8;
-            add(overcastLabel, constraints);
+        overcastLabel = new JLabel("Overcast:");
+        overcastLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        constraints.gridx = 5;
+        constraints.gridy = 8;
+        add(overcastLabel, constraints);
 
-            overcastValue = new JTextField();
-            overcastValue.setFont(new Font("Arial", Font.PLAIN, 16));
-            overcastValue.setEditable(false);
-            constraints.gridx = 6;
-            add(overcastValue, constraints);
+        overcastValue = new JTextField();
+        overcastValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        overcastValue.setEditable(false);
+        constraints.gridx = 6;
+        add(overcastValue, constraints);
 
-            // add actionListeners to objects
-            englishLanguage.addActionListener(this);
-            polishLanguage.addActionListener(this);
-            searchButton.addActionListener(this);
-            reset.addActionListener(this);
-            lastSearch.addActionListener(this);
+        // add actionListeners to objects
+        englishLanguage.addActionListener(this);
+        polishLanguage.addActionListener(this);
+        searchButton.addActionListener(this);
+        reset.addActionListener(this);
+        lastSearch.addActionListener(this);
 
-            // hide components that show results
-            setVisibilityOfResults(false);
+        // hide components that show results
+        setVisibilityOfResults(false);
 
 
         // set path to file with last searched city
