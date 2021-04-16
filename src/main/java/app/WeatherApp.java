@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 
-public class WeatherApp extends JFrame implements ActionListener {
+public class WeatherApp extends JFrame {
 
     public static void main(String[] args) {
         new WeatherApp();
@@ -39,9 +39,7 @@ public class WeatherApp extends JFrame implements ActionListener {
     private JLabel cityLabel, units, language, iconLabel;
     private JTextField city, description;
     private JRadioButton metricUnits, imperialUnits;
-    private ButtonGroup unitsGroup;
     private JRadioButton englishLanguage, polishLanguage;
-    private ButtonGroup languageGroup;
     private JButton searchButton, reset, lastSearch;
 
     // declare hidden components (used for showing results)
@@ -69,7 +67,7 @@ public class WeatherApp extends JFrame implements ActionListener {
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setLocation(300, 300);
 
-            // resize window to fir the components
+            // resize window to fit the components
             pack();
             // show main window
             setVisible(true);
@@ -130,7 +128,7 @@ public class WeatherApp extends JFrame implements ActionListener {
         constraints.gridwidth = 1;
         add(imperialUnits, constraints);
 
-        unitsGroup = new ButtonGroup();
+        ButtonGroup unitsGroup = new ButtonGroup();
         unitsGroup.add(metricUnits);
         unitsGroup.add(imperialUnits);
 
@@ -155,7 +153,7 @@ public class WeatherApp extends JFrame implements ActionListener {
         constraints.gridx = 6;
         add(polishLanguage, constraints);
 
-        languageGroup = new ButtonGroup();
+        ButtonGroup languageGroup = new ButtonGroup();
         languageGroup.add(polishLanguage);
         languageGroup.add(englishLanguage);
 
@@ -178,7 +176,6 @@ public class WeatherApp extends JFrame implements ActionListener {
         constraints.gridy = 2;
         constraints.gridheight = 2;
         constraints.gridwidth = 1;
-
 
         currentTemperatureValue = new JLabel();
         currentTemperatureValue.setFont(new Font("Arial", Font.BOLD, 26));
@@ -346,16 +343,18 @@ public class WeatherApp extends JFrame implements ActionListener {
         constraints.gridx = 6;
         add(overcastValue, constraints);
 
+        // create ActionListener
+        MainActionListener actionListener = new MainActionListener();
+
         // add actionListeners to objects
-        englishLanguage.addActionListener(this);
-        polishLanguage.addActionListener(this);
-        searchButton.addActionListener(this);
-        reset.addActionListener(this);
-        lastSearch.addActionListener(this);
+        englishLanguage.addActionListener(actionListener);
+        polishLanguage.addActionListener(actionListener);
+        searchButton.addActionListener(actionListener);
+        reset.addActionListener(actionListener);
+        lastSearch.addActionListener(actionListener);
 
         // hide components that show results
         setVisibilityOfResults(false);
-
 
         // set path to file with last searched city
         lastSearchFile = new File("../lastSearch.txt");
@@ -368,29 +367,31 @@ public class WeatherApp extends JFrame implements ActionListener {
                 if ((lastSearchCity = bufferedReader.readLine()) == null) lastSearch.setEnabled(false);
                 lastSearch.setEnabled(true);
             } catch (IOException e) {
-                // TODO show an error
+                return false;
             }
         }
 
-        return true;
-    }
+        return true; // everything has ben loaded correctly
+    }   // end of prepareGUI() method
 
-    // set events
-    public void actionPerformed(ActionEvent arg0) {
+    private class MainActionListener implements ActionListener{
+        // set events
+        public void actionPerformed(ActionEvent arg0) {
 
-        Object actionSource = arg0.getSource();
-        if (englishLanguage == actionSource) {
-            if (englishLanguage.isSelected()) setEnglishLanguage();
-        } else if (polishLanguage == actionSource) {
-            if (polishLanguage.isSelected()) setPolishLanguage();
-        } else if (searchButton == actionSource) search(getQuery());
+            Object actionSource = arg0.getSource();
+            if (englishLanguage == actionSource) {
+                if (englishLanguage.isSelected()) setEnglishLanguage();
+            } else if (polishLanguage == actionSource) {
+                if (polishLanguage.isSelected()) setPolishLanguage();
+            } else if (searchButton == actionSource) search(getQuery());
 
-        else if (reset == actionSource) resetApp();
+            else if (reset == actionSource) resetApp();
 
-        else if (lastSearch == actionSource) {
-            search(new Query(lastSearchCity, getUnits(), getLanguage()));
-            String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); // converts spaces in ASCII code to visible spaces
-            city.setText(cityWithSpaces);
+            else if (lastSearch == actionSource) {
+                search(new Query(lastSearchCity, getUnits(), getLanguage()));
+                String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); // converts spaces in ASCII code to visible spaces
+                city.setText(cityWithSpaces);
+            }
         }
     }
 
