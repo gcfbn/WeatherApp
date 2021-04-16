@@ -380,9 +380,9 @@ public class WeatherApp extends JFrame {
 
             Object actionSource = arg0.getSource();
             if (englishLanguage == actionSource) {
-                if (englishLanguage.isSelected()) setEnglishLanguage();
+                setLanguage(Language.ENGLISH);
             } else if (polishLanguage == actionSource) {
-                if (polishLanguage.isSelected()) setPolishLanguage();
+                setLanguage(Language.POLISH);
             } else if (searchButton == actionSource) search(getQuery());
 
             else if (reset == actionSource) resetApp();
@@ -395,60 +395,34 @@ public class WeatherApp extends JFrame {
         }
     }
 
-    private void setEnglishLanguage() {
-        cityLabel.setText("City:");
-        units.setText("Units:");
-        metricUnits.setText("Metric");
-        imperialUnits.setText("Imperial");
-        language.setText("Language:");
-        englishLanguage.setText("English");
-        polishLanguage.setText("Polish");
-        searchButton.setText("Search");
-        reset.setText("Reset");
-        lastSearch.setText("Last search");
-        minimalTemperatureLabel.setText("Minimal temperature:");
-        maximalTemperatureLabel.setText("Maximal temperature:");
-        feelsLikeLabel.setText("Feels like: ");
-        pressureLabel.setText("Atmospheric pressure:");
-        humidityLabel.setText("Humidity:");
-        wind.setText("Wind:");
-        windSpeedLabel.setText("Speed:");
-        windDirectionLabel.setText("Direction:");
-        sky.setText("Sky:");
-        sunriseLabel.setText("Sunrise:");
-        sunsetLabel.setText("Sunset:");
-        overcastLabel.setText("Overcast:");
-        this.pack(); // resizes the window
-    }
-
-    private void setPolishLanguage() {
-        cityLabel.setText("Miasto:");
-        units.setText("Jednostki:");
-        metricUnits.setText("Metryczne");
-        imperialUnits.setText("Imperialne");
-        language.setText("Jêzyk:");
-        englishLanguage.setText("Angielski");
-        polishLanguage.setText("Polski");
-        searchButton.setText("Szukaj");
-        reset.setText("Reset");
-        lastSearch.setText("Ostatania lokalizacja");
-        minimalTemperatureLabel.setText("Minimalna temperatura: ");
-        maximalTemperatureLabel.setText("Maksymalna temperatura:");
-        feelsLikeLabel.setText("Odczuwalna temperatura:");
-        pressureLabel.setText("Ciœnienie:");
-        humidityLabel.setText("Wilgotnoœæ:");
-        wind.setText("Wiatr:");
-        windSpeedLabel.setText("Prêdkoœæ:");
-        windDirectionLabel.setText("Kierunek:");
-        sky.setText("Niebo:");
-        sunriseLabel.setText("Wschód s³oñca:");
-        sunsetLabel.setText("Zachód s³oñca:");
-        overcastLabel.setText("Zachmurzenie:");
-        this.pack(); // resizes the window
+    private void setLanguage(Language l){
+        cityLabel.setText(l.cityLabel);
+        units.setText(l.units);
+        metricUnits.setText(l.metricUnits);
+        imperialUnits.setText(l.imperialUnits);
+        language.setText(l.language);
+        englishLanguage.setText(l.englishLanguage);
+        polishLanguage.setText(l.polishLangauge);
+        searchButton.setText(l.searchButton);
+        reset.setText(l.reset);
+        lastSearch.setText(l.lastSearch);
+        minimalTemperatureLabel.setText(l.minimalTemperatureLabel);
+        maximalTemperatureLabel.setText(l.maximalTemperatureLabel);
+        feelsLikeLabel.setText(l.feelsLikeLabel);
+        pressureLabel.setText(l.pressureLabel);
+        humidityLabel.setText(l.humidityLabel);
+        wind.setText(l.wind);
+        windSpeedLabel.setText(l.windSpeedLabel);
+        windDirectionLabel.setText(l.windDirectionLabel);
+        sky.setText(l.sky);
+        sunriseLabel.setText(l.sunriseLabel);
+        sunsetLabel.setText(l.sunsetLabel);
+        overcastLabel.setText(l.overcastLabel);
+        pack(); // resize window
     }
 
     private void resetApp() {
-        setEnglishLanguage();
+        setLanguage(Language.ENGLISH);
         englishLanguage.setSelected(true);
         polishLanguage.setSelected(false);
         city.setText("");
@@ -501,13 +475,13 @@ public class WeatherApp extends JFrame {
                 // checks if apiCaller returned value that means there is no such data in RESTapi
                 {
                     if (results.currentTemperature != -273.15)
-                        currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
+                        currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " ï¿½" + temperatureUnit);
                     if (results.minimalTemperature != -273.15)
-                        minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
+                        minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " ï¿½" + temperatureUnit);
                     if (results.maximalTemperature != -273.15)
-                        maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
+                        maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " ï¿½" + temperatureUnit);
                     if (results.feelsLike != -273.15)
-                        feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
+                        feelsLikeValue.setText(Double.toString(results.feelsLike) + " ï¿½" + temperatureUnit);
 
                     if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
                     if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
@@ -584,17 +558,17 @@ public class WeatherApp extends JFrame {
             } else if (status == 400 || status == 404) { // invalid request
                 String error;
                 if (query.language.equals("en")) error = "Inavlid city name";
-                else error = "Nieprawid³owe miasto";
+                else error = "Nieprawidï¿½owe miasto";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             } else if (status == 401 || status == 403) { // authentication error
                 String error;
                 if (query.language.equals("en")) error = "Authentication error";
-                else error = "B³¹d autoryzacji";
+                else error = "Bï¿½ï¿½d autoryzacji";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             } else { // server error
                 String error;
                 if (query.language.equals("en")) error = "Server error";
-                else error = "B³¹d serwera";
+                else error = "Bï¿½ï¿½d serwera";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             }
         } catch (UnirestException e) {
