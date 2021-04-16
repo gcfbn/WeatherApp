@@ -58,7 +58,7 @@ public class WeatherApp extends JFrame implements ActionListener {
 
     WeatherApp() {
 
-        if (!prepareGUI()) { // if something go wrong loading resources
+        if (!prepareGUI()) { // if something went wrong loading resources
             JOptionPane.showMessageDialog(this, "Could not load resources", "Resources error", JOptionPane.ERROR_MESSAGE);
             dispose();  // closes app
         }
@@ -67,7 +67,7 @@ public class WeatherApp extends JFrame implements ActionListener {
             this.setResizable(false);
             this.setTitle("Weather app");
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            this.setLocation(700, 450);
+            this.setLocation(300, 300);
 
             // resize window to fir the components
             pack();
@@ -166,11 +166,11 @@ public class WeatherApp extends JFrame implements ActionListener {
 
         // try to read empty icon from resources
         try {
-            BufferedImage icon = ImageIO.read(new File("/empty.png"));
+            BufferedImage icon = ImageIO.read(new File("src/main/resources/empty.png"));
             iconLabel = new JLabel(new ImageIcon(icon));
             add(iconLabel, constraints);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Could not load resources.", "Resources error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("TUTAJ");
             return false;
         }
 
