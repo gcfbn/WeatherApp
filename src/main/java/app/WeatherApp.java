@@ -39,22 +39,22 @@ public class WeatherApp extends JFrame implements ActionListener
 	}
 	
 	//declare visible components (used for sending a request)
-	private JLabel cityLabel, units, language, iconLabel;
-	private	JTextField city, description;
-	private	JRadioButton metricUnits, imperialUnits;
-	private	ButtonGroup unitsGroup;
-	private	JRadioButton englishLanguage, polishLanguage;
-	private	ButtonGroup languageGroup;
-	private	BufferedImage icon;
-	private	JButton searchButton, reset, lastSearch;
+	private final JLabel cityLabel, units, language, iconLabel;
+	private final JTextField city, description;
+	private final JRadioButton metricUnits, imperialUnits;
+	private	final ButtonGroup unitsGroup;
+	private	final JRadioButton englishLanguage, polishLanguage;
+	private	final ButtonGroup languageGroup;
+	private	final BufferedImage icon;
+	private	final JButton searchButton, reset, lastSearch;
 			
 	//declare hidden components (used for showing results)
-	private	JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
-	private	JTextField minimalTemperatureValue, maximalTemperatureValue, feelsLikeValue, pressureValue, humidityValue;
-	private	JLabel wind, windSpeedLabel, windDirectionLabel;
-	private	JTextField windSpeedValue, windDirectionValue;
-	private	JLabel sky, sunriseLabel, sunsetLabel, overcastLabel;
-	private	JTextField sunriseValue, sunsetValue, overcastValue;
+	private	final JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
+	private	final JTextField minimalTemperatureValue, maximalTemperatureValue, feelsLikeValue, pressureValue, humidityValue;
+	private	final JLabel wind, windSpeedLabel, windDirectionLabel;
+	private	final JTextField windSpeedValue, windDirectionValue;
+	private	final JLabel sky, sunriseLabel, sunsetLabel, overcastLabel;
+	private	final JTextField sunriseValue, sunsetValue, overcastValue;
 	
 	//variables used for loading last search
 	public File lastSearchFile;
@@ -68,267 +68,269 @@ public class WeatherApp extends JFrame implements ActionListener
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocation(700, 450);
 		setLayout(new GridBagLayout());
-		
-		//set spaces between components
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.insets = new Insets(5, 3, 3, 5);
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		
-		//initialize components, set their properties and add them to the main frame
-		cityLabel = new JLabel("City:");
-		cityLabel.setFont(new Font("Arial", Font.PLAIN, 26));
-		constraints.gridwidth = 2;
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		add(cityLabel, constraints);
-		
-		city = new JTextField();
-		city.setFont(new Font("Arial", Font.PLAIN, 32));
-		city.setPreferredSize(new Dimension(250, 40));
-		constraints.gridheight = 1;
-		constraints.gridwidth = 3;
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		add(city, constraints);
-		
-		units = new JLabel("Units:");
-		units.setFont(new Font("Arial", Font.PLAIN, 20));
-		constraints.gridwidth = 2;
-		constraints.gridx = 3;
-		constraints.gridy = 0;
-		constraints.fill = GridBagConstraints.CENTER;
-		add(units, constraints);
-		
-		metricUnits = new JRadioButton("Metric");
-		metricUnits.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		metricUnits.setSelected(true);
-		add(metricUnits, constraints);
-		
-		imperialUnits = new JRadioButton("Imperial");
-		imperialUnits.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 4;
-		constraints.gridwidth = 1;
-		add(imperialUnits, constraints);
-		
-		unitsGroup = new ButtonGroup();
-		unitsGroup.add(metricUnits);
-		unitsGroup.add(imperialUnits);
-		
-		language = new JLabel("Language:");
-		language.setFont(new Font("Arial", Font.PLAIN, 20));
-		constraints.gridwidth = 2;
-		constraints.gridx = 5;
-		constraints.gridy = 0;
-		constraints.fill = GridBagConstraints.CENTER;
-		add(language, constraints);
-		
-		englishLanguage = new JRadioButton("English");
-		englishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		englishLanguage.setSelected(true);
-		add(englishLanguage, constraints);
-		
-		polishLanguage = new JRadioButton("Polish");
-		polishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.gridx = 6;
-		add(polishLanguage, constraints);
-		
-		languageGroup = new ButtonGroup();
-		languageGroup.add(polishLanguage);
-		languageGroup.add(englishLanguage);
-		
-		icon = ImageIO.read(WeatherApp.class.getResourceAsStream("/empty.png"));
-		iconLabel = new JLabel(new ImageIcon(icon));
-		constraints.gridx = 0;
-		constraints.gridy = 2;
-		constraints.gridheight = 2;
-		constraints.gridwidth = 1;
-		add(iconLabel, constraints);
-		
-		currentTemperatureValue = new JLabel();
-		currentTemperatureValue.setFont(new Font ("Arial", Font.BOLD, 26));
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.gridx = 1;
-		add(currentTemperatureValue, constraints);
-		
-		searchButton = new JButton("Search");
-		searchButton.setFont(new Font("Arial", Font.BOLD, 32));
-		constraints.gridx = 3;
-		constraints.gridy = 3;
-		constraints.gridheight = 1;
-		constraints.gridwidth = 4;
-		add(searchButton, constraints);
-		
-		description = new JTextField();
-		description.setEditable(false);
-		description.setFont(new Font("Arial", Font.PLAIN, 20));
-		constraints.gridx = 0;
-		constraints.gridy = 4;
-		constraints.gridwidth = 3;
-		add(description, constraints);
-		
-		reset = new JButton("Reset");
-		reset.setFont(new Font("Arial", Font.BOLD, 32));
-		constraints.gridx = 3;
-		constraints.gridwidth = 2;
-		add(reset, constraints);
-		
-		lastSearch = new JButton("Last search");
-		lastSearch.setFont(new Font("Arial", Font.BOLD, 32));
-		constraints.gridx = 5;
-		constraints.gridwidth = 2;
-		add(lastSearch, constraints);
-		
-		minimalTemperatureLabel = new JLabel("Minimal temperature:");
-		minimalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridwidth = 1;
-		constraints.gridx = 0;
-		constraints.gridy = 5;
-		add(minimalTemperatureLabel, constraints);
-		
-		minimalTemperatureValue = new JTextField();
-		minimalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		minimalTemperatureValue.setEditable(false);
-		constraints.gridx = 1;
-		add(minimalTemperatureValue, constraints);
-		
-		maximalTemperatureLabel = new JLabel("Maximal temperature:");
-		maximalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 0;
-		constraints.gridy = 6;
-		add(maximalTemperatureLabel, constraints);
-		
-		maximalTemperatureValue = new JTextField();
-		maximalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		maximalTemperatureValue.setEditable(false);
-		constraints.gridx = 1;
-		add(maximalTemperatureValue, constraints);
-		
-		feelsLikeLabel = new JLabel("Feels like:");
-		feelsLikeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 0;
-		constraints.gridy = 7;
-		add(feelsLikeLabel, constraints);
-		
-		feelsLikeValue = new JTextField();
-		feelsLikeValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		feelsLikeValue.setEditable(false);
-		constraints.gridx = 1;
-		add(feelsLikeValue, constraints);
-		
-		pressureLabel = new JLabel("Atmospheric pressure: ");
-		pressureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 0;
-		constraints.gridy = 8;
-		add(pressureLabel, constraints);
-		
-		pressureValue = new JTextField();
-		pressureValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		pressureValue.setEditable(false);
-		constraints.gridx = 1;
-		add(pressureValue, constraints);
-		
-		humidityLabel = new JLabel("Humidity: ");
-		humidityLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 0;
-		constraints.gridy = 9;
-		add(humidityLabel, constraints);
-		
-		humidityValue = new JTextField();
-		humidityValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		humidityValue.setEditable(false);
-		constraints.gridx = 1;
-		add(humidityValue, constraints);
-		
-		wind = new JLabel("Wind:");
-		wind.setFont(new Font("Arial", Font.BOLD, 20));
-		constraints.gridx = 3;
-		constraints.gridy = 5;
-		add(wind, constraints);
-		
-		windSpeedLabel = new JLabel("Speed:");
-		windSpeedLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridy = 6;
-		add(windSpeedLabel, constraints);
-		
-		windSpeedValue = new JTextField();
-		windSpeedValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		windSpeedValue.setEditable(false);
-		constraints.gridx = 4;
-		add(windSpeedValue, constraints);
-		
-		windDirectionLabel = new JLabel("Direction:");
-		windDirectionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 3;
-		constraints.gridy = 7;
-		add(windDirectionLabel, constraints);
-		
-		windDirectionValue = new JTextField();
-		windDirectionValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		windDirectionValue.setEditable(false);
-		constraints.gridx = 4;
-		add(windDirectionValue, constraints);
-		
-		sky = new JLabel("Sky:");
-		sky.setFont(new Font("Arial", Font.BOLD, 20));
-		constraints.gridx = 5;
-		constraints.gridy = 5;
-		add(sky, constraints);
-		
-		sunriseLabel = new JLabel("Sunrise:");
-		sunriseLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridy = 6;
-		add(sunriseLabel, constraints);
-		
-		sunriseValue = new JTextField();
-		sunriseValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		sunriseValue.setEditable(false);
-		constraints.gridx = 6;
-		add(sunriseValue, constraints);
-		
-		sunsetLabel = new JLabel("Sunset:");
-		sunsetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 5;
-		constraints.gridy = 7;
-		add(sunsetLabel, constraints);
-		
-		sunsetValue = new JTextField();
-		sunsetValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		sunsetValue.setEditable(false);
-		constraints.gridx = 6;
-		add(sunsetValue, constraints);
-		
-		overcastLabel = new JLabel("Overcast:");
-		overcastLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		constraints.gridx = 5;
-		constraints.gridy = 8;
-		add(overcastLabel, constraints);
-		
-		overcastValue = new JTextField();
-		overcastValue.setFont(new Font("Arial", Font.PLAIN, 16));
-		overcastValue.setEditable(false);
-		constraints.gridx = 6;
-		add(overcastValue, constraints);
-		
-		//add actionListeners to objects
-		englishLanguage.addActionListener(this);
-		polishLanguage.addActionListener(this);
-		searchButton.addActionListener(this);
-		reset.addActionListener(this);
-		lastSearch.addActionListener(this);
-		
-		//hide components that show results
-		setVisibilityOfResults(false);
+
+		{
+			//set spaces between components
+			GridBagConstraints constraints = new GridBagConstraints();
+			constraints.insets = new Insets(5, 3, 3, 5);
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+
+			//initialize components, set their properties and add them to the main frame
+			cityLabel = new JLabel("City:");
+			cityLabel.setFont(new Font("Arial", Font.PLAIN, 26));
+			constraints.gridwidth = 2;
+			constraints.gridx = 0;
+			constraints.gridy = 0;
+			add(cityLabel, constraints);
+
+			city = new JTextField();
+			city.setFont(new Font("Arial", Font.PLAIN, 32));
+			city.setPreferredSize(new Dimension(250, 40));
+			constraints.gridheight = 1;
+			constraints.gridwidth = 3;
+			constraints.gridx = 0;
+			constraints.gridy = 1;
+			add(city, constraints);
+
+			units = new JLabel("Units:");
+			units.setFont(new Font("Arial", Font.PLAIN, 20));
+			constraints.gridwidth = 2;
+			constraints.gridx = 3;
+			constraints.gridy = 0;
+			constraints.fill = GridBagConstraints.CENTER;
+			add(units, constraints);
+
+			metricUnits = new JRadioButton("Metric");
+			metricUnits.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			constraints.gridy = 1;
+			constraints.gridwidth = 1;
+			metricUnits.setSelected(true);
+			add(metricUnits, constraints);
+
+			imperialUnits = new JRadioButton("Imperial");
+			imperialUnits.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 4;
+			constraints.gridwidth = 1;
+			add(imperialUnits, constraints);
+
+			unitsGroup = new ButtonGroup();
+			unitsGroup.add(metricUnits);
+			unitsGroup.add(imperialUnits);
+
+			language = new JLabel("Language:");
+			language.setFont(new Font("Arial", Font.PLAIN, 20));
+			constraints.gridwidth = 2;
+			constraints.gridx = 5;
+			constraints.gridy = 0;
+			constraints.fill = GridBagConstraints.CENTER;
+			add(language, constraints);
+
+			englishLanguage = new JRadioButton("English");
+			englishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridy = 1;
+			constraints.gridwidth = 1;
+			englishLanguage.setSelected(true);
+			add(englishLanguage, constraints);
+
+			polishLanguage = new JRadioButton("Polish");
+			polishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			constraints.gridx = 6;
+			add(polishLanguage, constraints);
+
+			languageGroup = new ButtonGroup();
+			languageGroup.add(polishLanguage);
+			languageGroup.add(englishLanguage);
+
+			icon = ImageIO.read(WeatherApp.class.getResourceAsStream("/empty.png"));
+			iconLabel = new JLabel(new ImageIcon(icon));
+			constraints.gridx = 0;
+			constraints.gridy = 2;
+			constraints.gridheight = 2;
+			constraints.gridwidth = 1;
+			add(iconLabel, constraints);
+
+			currentTemperatureValue = new JLabel();
+			currentTemperatureValue.setFont(new Font("Arial", Font.BOLD, 26));
+			constraints.anchor = GridBagConstraints.CENTER;
+			constraints.gridx = 1;
+			add(currentTemperatureValue, constraints);
+
+			searchButton = new JButton("Search");
+			searchButton.setFont(new Font("Arial", Font.BOLD, 32));
+			constraints.gridx = 3;
+			constraints.gridy = 3;
+			constraints.gridheight = 1;
+			constraints.gridwidth = 4;
+			add(searchButton, constraints);
+
+			description = new JTextField();
+			description.setEditable(false);
+			description.setFont(new Font("Arial", Font.PLAIN, 20));
+			constraints.gridx = 0;
+			constraints.gridy = 4;
+			constraints.gridwidth = 3;
+			add(description, constraints);
+
+			reset = new JButton("Reset");
+			reset.setFont(new Font("Arial", Font.BOLD, 32));
+			constraints.gridx = 3;
+			constraints.gridwidth = 2;
+			add(reset, constraints);
+
+			lastSearch = new JButton("Last search");
+			lastSearch.setFont(new Font("Arial", Font.BOLD, 32));
+			constraints.gridx = 5;
+			constraints.gridwidth = 2;
+			add(lastSearch, constraints);
+
+			minimalTemperatureLabel = new JLabel("Minimal temperature:");
+			minimalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridwidth = 1;
+			constraints.gridx = 0;
+			constraints.gridy = 5;
+			add(minimalTemperatureLabel, constraints);
+
+			minimalTemperatureValue = new JTextField();
+			minimalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			minimalTemperatureValue.setEditable(false);
+			constraints.gridx = 1;
+			add(minimalTemperatureValue, constraints);
+
+			maximalTemperatureLabel = new JLabel("Maximal temperature:");
+			maximalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 0;
+			constraints.gridy = 6;
+			add(maximalTemperatureLabel, constraints);
+
+			maximalTemperatureValue = new JTextField();
+			maximalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			maximalTemperatureValue.setEditable(false);
+			constraints.gridx = 1;
+			add(maximalTemperatureValue, constraints);
+
+			feelsLikeLabel = new JLabel("Feels like:");
+			feelsLikeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 0;
+			constraints.gridy = 7;
+			add(feelsLikeLabel, constraints);
+
+			feelsLikeValue = new JTextField();
+			feelsLikeValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			feelsLikeValue.setEditable(false);
+			constraints.gridx = 1;
+			add(feelsLikeValue, constraints);
+
+			pressureLabel = new JLabel("Atmospheric pressure: ");
+			pressureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 0;
+			constraints.gridy = 8;
+			add(pressureLabel, constraints);
+
+			pressureValue = new JTextField();
+			pressureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			pressureValue.setEditable(false);
+			constraints.gridx = 1;
+			add(pressureValue, constraints);
+
+			humidityLabel = new JLabel("Humidity: ");
+			humidityLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 0;
+			constraints.gridy = 9;
+			add(humidityLabel, constraints);
+
+			humidityValue = new JTextField();
+			humidityValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			humidityValue.setEditable(false);
+			constraints.gridx = 1;
+			add(humidityValue, constraints);
+
+			wind = new JLabel("Wind:");
+			wind.setFont(new Font("Arial", Font.BOLD, 20));
+			constraints.gridx = 3;
+			constraints.gridy = 5;
+			add(wind, constraints);
+
+			windSpeedLabel = new JLabel("Speed:");
+			windSpeedLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridy = 6;
+			add(windSpeedLabel, constraints);
+
+			windSpeedValue = new JTextField();
+			windSpeedValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			windSpeedValue.setEditable(false);
+			constraints.gridx = 4;
+			add(windSpeedValue, constraints);
+
+			windDirectionLabel = new JLabel("Direction:");
+			windDirectionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 3;
+			constraints.gridy = 7;
+			add(windDirectionLabel, constraints);
+
+			windDirectionValue = new JTextField();
+			windDirectionValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			windDirectionValue.setEditable(false);
+			constraints.gridx = 4;
+			add(windDirectionValue, constraints);
+
+			sky = new JLabel("Sky:");
+			sky.setFont(new Font("Arial", Font.BOLD, 20));
+			constraints.gridx = 5;
+			constraints.gridy = 5;
+			add(sky, constraints);
+
+			sunriseLabel = new JLabel("Sunrise:");
+			sunriseLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridy = 6;
+			add(sunriseLabel, constraints);
+
+			sunriseValue = new JTextField();
+			sunriseValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			sunriseValue.setEditable(false);
+			constraints.gridx = 6;
+			add(sunriseValue, constraints);
+
+			sunsetLabel = new JLabel("Sunset:");
+			sunsetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 5;
+			constraints.gridy = 7;
+			add(sunsetLabel, constraints);
+
+			sunsetValue = new JTextField();
+			sunsetValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			sunsetValue.setEditable(false);
+			constraints.gridx = 6;
+			add(sunsetValue, constraints);
+
+			overcastLabel = new JLabel("Overcast:");
+			overcastLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+			constraints.gridx = 5;
+			constraints.gridy = 8;
+			add(overcastLabel, constraints);
+
+			overcastValue = new JTextField();
+			overcastValue.setFont(new Font("Arial", Font.PLAIN, 16));
+			overcastValue.setEditable(false);
+			constraints.gridx = 6;
+			add(overcastValue, constraints);
+
+			//add actionListeners to objects
+			englishLanguage.addActionListener(this);
+			polishLanguage.addActionListener(this);
+			searchButton.addActionListener(this);
+			reset.addActionListener(this);
+			lastSearch.addActionListener(this);
+
+			//hide components that show results
+			setVisibilityOfResults(false);
+		}
 		
 		//set path to file with last searched city
 		lastSearchFile = new File("../lastSearch.txt");
 		lastSearchFile.createNewFile();
-		
+
 		//check if the file exists
 		if (lastSearchFile.exists())
 		{
