@@ -70,12 +70,12 @@ public class WeatherApp extends JFrame implements ActionListener
 		setLayout(new GridBagLayout());
 
 		{
-			//set spaces between components
+			// set spaces between components
 			GridBagConstraints constraints = new GridBagConstraints();
 			constraints.insets = new Insets(5, 3, 3, 5);
 			constraints.fill = GridBagConstraints.HORIZONTAL;
 
-			//initialize components, set their properties and add them to the main frame
+			// initialize components, set their properties and add them to the main frame
 			cityLabel = new JLabel("City:");
 			cityLabel.setFont(new Font("Arial", Font.PLAIN, 26));
 			constraints.gridwidth = 2;
@@ -316,14 +316,14 @@ public class WeatherApp extends JFrame implements ActionListener
 			constraints.gridx = 6;
 			add(overcastValue, constraints);
 
-			//add actionListeners to objects
+			// add actionListeners to objects
 			englishLanguage.addActionListener(this);
 			polishLanguage.addActionListener(this);
 			searchButton.addActionListener(this);
 			reset.addActionListener(this);
 			lastSearch.addActionListener(this);
 
-			//hide components that show results
+			// hide components that show results
 			setVisibilityOfResults(false);
 		}
 		
