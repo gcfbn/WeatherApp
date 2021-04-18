@@ -564,7 +564,9 @@ public class WeatherApp extends JFrame {
                 sunsetValue.setText(hours + ":" + minutes);
             } else sunriseValue.setText("");
 
-            overcastValue.setText(results.getOvercast() + "%");
+            if (!results.getOvercast().equals(""))
+                overcastValue.setText(results.getOvercast() + "%");
+            else overcastValue.setText("");
 
             // write name of the city in file with last search
             FileWriter fileWriter;
