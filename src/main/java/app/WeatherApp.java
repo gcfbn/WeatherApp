@@ -13,10 +13,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
@@ -28,8 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-
-import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class WeatherApp extends JFrame {
 
