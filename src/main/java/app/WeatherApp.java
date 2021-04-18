@@ -534,7 +534,9 @@ public class WeatherApp extends JFrame {
 
             // try to read icon from file
             try {
-                BufferedImage currentIcon = ImageIO.read(new File("/" + results.getIcon() + ".png"));
+                System.out.println(results.getIcon());
+                BufferedImage currentIcon =
+                        ImageIO.read(new File("src/main/resources/" + results.getIcon() + ".png"));
                 iconLabel.setIcon(new ImageIcon(currentIcon));
                 iconLabel.setVisible(true);
             } catch (IOException e) {
