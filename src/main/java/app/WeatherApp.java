@@ -83,7 +83,6 @@ public class WeatherApp extends JFrame {
 
         setLayout(new GridBagLayout());
 
-        //TODO create font(s)
         //TODO divide everything into classes
         //TODO code duplicates
         //TODO repair weird things like String x = new String()
@@ -94,17 +93,25 @@ public class WeatherApp extends JFrame {
         constraints.insets = new Insets(5, 3, 3, 5);
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
+        // create fonts
+        Font font16 = new Font("Arial", Font.PLAIN, 16);
+        Font font20 = new Font("Arial", Font.PLAIN, 20);
+        Font font26 = new Font("Arial", Font.PLAIN, 26);
+        Font font32 = new Font("Arial", Font.PLAIN, 32);
+        Font fontBold20 = new Font("Arial", Font.PLAIN, 20);
+        Font fontBold32 = new Font("Arial", Font.BOLD, 32);
+
         // initialize components, set their properties and add them to the main frame
 
         cityLabel = new JLabel("City:");
-        cityLabel.setFont(new Font("Arial", Font.PLAIN, 26));
+        cityLabel.setFont(font26);
         constraints.gridwidth = 2;
         constraints.gridx = 0;
         constraints.gridy = 0;
         add(cityLabel, constraints);
 
         city = new JTextField();
-        city.setFont(new Font("Arial", Font.PLAIN, 32));
+        city.setFont(font32);
         city.setPreferredSize(new Dimension(250, 40));
         constraints.gridheight = 1;
         constraints.gridwidth = 3;
@@ -113,7 +120,7 @@ public class WeatherApp extends JFrame {
         add(city, constraints);
 
         units = new JLabel("Units:");
-        units.setFont(new Font("Arial", Font.PLAIN, 20));
+        units.setFont(font20);
         constraints.gridwidth = 2;
         constraints.gridx = 3;
         constraints.gridy = 0;
@@ -121,7 +128,7 @@ public class WeatherApp extends JFrame {
         add(units, constraints);
 
         metricUnits = new JRadioButton("Metric");
-        metricUnits.setFont(new Font("Arial", Font.PLAIN, 16));
+        metricUnits.setFont(font16);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
@@ -129,7 +136,7 @@ public class WeatherApp extends JFrame {
         add(metricUnits, constraints);
 
         imperialUnits = new JRadioButton("Imperial");
-        imperialUnits.setFont(new Font("Arial", Font.PLAIN, 16));
+        imperialUnits.setFont(font16);
         constraints.gridx = 4;
         constraints.gridwidth = 1;
         add(imperialUnits, constraints);
@@ -139,7 +146,7 @@ public class WeatherApp extends JFrame {
         unitsGroup.add(imperialUnits);
 
         language = new JLabel("Language:");
-        language.setFont(new Font("Arial", Font.PLAIN, 20));
+        language.setFont(font20);
         constraints.gridwidth = 2;
         constraints.gridx = 5;
         constraints.gridy = 0;
@@ -147,14 +154,14 @@ public class WeatherApp extends JFrame {
         add(language, constraints);
 
         englishLanguage = new JRadioButton("English");
-        englishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
+        englishLanguage.setFont(font16);
         constraints.gridy = 1;
         constraints.gridwidth = 1;
         englishLanguage.setSelected(true);
         add(englishLanguage, constraints);
 
         polishLanguage = new JRadioButton("Polish");
-        polishLanguage.setFont(new Font("Arial", Font.PLAIN, 16));
+        polishLanguage.setFont(font16);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 6;
         add(polishLanguage, constraints);
@@ -184,13 +191,13 @@ public class WeatherApp extends JFrame {
         constraints.gridwidth = 1;
 
         currentTemperatureValue = new JLabel();
-        currentTemperatureValue.setFont(new Font("Arial", Font.BOLD, 26));
+        currentTemperatureValue.setFont(font26);
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.gridx = 1;
         add(currentTemperatureValue, constraints);
 
         searchButton = new JButton("Search");
-        searchButton.setFont(new Font("Arial", Font.BOLD, 32));
+        searchButton.setFont(font32);
         constraints.gridx = 3;
         constraints.gridy = 3;
         constraints.gridheight = 1;
@@ -199,152 +206,152 @@ public class WeatherApp extends JFrame {
 
         description = new JTextField();
         description.setEditable(false);
-        description.setFont(new Font("Arial", Font.PLAIN, 20));
+        description.setFont(font20);
         constraints.gridx = 0;
         constraints.gridy = 4;
         constraints.gridwidth = 3;
         add(description, constraints);
 
         reset = new JButton("Reset");
-        reset.setFont(new Font("Arial", Font.BOLD, 32));
+        reset.setFont(fontBold32);
         constraints.gridx = 3;
         constraints.gridwidth = 2;
         add(reset, constraints);
 
         lastSearch = new JButton("Last search");
-        lastSearch.setFont(new Font("Arial", Font.BOLD, 32));
+        lastSearch.setFont(fontBold32);
         constraints.gridx = 5;
         constraints.gridwidth = 2;
         lastSearch.setEnabled(false);
         add(lastSearch, constraints);
 
         minimalTemperatureLabel = new JLabel("Minimal temperature:");
-        minimalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        minimalTemperatureLabel.setFont(font16);
         constraints.gridwidth = 1;
         constraints.gridx = 0;
         constraints.gridy = 5;
         add(minimalTemperatureLabel, constraints);
 
         minimalTemperatureValue = new JTextField();
-        minimalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        minimalTemperatureValue.setFont(font16);
         minimalTemperatureValue.setEditable(false);
         constraints.gridx = 1;
         add(minimalTemperatureValue, constraints);
 
         maximalTemperatureLabel = new JLabel("Maximal temperature:");
-        maximalTemperatureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        maximalTemperatureLabel.setFont(font16);
         constraints.gridx = 0;
         constraints.gridy = 6;
         add(maximalTemperatureLabel, constraints);
 
         maximalTemperatureValue = new JTextField();
-        maximalTemperatureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        maximalTemperatureValue.setFont(font16);
         maximalTemperatureValue.setEditable(false);
         constraints.gridx = 1;
         add(maximalTemperatureValue, constraints);
 
         feelsLikeLabel = new JLabel("Feels like:");
-        feelsLikeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        feelsLikeLabel.setFont(font16);
         constraints.gridx = 0;
         constraints.gridy = 7;
         add(feelsLikeLabel, constraints);
 
         feelsLikeValue = new JTextField();
-        feelsLikeValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        feelsLikeValue.setFont(font16);
         feelsLikeValue.setEditable(false);
         constraints.gridx = 1;
         add(feelsLikeValue, constraints);
 
         pressureLabel = new JLabel("Atmospheric pressure: ");
-        pressureLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        pressureLabel.setFont(font16);
         constraints.gridx = 0;
         constraints.gridy = 8;
         add(pressureLabel, constraints);
 
         pressureValue = new JTextField();
-        pressureValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        pressureValue.setFont(font16);
         pressureValue.setEditable(false);
         constraints.gridx = 1;
         add(pressureValue, constraints);
 
         humidityLabel = new JLabel("Humidity: ");
-        humidityLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        humidityLabel.setFont(font16);
         constraints.gridx = 0;
         constraints.gridy = 9;
         add(humidityLabel, constraints);
 
         humidityValue = new JTextField();
-        humidityValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        humidityValue.setFont(font16);
         humidityValue.setEditable(false);
         constraints.gridx = 1;
         add(humidityValue, constraints);
 
         wind = new JLabel("Wind:");
-        wind.setFont(new Font("Arial", Font.BOLD, 20));
+        wind.setFont(fontBold20);
         constraints.gridx = 3;
         constraints.gridy = 5;
         add(wind, constraints);
 
         windSpeedLabel = new JLabel("Speed:");
-        windSpeedLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        windSpeedLabel.setFont(font16);
         constraints.gridy = 6;
         add(windSpeedLabel, constraints);
 
         windSpeedValue = new JTextField();
-        windSpeedValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        windSpeedValue.setFont(font16);
         windSpeedValue.setEditable(false);
         constraints.gridx = 4;
         add(windSpeedValue, constraints);
 
         windDirectionLabel = new JLabel("Direction:");
-        windDirectionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        windDirectionLabel.setFont(font16);
         constraints.gridx = 3;
         constraints.gridy = 7;
         add(windDirectionLabel, constraints);
 
         windDirectionValue = new JTextField();
-        windDirectionValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        windDirectionValue.setFont(font16);
         windDirectionValue.setEditable(false);
         constraints.gridx = 4;
         add(windDirectionValue, constraints);
 
         sky = new JLabel("Sky:");
-        sky.setFont(new Font("Arial", Font.BOLD, 20));
+        sky.setFont(fontBold20);
         constraints.gridx = 5;
         constraints.gridy = 5;
         add(sky, constraints);
 
         sunriseLabel = new JLabel("Sunrise:");
-        sunriseLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        sunriseLabel.setFont(font16);
         constraints.gridy = 6;
         add(sunriseLabel, constraints);
 
         sunriseValue = new JTextField();
-        sunriseValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        sunriseValue.setFont(font16);
         sunriseValue.setEditable(false);
         constraints.gridx = 6;
         add(sunriseValue, constraints);
 
         sunsetLabel = new JLabel("Sunset:");
-        sunsetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        sunsetLabel.setFont(font16);
         constraints.gridx = 5;
         constraints.gridy = 7;
         add(sunsetLabel, constraints);
 
         sunsetValue = new JTextField();
-        sunsetValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        sunsetValue.setFont(font16);
         sunsetValue.setEditable(false);
         constraints.gridx = 6;
         add(sunsetValue, constraints);
 
         overcastLabel = new JLabel("Overcast:");
-        overcastLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        overcastLabel.setFont(font16);
         constraints.gridx = 5;
         constraints.gridy = 8;
         add(overcastLabel, constraints);
 
         overcastValue = new JTextField();
-        overcastValue.setFont(new Font("Arial", Font.PLAIN, 16));
+        overcastValue.setFont(font16);
         overcastValue.setEditable(false);
         constraints.gridx = 6;
         add(overcastValue, constraints);
