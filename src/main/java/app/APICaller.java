@@ -43,8 +43,6 @@ public class APICaller {
                 results.setMaximalTemperature(Double.toString(temperatureObject.getDouble("temp_max")));
             if (temperatureObject.has("humidity"))
                 results.setHumidity(Integer.toString(temperatureObject.getInt("humidity")));
-            System.out.println(temperatureObject.getInt("humidity"));
-            System.out.println(results.getHumidity());
             if (temperatureObject.has("pressure"))
                 results.setPressure(Double.toString(temperatureObject.getDouble("pressure")));
             if (temperatureObject.has("feels_like"))
@@ -118,7 +116,6 @@ public class APICaller {
         URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";  // API key
         URL = URL + "&units=" + ((query.getUnits() == Units.METRIC) ? "metric" : "imperial");
         URL = URL + "&lang=" + ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
-        System.out.println(URL);
         return URL;
     }
 }
