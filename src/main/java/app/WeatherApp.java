@@ -488,16 +488,16 @@ public class WeatherApp extends JFrame {
                 // checks if apiCaller returned value that means there is no such data in RESTapi
                 {
                     if (results.currentTemperature != -273.15)
-                        currentTemperatureValue.setText(Double.toString(results.currentTemperature) + " °" + temperatureUnit);
+                        currentTemperatureValue.setText(results.currentTemperature + " °" + temperatureUnit);
                     if (results.minimalTemperature != -273.15)
-                        minimalTemperatureValue.setText(Double.toString(results.minimalTemperature) + " °" + temperatureUnit);
+                        minimalTemperatureValue.setText(results.minimalTemperature + " °" + temperatureUnit);
                     if (results.maximalTemperature != -273.15)
-                        maximalTemperatureValue.setText(Double.toString(results.maximalTemperature) + " °" + temperatureUnit);
+                        maximalTemperatureValue.setText(results.maximalTemperature + " °" + temperatureUnit);
                     if (results.feelsLike != -273.15)
-                        feelsLikeValue.setText(Double.toString(results.feelsLike) + " °" + temperatureUnit);
+                        feelsLikeValue.setText(results.feelsLike + " °" + temperatureUnit);
 
-                    if (results.humidity != -1) humidityValue.setText(Integer.toString(results.humidity) + "%");
-                    if (results.pressure != -1) pressureValue.setText(Integer.toString(results.pressure) + " hPa");
+                    if (results.humidity != -1) humidityValue.setText(results.humidity + "%");
+                    if (results.pressure != -1) pressureValue.setText(results.pressure + " hPa");
 
                     if (!results.description.equals("error")) description.setText(results.description);
                     if (!results.icon.equals("error")) {
@@ -515,9 +515,9 @@ public class WeatherApp extends JFrame {
                     if (query.units.equals("metric")) windSpeedUnit = "m/s";
                     else windSpeedUnit = "mph";
                     if (results.windSpeed != -1.0)
-                        windSpeedValue.setText(Double.toString(results.windSpeed) + " " + windSpeedUnit);
+                        windSpeedValue.setText(results.windSpeed + " " + windSpeedUnit);
 
-                    // sets the direction [N/NE/E/SE/S/SW/W/NW] based on degrees
+                    // sets the direction [N/NE/E/SE/S/SW/W/NW] based on wind angle
                     String windCompass = "";
                     if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30))
                         windCompass = "N";
@@ -552,7 +552,7 @@ public class WeatherApp extends JFrame {
                         sunsetValue.setText(hours + ":" + minutes);
                     }
 
-                    if (results.overcast != -1) overcastValue.setText(Integer.toString(results.overcast) + "%");
+                    if (results.overcast != -1) overcastValue.setText(results.overcast + "%");
                 }
 
                 // write name of the city in file with last search
@@ -590,10 +590,9 @@ public class WeatherApp extends JFrame {
     }
 
     private Query getQuery() {
-        String cityName = new String(city.getText());
+        String cityName = city.getText();
         String noSpacesCityName = cityName.replaceAll("\\s+", "%20"); // replaces spaces with hexadecimal ASCII code of space (to create URL properly)
-        Query query = new Query(noSpacesCityName, getUnits(), getLanguage());
-        return query;
+        return new Query(noSpacesCityName, getUnits(), getLanguage());
     }
 
     private String getLanguage() {
