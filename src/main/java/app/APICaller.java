@@ -8,15 +8,23 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
+import javax.swing.*;
+
 public class APICaller {
 
-    public Results getResults(Query query) throws UnirestException {
+    public Results getResults(Query query) {
 
         // create URL from query
         String URL = getURL(query);
 
+        HttpResponse<JsonNode> response = null;
+
         // get results as JSON
-        HttpResponse<JsonNode> response = Unirest.get(URL).asJson();
+        try{
+            response = Unirest.get(URL).asJson();
+        } catch (UnirestException e) {
+            return null;
+        }
 
         // get JSONObject from response
         JSONObject resultsObject = new JSONObject(response.getBody().toString());
@@ -83,9 +91,15 @@ public class APICaller {
         return results;
     }
 
-    public int getStatus(Query query) throws UnirestException {
+    public int getStatus(Query query){
         String URL = getURL(query);
-        HttpResponse<JsonNode> response = Unirest.get(URL).asJson();
+
+        HttpResponse<JsonNode> response = null;
+        try{
+            response = Unirest.get(URL).asJson();
+        } catch (UnirestException e) {
+            return 900;
+        }
         return response.getStatus();
     }
 

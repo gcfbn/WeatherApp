@@ -87,7 +87,7 @@ public class WeatherApp extends JFrame {
         //TODO code duplicates
         //TODO MVC?
         //TODO units to an Enum
-        //TODO .txt file to .obj
+        //TODO .txt file to .obj (does not make sense)
 
         // set spaces between components
         GridBagConstraints constraints = new GridBagConstraints();
@@ -480,7 +480,27 @@ public class WeatherApp extends JFrame {
         try {
             // checks if query is correct
             int status = apiCaller.getStatus(query);
-            if (status == 200) {// query is correct
+
+            // show error if status is not equal 200
+            if (status != 200) {
+
+                String error;
+
+                if (status == 400 || status == 404) {   // invalid request
+                    error = (query.getLanguage() == Language.ENGLISH) ? "Invalid city name!" : "Nieprawidłowe miasto!";
+                } else if (status == 401 || status == 403) {    // authentication error
+                    error = (query.getLanguage() == Language.ENGLISH) ? "Authentication error!" : "Błąd autoryzacji!";
+                } else if (status == 900) {  // UnirestException, my own code
+                    error = (query.getLanguage() == Language.ENGLISH) ? "Unirest error!" : "Wystąpił problem z Unirest!";
+                } else { // server error 500/501
+                    error = (query.getLanguage() == Language.ENGLISH) ? "Server error!" : "Błąd serwera!";
+                }
+
+                JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            // query is correct
+            else {
 
                 Results results = apiCaller.getResults(query);
 
@@ -488,7 +508,7 @@ public class WeatherApp extends JFrame {
                 if (query.getUnits().equals("metric")) temperatureUnit = "C";
                 else temperatureUnit = "F";
 
-                // checks if apiCaller returned value that means there is no such data in RESTapi
+                // set values from results
                 {
                     currentTemperatureValue.setText(results.getCurrentTemperature() + " °" + temperatureUnit);
                     minimalTemperatureValue.setText(results.getMinimalTemperature() + " °" + temperatureUnit);
@@ -506,7 +526,7 @@ public class WeatherApp extends JFrame {
                         iconLabel.setVisible(true);
                     } catch (IOException e) {
                         JOptionPane.showMessageDialog(this, "Could not load resource file!",
-                                "Resource error!", JOptionPane.ERROR_MESSAGE);
+                                "Resource error", JOptionPane.ERROR_MESSAGE);
                     }
 
                     String windSpeedUnit;
@@ -557,22 +577,8 @@ public class WeatherApp extends JFrame {
                 }
 
                 setVisibilityOfResults(true);
-            } else if (status == 400 || status == 404) { // invalid request
-                String error;
-                if (query.getLanguage() == Language.ENGLISH) error = "Inavlid city name";
-                else error = "Nieprawidłowe miasto";
-                JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-            } else if (status == 401 || status == 403) { // authentication error
-                String error;
-                if (query.getLanguage() == Language.ENGLISH) error = "Authentication error";
-                else error = "Błąd autoryzacji";
-                JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-            } else { // server error 5xx
-                String error;
-                if (query.getLanguage() == Language.ENGLISH) error = "Server error";
-                else error = "Błąd serwera";
-                JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             }
+
         } catch (UnirestException e) {
             e.printStackTrace();
         }
