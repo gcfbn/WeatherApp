@@ -195,7 +195,7 @@ public class WeatherApp extends JFrame {
         add(currentTemperatureValue, constraints);
 
         searchButton = new JButton("Search");
-        searchButton.setFont(font32);
+        searchButton.setFont(fontBold32);
         constraints.gridx = 3;
         constraints.gridy = 3;
         constraints.gridheight = 1;
@@ -534,7 +534,6 @@ public class WeatherApp extends JFrame {
 
             // try to read icon from file
             try {
-                System.out.println(results.getIcon());
                 BufferedImage currentIcon =
                         ImageIO.read(new File("src/main/resources/" + results.getIcon() + ".png"));
                 iconLabel.setIcon(new ImageIcon(currentIcon));
