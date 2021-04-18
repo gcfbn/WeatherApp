@@ -10,12 +10,12 @@ import kong.unirest.json.JSONObject;
 
 public class APICaller {
 
-    public Results call(Query query) throws UnirestException {
+    public Results getResults(Query query) throws UnirestException {
 
-        String URL = getURL(query);
-        HttpResponse<JsonNode> response = Unirest.get(URL).asJson();
+        String URL = getURL(query); // create URL from query
+        HttpResponse<JsonNode> response = Unirest.get(URL).asJson(); // get results as JSON
 
-        JSONObject resultsObject = new JSONObject(response.getBody().toString());
+        JSONObject resultsObject = new JSONObject(response.getBody().toString()); // get JSONObject from response
 
         Results results = new Results();
 
@@ -62,7 +62,7 @@ public class APICaller {
 
         // icon & description
         // "weather" key in returned JSON file is an array
-        // weather with index 0 is the prime weather and it will be shown
+        // first element of this array will be displayed
         if (resultsObject.has("weather")) {
             JSONArray iconArray = (JSONArray) resultsObject.get("weather");
             JSONObject iconObject = (JSONObject) iconArray.get(0);
@@ -83,7 +83,7 @@ public class APICaller {
     private String getURL(Query query) {
         String URL = "http://api.openweathermap.org/data/2.5/weather";
         URL = URL + "?q=" + query.getCity();
-        URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";
+        URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";  // API key
         URL = URL + "&units=" + query.getUnits();
         URL = URL + "&lang=" + ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
         return URL;

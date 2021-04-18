@@ -476,9 +476,9 @@ public class WeatherApp extends JFrame {
         try {
             // checks if query is correct
             int status = apiCaller.getStatus(query);
-            if (status == 200) // query is correct
-            {
-                Results results = apiCaller.call(query);
+            if (status == 200) {// query is correct
+
+                Results results = apiCaller.getResults(query);
 
                 String temperatureUnit;
                 if (query.getUnits().equals("metric")) temperatureUnit = "C";
@@ -577,7 +577,7 @@ public class WeatherApp extends JFrame {
                 if (query.getLanguage() == Language.ENGLISH) error = "Authentication error";
                 else error = "Błąd autoryzacji";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
-            } else { // server error
+            } else { // server error 5xx
                 String error;
                 if (query.getLanguage() == Language.ENGLISH) error = "Server error";
                 else error = "Błąd serwera";
