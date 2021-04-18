@@ -180,7 +180,6 @@ public class WeatherApp extends JFrame {
             iconLabel = new JLabel(new ImageIcon(icon));
             add(iconLabel, constraints);
         } catch (IOException e) {
-            System.out.println("TUTAJ");
             return false;
         }
 
