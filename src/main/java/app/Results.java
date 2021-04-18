@@ -3,7 +3,7 @@ package app;
 public class Results {
 
     // FIELDS
-    private String icon = "", currentTemperature = "", description = "", minimalTemperature = "", maximalTemperature = "",
+    private String icon = "", currentTemperature = "", description = "", minimumTemperature = "", maximumTemperature = "",
             feelsLike = "", pressure = "", humidity = "", windDirection = "", windSpeed = "", overcast = "";
     private long sunrise, sunset;
 
@@ -31,20 +31,20 @@ public class Results {
         this.description = description;
     }
 
-    public String getMinimalTemperature() {
-        return minimalTemperature;
+    public String getMinimumTemperature() {
+        return minimumTemperature;
     }
 
-    public void setMinimalTemperature(String minimalTemperature) {
-        this.minimalTemperature = minimalTemperature;
+    public void setMinimumTemperature(String minimumTemperature) {
+        this.minimumTemperature = minimumTemperature;
     }
 
-    public String getMaximalTemperature() {
-        return maximalTemperature;
+    public String getMaximumTemperature() {
+        return maximumTemperature;
     }
 
-    public void setMaximalTemperature(String maximalTemperature) {
-        this.maximalTemperature = maximalTemperature;
+    public void setMaximumTemperature(String maximumTemperature) {
+        this.maximumTemperature = maximumTemperature;
     }
 
     public String getFeelsLike() {

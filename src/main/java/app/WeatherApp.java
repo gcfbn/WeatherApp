@@ -359,7 +359,7 @@ public class WeatherApp extends JFrame {
         lastSearch.addActionListener(actionListener);
 
         // hide components that show results
-        setVisibilityOfResults(false);
+        setResultsVisibility(false);
 
         // set path to file with last searched city
         lastSearchFile = new File("lastSearch.txt");
@@ -434,10 +434,10 @@ public class WeatherApp extends JFrame {
         polishLanguage.setSelected(false);
         city.setText("");
         description.setText("");
-        setVisibilityOfResults(false);
+        setResultsVisibility(false);
     }
 
-    private void setVisibilityOfResults(boolean bool) {
+    private void setResultsVisibility(boolean bool) {
         iconLabel.setVisible(bool);
         currentTemperatureValue.setVisible(bool);
         minimalTemperatureLabel.setVisible(bool);
@@ -504,12 +504,12 @@ public class WeatherApp extends JFrame {
                 currentTemperatureValue.setText(results.getCurrentTemperature() + " °" + temperatureUnit);
             else currentTemperatureValue.setText("");
 
-            if (!results.getMinimalTemperature().equals(""))
-                minimalTemperatureValue.setText(results.getMinimalTemperature() + " °" + temperatureUnit);
+            if (!results.getMinimumTemperature().equals(""))
+                minimalTemperatureValue.setText(results.getMinimumTemperature() + " °" + temperatureUnit);
             else minimalTemperatureValue.setText("");
 
-            if (!results.getMaximalTemperature().equals(""))
-                maximalTemperatureValue.setText(results.getMaximalTemperature() + " °" + temperatureUnit);
+            if (!results.getMaximumTemperature().equals(""))
+                maximalTemperatureValue.setText(results.getMaximumTemperature() + " °" + temperatureUnit);
             else maximalTemperatureValue.setText("");
 
             if (!results.getFeelsLike().equals(""))
@@ -580,7 +580,7 @@ public class WeatherApp extends JFrame {
                 e.printStackTrace();
             }
 
-            setVisibilityOfResults(true);
+            setResultsVisibility(true);
         }
     }
 

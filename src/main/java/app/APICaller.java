@@ -38,9 +38,9 @@ public class APICaller {
             if (temperatureObject.has("temp"))
                 results.setCurrentTemperature(Double.toString(temperatureObject.getDouble("temp")));
             if (temperatureObject.has("temp_min"))
-                results.setMinimalTemperature(Double.toString(temperatureObject.getDouble("temp_min")));
+                results.setMinimumTemperature(Double.toString(temperatureObject.getDouble("temp_min")));
             if (temperatureObject.has("temp_max"))
-                results.setMaximalTemperature(Double.toString(temperatureObject.getDouble("temp_max")));
+                results.setMaximumTemperature(Double.toString(temperatureObject.getDouble("temp_max")));
             if (temperatureObject.has("humidity"))
                 results.setHumidity(Integer.toString(temperatureObject.getInt("humidity")));
             if (temperatureObject.has("pressure"))
