@@ -2,10 +2,11 @@ package app;
 
 public class Query {
 
-    private final String city, units;
+    private final String city;
+    private final Units units;
     private final Language language;
 
-    Query(String city, String units, Language language) {
+    Query(String city, Units units, Language language) {
         this.city = city;
         this.units = units;
         this.language = language;
@@ -15,7 +16,7 @@ public class Query {
         return city;
     }
 
-    public String getUnits() {
+    public Units getUnits() {
         return units;
     }
 

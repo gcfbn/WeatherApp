@@ -505,7 +505,7 @@ public class WeatherApp extends JFrame {
                 Results results = apiCaller.getResults(query);
 
                 String temperatureUnit;
-                if (query.getUnits().equals("metric")) temperatureUnit = "C";
+                if (query.getUnits() == Units.METRIC) temperatureUnit = "C";
                 else temperatureUnit = "F";
 
                 // set values from results
@@ -530,7 +530,7 @@ public class WeatherApp extends JFrame {
                     }
 
                     String windSpeedUnit;
-                    if (query.getUnits().equals("metric")) windSpeedUnit = "m/s";
+                    if (query.getUnits() == Units.METRIC) windSpeedUnit = "m/s";
                     else windSpeedUnit = "mph";
                     windSpeedValue.setText(results.getWindSpeed() + " " + windSpeedUnit);
 
@@ -596,8 +596,8 @@ public class WeatherApp extends JFrame {
         else return Language.POLISH;
     }
 
-    private String getUnits() {
-        if (metricUnits.isSelected()) return "metric";
-        else return "imperial";
+    private Units getUnits() {
+        if (metricUnits.isSelected()) return Units.METRIC;
+        else return Units.IMPERIAL;
     }
 }

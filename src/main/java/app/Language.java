@@ -13,7 +13,7 @@ public enum Language {
             "Angielski", "Polski", "Szukaj", "Reset",
             "Ostatnie wyszukiwanie", "Temperatura minimalna:",
             "Temperatura maksymalna:", "Temperatura odczuwalna:", "Ciśnienie:",
-            "Wilgotność:","Wiatr:", "Prędkość", "Kierunek", "Niebo:",
+            "Wilgotność:", "Wiatr:", "Prędkość", "Kierunek", "Niebo:",
             "Wschód słońca", "Zachód słońca:", "Zachmurzenie:");
 
     public final String cityLabel, units, metricUnits, imperialUnits, language, englishLanguage, polishLangauge,
