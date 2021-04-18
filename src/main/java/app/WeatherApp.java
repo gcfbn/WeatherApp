@@ -86,6 +86,8 @@ public class WeatherApp extends JFrame {
         //TODO divide everything into classes
         //TODO code duplicates
         //TODO MVC?
+        //TODO units to an Enum
+        //TODO .txt file to .obj
 
         // set spaces between components
         GridBagConstraints constraints = new GridBagConstraints();

@@ -12,11 +12,16 @@ public class APICaller {
 
     public Results getResults(Query query) throws UnirestException {
 
-        String URL = getURL(query); // create URL from query
-        HttpResponse<JsonNode> response = Unirest.get(URL).asJson(); // get results as JSON
+        // create URL from query
+        String URL = getURL(query);
 
-        JSONObject resultsObject = new JSONObject(response.getBody().toString()); // get JSONObject from response
+        // get results as JSON
+        HttpResponse<JsonNode> response = Unirest.get(URL).asJson();
 
+        // get JSONObject from response
+        JSONObject resultsObject = new JSONObject(response.getBody().toString());
+
+        // create empty Results object
         Results results = new Results();
 
         // get data from JSONObject
