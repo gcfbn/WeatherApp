@@ -2,14 +2,9 @@ package app;
 
 public class Results {
 
-    private String icon;
-    private double currentTemperature;
-    private String description;
-    private double minimalTemperature, maximalTemperature, feelsLike;
-    private int pressure, humidity, windDirection;
-    private double windSpeed;
-    private String sunrise, sunset;
-    private int overcast;
+    private String icon = "", currentTemperature = "", description = "", minimalTemperature = "", maximalTemperature = "",
+            feelsLike = "", pressure = "", humidity = "", windDirection = "", windSpeed = "", sunrise = "", sunset = "",
+            overcast = "";
 
     @Override
     public String toString() {
@@ -25,11 +20,11 @@ public class Results {
         this.icon = icon;
     }
 
-    public double getCurrentTemperature() {
+    public String getCurrentTemperature() {
         return currentTemperature;
     }
 
-    public void setCurrentTemperature(double currentTemperature) {
+    public void setCurrentTemperature(String currentTemperature) {
         this.currentTemperature = currentTemperature;
     }
 
@@ -41,59 +36,59 @@ public class Results {
         this.description = description;
     }
 
-    public double getMinimalTemperature() {
+    public String getMinimalTemperature() {
         return minimalTemperature;
     }
 
-    public void setMinimalTemperature(double minimalTemperature) {
+    public void setMinimalTemperature(String minimalTemperature) {
         this.minimalTemperature = minimalTemperature;
     }
 
-    public double getMaximalTemperature() {
+    public String getMaximalTemperature() {
         return maximalTemperature;
     }
 
-    public void setMaximalTemperature(double maximalTemperature) {
+    public void setMaximalTemperature(String maximalTemperature) {
         this.maximalTemperature = maximalTemperature;
     }
 
-    public double getFeelsLike() {
+    public String getFeelsLike() {
         return feelsLike;
     }
 
-    public void setFeelsLike(double feelsLike) {
+    public void setFeelsLike(String feelsLike) {
         this.feelsLike = feelsLike;
     }
 
-    public int getPressure() {
+    public String getPressure() {
         return pressure;
     }
 
-    public void setPressure(int pressure) {
+    public void setPressure(String pressure) {
         this.pressure = pressure;
     }
 
-    public int getHumidity() {
+    public String getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(int humidity) {
+    public void setHumidity(String humidity) {
         this.humidity = humidity;
     }
 
-    public int getWindDirection() {
+    public String getWindDirection() {
         return windDirection;
     }
 
-    public void setWindDirection(int windDirection) {
+    public void setWindDirection(String windDirection) {
         this.windDirection = windDirection;
     }
 
-    public double getWindSpeed() {
+    public String getWindSpeed() {
         return windSpeed;
     }
 
-    public void setWindSpeed(double windSpeed) {
+    public void setWindSpeed(String windSpeed) {
         this.windSpeed = windSpeed;
     }
 
@@ -113,11 +108,11 @@ public class Results {
         this.sunset = sunset;
     }
 
-    public int getOvercast() {
+    public String getOvercast() {
         return overcast;
     }
 
-    public void setOvercast(int overcast) {
+    public void setOvercast(String overcast) {
         this.overcast = overcast;
     }
 }

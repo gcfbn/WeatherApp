@@ -43,7 +43,8 @@ public class WeatherApp extends JFrame {
     private JButton searchButton, reset, lastSearch;
 
     // declare hidden components (used for showing results)
-    private JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel, pressureLabel, humidityLabel;
+    private JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel,
+            pressureLabel, humidityLabel;
     private JTextField minimalTemperatureValue, maximalTemperatureValue, feelsLikeValue, pressureValue, humidityValue;
     private JLabel wind, windSpeedLabel, windDirectionLabel;
     private JTextField windSpeedValue, windDirectionValue;
@@ -59,8 +60,7 @@ public class WeatherApp extends JFrame {
         if (!prepareGUI()) { // if something went wrong loading resources
             JOptionPane.showMessageDialog(this, "Could not load resources", "Resources error", JOptionPane.ERROR_MESSAGE);
             dispose();  // close app
-        }
-        else {  // everything works
+        } else {  // everything works
             // set properties of the main frame
             this.setResizable(false);
             this.setTitle("Weather app");
@@ -386,7 +386,7 @@ public class WeatherApp extends JFrame {
         return true; // everything has ben loaded correctly
     }   // end of prepareGUI() method
 
-    private class MainActionListener implements ActionListener{
+    private class MainActionListener implements ActionListener {
         // set events
         public void actionPerformed(ActionEvent arg0) {
 
@@ -395,19 +395,21 @@ public class WeatherApp extends JFrame {
                 setLanguage(Language.ENGLISH);
             } else if (polishLanguage == actionSource) {
                 setLanguage(Language.POLISH);
-            } else if (searchButton == actionSource) search(getQuery());
+            } else if (searchButton == actionSource)
+                search(getQuery());
 
             else if (reset == actionSource) resetApp();
 
             else if (lastSearch == actionSource) {
                 search(new Query(lastSearchCity, getUnits(), getLanguage()));
-                String cityWithSpaces = lastSearchCity.replaceAll("%20", " "); // converts spaces in ASCII code to visible spaces
+                String cityWithSpaces =
+                        lastSearchCity.replaceAll("%20", " "); // converts spaces in ASCII code to visible spaces
                 city.setText(cityWithSpaces);
             }
         }
     }
 
-    private void setLanguage(Language l){
+    private void setLanguage(Language l) {
         cityLabel.setText(l.cityLabel);
         units.setText(l.units);
         metricUnits.setText(l.metricUnits);
@@ -486,51 +488,36 @@ public class WeatherApp extends JFrame {
 
                 // checks if apiCaller returned value that means there is no such data in RESTapi
                 {
-                    if (results.currentTemperature != -273.15)
-                        currentTemperatureValue.setText(results.currentTemperature + " °" + temperatureUnit);
-                    if (results.minimalTemperature != -273.15)
-                        minimalTemperatureValue.setText(results.minimalTemperature + " °" + temperatureUnit);
-                    if (results.maximalTemperature != -273.15)
-                        maximalTemperatureValue.setText(results.maximalTemperature + " °" + temperatureUnit);
-                    if (results.feelsLike != -273.15)
-                        feelsLikeValue.setText(results.feelsLike + " °" + temperatureUnit);
+                    currentTemperatureValue.setText(results.getCurrentTemperature() + " °" + temperatureUnit);
+                    minimalTemperatureValue.setText(results.getMinimalTemperature() + " °" + temperatureUnit);
+                    maximalTemperatureValue.setText(results.getMaximalTemperature() + " °" + temperatureUnit);
+                    feelsLikeValue.setText(results.getFeelsLike() + " °" + temperatureUnit);
+                    humidityValue.setText(results.getHumidity() + "%");
+                    pressureValue.setText(results.getPressure() + " hPa");
 
-                    if (results.humidity != -1) humidityValue.setText(results.humidity + "%");
-                    if (results.pressure != -1) pressureValue.setText(results.pressure + " hPa");
+                    description.setText(results.getDescription());
 
-                    if (!results.description.equals("error")) description.setText(results.description);
-                    if (!results.icon.equals("error")) {
-                        try {
-                            // read icon file and show it in GUI
-                            BufferedImage currentIcon = ImageIO.read(WeatherApp.class.getResourceAsStream("/" + results.icon + ".png"));
-                            iconLabel.setIcon(new ImageIcon(currentIcon));
-                            iconLabel.setVisible(true);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    // try to read icon from file
+                    try {
+                        BufferedImage currentIcon = ImageIO.read(new File("/" + results.getIcon() + ".png"));
+                        iconLabel.setIcon(new ImageIcon(currentIcon));
+                        iconLabel.setVisible(true);
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(this, "Could not load resource file!",
+                                "Resource error!", JOptionPane.ERROR_MESSAGE);
                     }
 
                     String windSpeedUnit;
                     if (query.getUnits().equals("metric")) windSpeedUnit = "m/s";
                     else windSpeedUnit = "mph";
-                    if (results.windSpeed != -1.0)
-                        windSpeedValue.setText(results.windSpeed + " " + windSpeedUnit);
+                    windSpeedValue.setText(results.getWindSpeed() + " " + windSpeedUnit);
 
-                    // sets the direction [N/NE/E/SE/S/SW/W/NW] based on wind angle
-                    String windCompass = "";
-                    if ((results.windDirection >= 330 && results.windDirection < 360) || (results.windDirection >= 0 && results.windDirection < 30))
-                        windCompass = "N";
-                    else if (results.windDirection >= 30 && results.windDirection < 60) windCompass = "NE";
-                    else if (results.windDirection >= 60 && results.windDirection < 120) windCompass = "E";
-                    else if (results.windDirection >= 120 && results.windDirection < 150) windCompass = "SE";
-                    else if (results.windDirection >= 150 && results.windDirection < 210) windCompass = "S";
-                    else if (results.windDirection >= 210 && results.windDirection < 240) windCompass = "SW";
-                    else if (results.windDirection >= 240 && results.windDirection < 300) windCompass = "W";
-                    else if (results.windDirection >= 300 && results.windDirection < 330) windCompass = "NW";
-                    windDirectionValue.setText(windCompass);
+                    windDirectionValue.setText(results.getWindDirection());
 
                     if (!results.sunrise.equals("error")) {
-                        Date sunriseDate = new Date(Long.parseLong(results.sunrise) * 1000); // creates date from unix time (GMT)
+                        Date sunriseDate =
+                                new Date(Long.parseLong(results.sunrise) * 1000); // creates date from unix time (GMT)
+
                         Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
                         sunriseCalendar.setTime(sunriseDate);
                         String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
@@ -541,7 +528,8 @@ public class WeatherApp extends JFrame {
                     }
 
                     if (!results.sunset.equals("error")) {
-                        Date sunsetDate = new Date(Long.parseLong(results.sunset) * 1000); // creates date from unix time (GMT)
+                        Date sunsetDate =
+                                new Date(Long.parseLong(results.sunset) * 1000); // creates date from unix time (GMT)
                         Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
                         sunsetCalendar.setTime(sunsetDate);
                         String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
@@ -551,7 +539,7 @@ public class WeatherApp extends JFrame {
                         sunsetValue.setText(hours + ":" + minutes);
                     }
 
-                    if (results.overcast != -1) overcastValue.setText(results.overcast + "%");
+                    overcastValue.setText(results.getOvercast() + "%");
                 }
 
                 // write name of the city in file with last search
@@ -590,7 +578,8 @@ public class WeatherApp extends JFrame {
 
     private Query getQuery() {
         String cityName = city.getText();
-        String noSpacesCityName = cityName.replaceAll("\\s+", "%20"); // replaces spaces with hexadecimal ASCII code of space (to create URL properly)
+        String noSpacesCityName =
+                cityName.replaceAll("\\s+", "%20"); // replaces spaces with hexadecimal ASCII code of space (to create URL properly)
         return new Query(noSpacesCityName, getUnits(), getLanguage());
     }
 
