@@ -14,6 +14,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -477,110 +479,116 @@ public class WeatherApp extends JFrame {
     private void search(Query query) {
 
         APICaller apiCaller = new APICaller();
-        try {
-            // checks if query is correct
-            int status = apiCaller.getStatus(query);
+        // checks if query is correct
+        int status = apiCaller.getStatus(query);
 
-            // show error if status is not equal 200
-            if (status != 200) {
+        // show error if status is not equal 200
+        if (status != 200) {
 
-                String error;
+            String error;
 
-                if (status == 400 || status == 404) {   // invalid request
-                    error = (query.getLanguage() == Language.ENGLISH) ? "Invalid city name!" : "Nieprawidłowe miasto!";
-                } else if (status == 401 || status == 403) {    // authentication error
-                    error = (query.getLanguage() == Language.ENGLISH) ? "Authentication error!" : "Błąd autoryzacji!";
-                } else if (status == 900) {  // UnirestException, my own code
-                    error = (query.getLanguage() == Language.ENGLISH) ? "Unirest error!" : "Wystąpił problem z Unirest!";
-                } else { // server error 500/501
-                    error = (query.getLanguage() == Language.ENGLISH) ? "Server error!" : "Błąd serwera!";
-                }
-
-                JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+            if (status == 400 || status == 404) {   // invalid request
+                error = (query.getLanguage() == Language.ENGLISH) ? "Invalid city name!" : "Nieprawidłowe miasto!";
+            } else if (status == 401 || status == 403) {    // authentication error
+                error = (query.getLanguage() == Language.ENGLISH) ? "Authentication error!" : "Błąd autoryzacji!";
+            } else if (status == 900) {  // UnirestException, my own code
+                error = (query.getLanguage() == Language.ENGLISH) ? "Unirest error!" : "Wystąpił problem z Unirest!";
+            } else { // server error 500/501
+                error = (query.getLanguage() == Language.ENGLISH) ? "Server error!" : "Błąd serwera!";
             }
 
-            // query is correct
-            else {
+            JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
-                Results results = apiCaller.getResults(query);
+        // query is correct
+        else {
 
-                String temperatureUnit;
-                if (query.getUnits() == Units.METRIC) temperatureUnit = "C";
-                else temperatureUnit = "F";
+            Results results = apiCaller.getResults(query);
 
-                // set values from results
-                {
-                    currentTemperatureValue.setText(results.getCurrentTemperature() + " °" + temperatureUnit);
-                    minimalTemperatureValue.setText(results.getMinimalTemperature() + " °" + temperatureUnit);
-                    maximalTemperatureValue.setText(results.getMaximalTemperature() + " °" + temperatureUnit);
-                    feelsLikeValue.setText(results.getFeelsLike() + " °" + temperatureUnit);
-                    humidityValue.setText(results.getHumidity() + "%");
-                    pressureValue.setText(results.getPressure() + " hPa");
+            String temperatureUnit;
+            if (query.getUnits() == Units.METRIC) temperatureUnit = "C";
+            else temperatureUnit = "F";
 
-                    description.setText(results.getDescription());
+            // set values from results
 
-                    // try to read icon from file
-                    try {
-                        BufferedImage currentIcon = ImageIO.read(new File("/" + results.getIcon() + ".png"));
-                        iconLabel.setIcon(new ImageIcon(currentIcon));
-                        iconLabel.setVisible(true);
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(this, "Could not load resource file!",
-                                "Resource error", JOptionPane.ERROR_MESSAGE);
-                    }
+            if (!results.getCurrentTemperature().equals(""))
+                currentTemperatureValue.setText(results.getCurrentTemperature() + " °" + temperatureUnit);
+            else currentTemperatureValue.setText("");
 
-                    String windSpeedUnit;
-                    if (query.getUnits() == Units.METRIC) windSpeedUnit = "m/s";
-                    else windSpeedUnit = "mph";
-                    windSpeedValue.setText(results.getWindSpeed() + " " + windSpeedUnit);
+            if (!results.getMinimalTemperature().equals(""))
+                minimalTemperatureValue.setText(results.getMinimalTemperature() + " °" + temperatureUnit);
+            else minimalTemperatureValue.setText("");
 
-                    windDirectionValue.setText(results.getWindDirection());
+            if (!results.getMaximalTemperature().equals(""))
+                maximalTemperatureValue.setText(results.getMaximalTemperature() + " °" + temperatureUnit);
+            else maximalTemperatureValue.setText("");
 
-                    if (!results.sunrise.equals("error")) {
-                        Date sunriseDate =
-                                new Date(Long.parseLong(results.sunrise) * 1000); // creates date from unix time (GMT)
+            if (!results.getFeelsLike().equals(""))
+                feelsLikeValue.setText(results.getFeelsLike() + " °" + temperatureUnit);
+            else feelsLikeValue.setText("");
 
-                        Calendar sunriseCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-                        sunriseCalendar.setTime(sunriseDate);
-                        String hours = Integer.toString(sunriseCalendar.get(Calendar.HOUR_OF_DAY));
-                        String minutes = Integer.toString(sunriseCalendar.get(Calendar.MINUTE));
-                        if (sunriseCalendar.get(Calendar.MINUTE) < 10)
-                            minutes = "0" + minutes; // adds '0' to begin of minutes
-                        sunriseValue.setText(hours + ":" + minutes);
-                    }
+            if (!results.getHumidity().equals(""))
+                humidityValue.setText(results.getHumidity() + "%");
+            else humidityValue.setText("");
 
-                    if (!results.sunset.equals("error")) {
-                        Date sunsetDate =
-                                new Date(Long.parseLong(results.sunset) * 1000); // creates date from unix time (GMT)
-                        Calendar sunsetCalendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-                        sunsetCalendar.setTime(sunsetDate);
-                        String hours = Integer.toString(sunsetCalendar.get(Calendar.HOUR_OF_DAY));
-                        String minutes = Integer.toString(sunsetCalendar.get(Calendar.MINUTE));
-                        if (sunsetCalendar.get(Calendar.MINUTE) < 10)
-                            minutes = "0" + minutes; // adds '0' to begin of minutes
-                        sunsetValue.setText(hours + ":" + minutes);
-                    }
+            if (!results.getPressure().equals(""))
+                pressureValue.setText(results.getPressure() + " hPa");
+            else pressureValue.setText("");
 
-                    overcastValue.setText(results.getOvercast() + "%");
-                }
+            description.setText(results.getDescription());
 
-                // write name of the city in file with last search
-                FileWriter fileWriter;
-                try {
-                    fileWriter = new FileWriter(lastSearchFile);
-                    fileWriter.write(query.getCity());
-                    fileWriter.close();
-                    lastSearch.setEnabled(true);
-                    lastSearchCity = query.getCity();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                setVisibilityOfResults(true);
+            // try to read icon from file
+            try {
+                BufferedImage currentIcon = ImageIO.read(new File("/" + results.getIcon() + ".png"));
+                iconLabel.setIcon(new ImageIcon(currentIcon));
+                iconLabel.setVisible(true);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Could not load resource file!",
+                        "Resource error", JOptionPane.ERROR_MESSAGE);
             }
 
-        } catch (UnirestException e) {
-            e.printStackTrace();
+            String windSpeedUnit;
+            if (query.getUnits() == Units.METRIC) windSpeedUnit = "m/s";
+            else windSpeedUnit = "mph";
+            windSpeedValue.setText(results.getWindSpeed() + " " + windSpeedUnit);
+
+            windDirectionValue.setText(results.getWindDirection());
+
+            if (results.getSunrise() != 0) {
+                LocalDateTime sunriseDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(results.getSunrise()),
+                        TimeZone.getDefault().toZoneId()); // creates date from unix time (GMT)
+
+                String hours = Integer.toString(sunriseDate.getHour());
+                String minutes = (sunriseDate.getMinute() < 10) ? "0" + sunriseDate.getMinute() :
+                        Integer.toString(sunriseDate.getMinute());
+                sunriseValue.setText(hours + ":" + minutes);
+            } else sunriseValue.setText("");
+
+            if (results.getSunset() != 0) {
+                LocalDateTime sunsetDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(results.getSunset()),
+                        TimeZone.getDefault().toZoneId()); // creates date from unix time (GMT)
+
+                String hours = Integer.toString(sunsetDate.getHour());
+                String minutes = (sunsetDate.getMinute() < 10) ? "0" + sunsetDate.getMinute() :
+                        Integer.toString(sunsetDate.getMinute());
+                sunsetValue.setText(hours + ":" + minutes);
+            } else sunriseValue.setText("");
+
+            overcastValue.setText(results.getOvercast() + "%");
+
+            // write name of the city in file with last search
+            FileWriter fileWriter;
+            try {
+                fileWriter = new FileWriter(lastSearchFile);
+                fileWriter.write(query.getCity());
+                fileWriter.close();
+                lastSearch.setEnabled(true);
+                lastSearchCity = query.getCity();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            setVisibilityOfResults(true);
         }
     }
 

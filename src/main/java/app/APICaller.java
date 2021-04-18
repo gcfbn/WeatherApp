@@ -35,16 +35,28 @@ public class APICaller {
         if (resultsObject.has("main")) {
             JSONObject temperatureObject = resultsObject.getJSONObject("main");
 
-            if (temperatureObject.has("temp")) results.setCurrentTemperature(Double.toString(temperatureObject.getDouble("temp")));
-            if (temperatureObject.has("temp_min")) results.setMinimalTemperature(Double.toString(temperatureObject.getDouble("temp_min")));
-            if (temperatureObject.has("temp_max")) results.setMaximalTemperature(Double.toString(temperatureObject.getDouble("temp_max")));
-            if (temperatureObject.has("humidity")) results.setHumidity(Double.toString(temperatureObject.getDouble("humidity")));
-            if (temperatureObject.has("pressure")) results.setPressure(Double.toString(temperatureObject.getDouble("pressure")));
-            if (temperatureObject.has("feels_like")) results.setFeelsLike(Double.toString(temperatureObject.getDouble("feels_like")));
+            if (temperatureObject.has("temp"))
+                results.setCurrentTemperature(Double.toString(temperatureObject.getDouble("temp")));
+            if (temperatureObject.has("temp_min"))
+                results.setMinimalTemperature(Double.toString(temperatureObject.getDouble("temp_min")));
+            if (temperatureObject.has("temp_max"))
+                results.setMaximalTemperature(Double.toString(temperatureObject.getDouble("temp_max")));
+            if (temperatureObject.has("humidity"))
+                results.setHumidity(Integer.toString(temperatureObject.getInt("humidity")));
+            System.out.println(temperatureObject.getInt("humidity"));
+            System.out.println(results.getHumidity());
+            if (temperatureObject.has("pressure"))
+                results.setPressure(Double.toString(temperatureObject.getDouble("pressure")));
+            if (temperatureObject.has("feels_like"))
+                results.setFeelsLike(Double.toString(temperatureObject.getDouble("feels_like")));
         }
 
         // overcast
-        if (resultsObject.has("clouds")) results.setOvercast(Double.toString(resultsObject.getJSONObject("clouds").getInt("all")));
+        if (resultsObject.has("clouds")){
+            JSONObject cloudsObject = resultsObject.getJSONObject("clouds");
+            if (cloudsObject.has("all"))
+                results.setOvercast(Integer.toString(cloudsObject.getInt("all")));
+        }
 
         // wind
         if (resultsObject.has("wind")) {
@@ -72,8 +84,8 @@ public class APICaller {
         if (resultsObject.has("sys")) {
             JSONObject sunObject = resultsObject.getJSONObject("sys");
 
-            if (sunObject.has("sunrise")) results.setSunrise(sunObject.getString("sunrise"));
-            if (sunObject.has("sunset")) results.setSunset(sunObject.getString("sunset"));
+            if (sunObject.has("sunrise")) results.setSunrise(sunObject.getLong("sunrise"));
+            if (sunObject.has("sunset")) results.setSunset(sunObject.getLong("sunset"));
         }
 
         // icon & description
@@ -106,6 +118,7 @@ public class APICaller {
         URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";  // API key
         URL = URL + "&units=" + ((query.getUnits() == Units.METRIC) ? "metric" : "imperial");
         URL = URL + "&lang=" + ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
+        System.out.println(URL);
         return URL;
     }
 }

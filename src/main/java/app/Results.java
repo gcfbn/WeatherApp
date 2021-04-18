@@ -2,15 +2,10 @@ package app;
 
 public class Results {
 
+    // FIELDS
     private String icon = "", currentTemperature = "", description = "", minimalTemperature = "", maximalTemperature = "",
-            feelsLike = "", pressure = "", humidity = "", windDirection = "", windSpeed = "", sunrise = "", sunset = "",
-            overcast = "";
-
-    @Override
-    public String toString() {
-        return icon + " " + currentTemperature + " " + description + " " + minimalTemperature + " " + maximalTemperature + " " + feelsLike + " " +
-                pressure + " " + humidity + " " + windDirection + " " + windSpeed + " " + sunrise + " " + sunset + " " + overcast;
-    }
+            feelsLike = "", pressure = "", humidity = "", windDirection = "", windSpeed = "", overcast = "";
+    private long sunrise, sunset;
 
     public String getIcon() {
         return icon;
@@ -92,19 +87,19 @@ public class Results {
         this.windSpeed = windSpeed;
     }
 
-    public String getSunrise() {
+    public long getSunrise() {
         return sunrise;
     }
 
-    public void setSunrise(String sunrise) {
+    public void setSunrise(long sunrise) {
         this.sunrise = sunrise;
     }
 
-    public String getSunset() {
+    public long getSunset() {
         return sunset;
     }
 
-    public void setSunset(String sunset) {
+    public void setSunset(long sunset) {
         this.sunset = sunset;
     }
 
