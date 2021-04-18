@@ -362,7 +362,7 @@ public class WeatherApp extends JFrame {
         setVisibilityOfResults(false);
 
         // set path to file with last searched city
-        lastSearchFile = new File("../lastSearch.txt");
+        lastSearchFile = new File("lastSearch.txt");
 
         // create file if it doesn't exist
         // in other case, try to read from file
