@@ -82,10 +82,10 @@ public class APICaller {
 
     private String getURL(Query query) {
         String URL = "http://api.openweathermap.org/data/2.5/weather";
-        URL = URL + "?q=" + query.city;
+        URL = URL + "?q=" + query.getCity();
         URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";
-        URL = URL + "&units=" + query.units;
-        URL = URL + "&lang=" + query.language;
+        URL = URL + "&units=" + query.getUnits();
+        URL = URL + "&lang=" + ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
         return URL;
     }
 }

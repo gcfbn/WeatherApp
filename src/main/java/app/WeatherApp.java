@@ -58,7 +58,7 @@ public class WeatherApp extends JFrame {
 
         if (!prepareGUI()) { // if something went wrong loading resources
             JOptionPane.showMessageDialog(this, "Could not load resources", "Resources error", JOptionPane.ERROR_MESSAGE);
-            dispose();  // closes app
+            dispose();  // close app
         }
         else {  // everything works
             // set properties of the main frame
@@ -85,7 +85,6 @@ public class WeatherApp extends JFrame {
 
         //TODO divide everything into classes
         //TODO code duplicates
-        //TODO repair weird things like String x = new String()
         //TODO MVC?
 
         // set spaces between components
@@ -482,7 +481,7 @@ public class WeatherApp extends JFrame {
                 Results results = apiCaller.call(query);
 
                 String temperatureUnit;
-                if (query.units.equals("metric")) temperatureUnit = "C";
+                if (query.getUnits().equals("metric")) temperatureUnit = "C";
                 else temperatureUnit = "F";
 
                 // checks if apiCaller returned value that means there is no such data in RESTapi
@@ -512,7 +511,7 @@ public class WeatherApp extends JFrame {
                     }
 
                     String windSpeedUnit;
-                    if (query.units.equals("metric")) windSpeedUnit = "m/s";
+                    if (query.getUnits().equals("metric")) windSpeedUnit = "m/s";
                     else windSpeedUnit = "mph";
                     if (results.windSpeed != -1.0)
                         windSpeedValue.setText(results.windSpeed + " " + windSpeedUnit);
@@ -559,10 +558,10 @@ public class WeatherApp extends JFrame {
                 FileWriter fileWriter;
                 try {
                     fileWriter = new FileWriter(lastSearchFile);
-                    fileWriter.write(query.city);
+                    fileWriter.write(query.getCity());
                     fileWriter.close();
                     lastSearch.setEnabled(true);
-                    lastSearchCity = query.city;
+                    lastSearchCity = query.getCity();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -570,17 +569,17 @@ public class WeatherApp extends JFrame {
                 setVisibilityOfResults(true);
             } else if (status == 400 || status == 404) { // invalid request
                 String error;
-                if (query.language.equals("en")) error = "Inavlid city name";
+                if (query.getLanguage() == Language.ENGLISH) error = "Inavlid city name";
                 else error = "Nieprawidłowe miasto";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             } else if (status == 401 || status == 403) { // authentication error
                 String error;
-                if (query.language.equals("en")) error = "Authentication error";
+                if (query.getLanguage() == Language.ENGLISH) error = "Authentication error";
                 else error = "Błąd autoryzacji";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             } else { // server error
                 String error;
-                if (query.language.equals("en")) error = "Server error";
+                if (query.getLanguage() == Language.ENGLISH) error = "Server error";
                 else error = "Błąd serwera";
                 JOptionPane.showMessageDialog(this, error + "!", error, JOptionPane.ERROR_MESSAGE);
             }
@@ -595,9 +594,9 @@ public class WeatherApp extends JFrame {
         return new Query(noSpacesCityName, getUnits(), getLanguage());
     }
 
-    private String getLanguage() {
-        if (englishLanguage.isSelected()) return "en";
-        else return "pl";
+    private Language getLanguage() {
+        if (englishLanguage.isSelected()) return Language.ENGLISH;
+        else return Language.POLISH;
     }
 
     private String getUnits() {
