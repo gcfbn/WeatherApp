@@ -402,9 +402,7 @@ public class WeatherApp extends JFrame {
 
             else if (lastSearch == actionSource) {
                 search(new Query(lastSearchCity, getUnits(), getLanguage()));
-                String cityWithSpaces =
-                        lastSearchCity.replaceAll("%20", " "); // converts spaces in ASCII code to visible spaces
-                city.setText(cityWithSpaces);
+                city.setText(HexSpaceConverter.hexToSpaces(lastSearchCity));
             }
         }
     }
@@ -596,8 +594,7 @@ public class WeatherApp extends JFrame {
 
     private Query getQuery() {
         String cityName = city.getText();
-        String noSpacesCityName =
-                cityName.replaceAll("\\s+", "%20"); // replaces spaces with hexadecimal ASCII code of space (to create URL properly)
+        String noSpacesCityName = HexSpaceConverter.spacesToHex(cityName);
         return new Query(noSpacesCityName, getUnits(), getLanguage());
     }
 
