@@ -15,19 +15,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
 
-import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,18 +28,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-public class WeatherApp extends JFrame {
+public class OldWeatherApp extends JFrame {
 
     public static void main(String[] args) {
-        new WeatherApp();
+        new OldWeatherApp();
     }
+
+
+//    private GUI gui = new GUI();
 
     // declare visible components (used for sending a request)
     private JLabel cityLabel, units, language, iconLabel;
     private JTextField city, description;
     private JRadioButton metricUnits, imperialUnits;
     private JRadioButton englishLanguage, polishLanguage;
-    private JButton searchButton, reset, lastSearch;
+    private JButton searchButton, resetButton, lastSearchButton;
 
     // declare hidden components (used for showing results)
     private JLabel currentTemperatureValue, minimalTemperatureLabel, maximalTemperatureLabel, feelsLikeLabel,
@@ -61,7 +57,7 @@ public class WeatherApp extends JFrame {
     private File lastSearchFile = new File("lastSearch.txt");
     private String lastSearchCity;
 
-    WeatherApp() {
+    OldWeatherApp() {
 
         if (!prepareGUI()) { // if something went wrong loading resources
             JOptionPane.showMessageDialog(this, "Could not load resources", "Resources error", JOptionPane.ERROR_MESSAGE);
@@ -78,6 +74,7 @@ public class WeatherApp extends JFrame {
             // show main window
             setVisible(true);
         }
+//        this.setContentPane(gui.mainPanel)
     }
 
     // TODO move this fat guy to another class or use external GUI builder
@@ -214,18 +211,18 @@ public class WeatherApp extends JFrame {
         constraints.gridwidth = 3;
         add(description, constraints);
 
-        reset = new JButton("Reset");
-        reset.setFont(fontBold32);
+        resetButton = new JButton("Reset");
+        resetButton.setFont(fontBold32);
         constraints.gridx = 3;
         constraints.gridwidth = 2;
-        add(reset, constraints);
+        add(resetButton, constraints);
 
-        lastSearch = new JButton("Last search");
-        lastSearch.setFont(fontBold32);
+        lastSearchButton = new JButton("Last search");
+        lastSearchButton.setFont(fontBold32);
         constraints.gridx = 5;
         constraints.gridwidth = 2;
-        lastSearch.setEnabled(false);
-        add(lastSearch, constraints);
+        lastSearchButton.setEnabled(false);
+        add(lastSearchButton, constraints);
 
         minimalTemperatureLabel = new JLabel("Minimal temperature:");
         minimalTemperatureLabel.setFont(font16);
@@ -365,8 +362,8 @@ public class WeatherApp extends JFrame {
         englishLanguage.addActionListener(actionListener);
         polishLanguage.addActionListener(actionListener);
         searchButton.addActionListener(actionListener);
-        reset.addActionListener(actionListener);
-        lastSearch.addActionListener(actionListener);
+        resetButton.addActionListener(actionListener);
+        lastSearchButton.addActionListener(actionListener);
 
         // hide components that show results
         setVisibilityOfResults(false);
@@ -380,7 +377,7 @@ public class WeatherApp extends JFrame {
             try {
                 lastSearchCity = TxtReader.readLine(lastSearchFile);
                 if (lastSearchCity != null)
-                    lastSearch.setEnabled(true);
+                    lastSearchButton.setEnabled(true);
             } catch (IOException e) {
                 // when something gone wrong when reading from file
                 return false;
@@ -402,9 +399,9 @@ public class WeatherApp extends JFrame {
             } else if (searchButton == actionSource)
                 search(buildQuery());
 
-            else if (reset == actionSource) resetApp();
+            else if (resetButton == actionSource) resetApp();
 
-            else if (lastSearch == actionSource) {
+            else if (lastSearchButton == actionSource) {
                 search(new Query(lastSearchCity, getUnits(), getLanguage()));
                 city.setText(HexSpaceConverter.hexToSpaces(lastSearchCity));
             }
@@ -421,8 +418,8 @@ public class WeatherApp extends JFrame {
         englishLanguage.setText(l.englishLanguage);
         polishLanguage.setText(l.polishLangauge);
         searchButton.setText(l.searchButton);
-        reset.setText(l.reset);
-        lastSearch.setText(l.lastSearch);
+        resetButton.setText(l.reset);
+        lastSearchButton.setText(l.lastSearch);
         minimalTemperatureLabel.setText(l.minimalTemperatureLabel);
         maximalTemperatureLabel.setText(l.maximalTemperatureLabel);
         feelsLikeLabel.setText(l.feelsLikeLabel);
@@ -584,7 +581,7 @@ public class WeatherApp extends JFrame {
             try {
                 String cityToWrite = query.getCity();
                 TxtWriter.writeLine(lastSearchFile, cityToWrite);
-                lastSearch.setEnabled(true);
+                lastSearchButton.setEnabled(true);
                 lastSearchCity = cityToWrite;
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Could not write file!",
