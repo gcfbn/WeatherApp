@@ -79,6 +79,9 @@ public class WeatherApp extends JFrame {
         }
     }
 
+    // TODO move writing to files and reading from files to another class
+
+    // TODO move this fat guy to another class or use external GUI builder
     /**
      * Initialize GUI components and add them to the main frame
      *
@@ -407,6 +410,7 @@ public class WeatherApp extends JFrame {
         }
     }
 
+    // TODO use some multi-language-support library
     private void setLanguage(Language l) {
         cityLabel.setText(l.cityLabel);
         units.setText(l.units);
@@ -470,6 +474,7 @@ public class WeatherApp extends JFrame {
         this.pack(); // resizes the window
     }
 
+    // TODO refactor and shorten this method
     private void search(Query query) {
 
         OpenWeatherMapCaller openWeatherMapCaller = new OpenWeatherMapCaller(query);
@@ -591,6 +596,8 @@ public class WeatherApp extends JFrame {
             setVisibilityOfResults(true);
         }
     }
+
+    // TODO rename these method so it won't look like a getter
 
     private Query getQuery() {
         String cityName = city.getText();

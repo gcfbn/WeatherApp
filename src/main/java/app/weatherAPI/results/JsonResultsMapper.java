@@ -5,7 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
-
+// TODO use external JSON Mapper (for example JacksonObjectMapper)
 public class JsonResultsMapper {
 
     public static JsonResults mapResults(HttpResponse<JsonNode> httpResponse){
