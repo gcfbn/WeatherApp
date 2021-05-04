@@ -1,5 +1,6 @@
-package app;
+package app.weatherAPI.results;
 
+import app.weatherAPI.results.Results;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 

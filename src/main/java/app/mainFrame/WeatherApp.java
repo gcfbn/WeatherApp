@@ -1,4 +1,10 @@
-package app;
+package app.mainFrame;
+
+import app.query.Language;
+import app.query.Query;
+import app.query.Units;
+import app.weatherAPI.results.Results;
+import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 import java.awt.Dimension;
 import java.awt.Font;

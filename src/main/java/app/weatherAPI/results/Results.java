@@ -1,4 +1,4 @@
-package app;
+package app.weatherAPI.results;
 
 public class Results {
 

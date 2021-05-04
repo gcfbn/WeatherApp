@@ -1,5 +1,10 @@
-package app;
+package app.weatherAPI.weatherAPICaller;
 
+import app.query.Language;
+import app.query.Query;
+import app.query.Units;
+import app.weatherAPI.results.Results;
+import app.weatherAPI.results.ResultsMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
