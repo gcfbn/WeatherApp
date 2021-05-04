@@ -37,11 +37,12 @@ public class OpenWeatherMapCaller {
     }
 
     private String buildURL(Query query) {
-        String URL = "http://api.openweathermap.org/data/2.5/weather";
-        URL = URL + "?q=" + query.getCity();
-        URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";  // API key
-        URL = URL + "&units=" + ((query.getUnits() == Units.METRIC) ? "metric" : "imperial");
-        URL = URL + "&lang=" + ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
-        return URL;
+        return "http://api.openweathermap.org/data/2.5/weather" + "?q=" + query.getCity() +
+                // TODO hide API key
+                "&appid=a52958f9ad25d7d64c67d97957bc6119" +  // API key
+                "&units=" +
+                ((query.getUnits() == Units.METRIC) ? "metric" : "imperial") +
+                "&lang=" +
+                ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
     }
 }
