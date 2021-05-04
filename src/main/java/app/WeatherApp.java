@@ -467,9 +467,9 @@ public class WeatherApp extends JFrame {
 
     private void search(Query query) {
 
-        APICaller apiCaller = new APICaller();
+        OpenWeatherMapCaller openWeatherMapCaller = new OpenWeatherMapCaller(query);
         // checks if query is correct
-        int status = apiCaller.getStatus(query);
+        int status = openWeatherMapCaller.getStatus();
 
         // show error if status is not equal 200
         if (status != 200) {
@@ -492,7 +492,7 @@ public class WeatherApp extends JFrame {
         // query is correct
         else {
 
-            Results results = apiCaller.getResults(query);
+            Results results = openWeatherMapCaller.getResults();
 
             String temperatureUnit;
             if (query.getUnits() == Units.METRIC) temperatureUnit = "C";

@@ -1,32 +1,12 @@
 package app;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
-public class APICaller {
+public class ResultsMapper {
 
-    public Results getResults(Query query) {
+    public static Results mapResults(JSONObject resultsObject){
 
-        // create URL from query
-        String URL = getURL(query);
-
-        HttpResponse<JsonNode> response;
-
-        // get results as JSON
-        try{
-            response = Unirest.get(URL).asJson();
-        } catch (UnirestException e) {
-            return null;
-        }
-
-        // get JSONObject from response
-        JSONObject resultsObject = new JSONObject(response.getBody().toString());
-
-        // create empty Results object
         Results results = new Results();
 
         // get data from JSONObject
@@ -96,26 +76,5 @@ public class APICaller {
             if (iconObject.has("description")) results.setDescription(iconObject.getString("description"));
         }
         return results;
-    }
-
-    public int getStatus(Query query){
-        String URL = getURL(query);
-
-        HttpResponse<JsonNode> response;
-        try{
-            response = Unirest.get(URL).asJson();
-        } catch (UnirestException e) {
-            return 900;
-        }
-        return response.getStatus();
-    }
-
-    private String getURL(Query query) {
-        String URL = "http://api.openweathermap.org/data/2.5/weather";
-        URL = URL + "?q=" + query.getCity();
-        URL = URL + "&appid=a52958f9ad25d7d64c67d97957bc6119";  // API key
-        URL = URL + "&units=" + ((query.getUnits() == Units.METRIC) ? "metric" : "imperial");
-        URL = URL + "&lang=" + ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
-        return URL;
     }
 }
