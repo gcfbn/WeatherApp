@@ -1,6 +1,8 @@
 package app.mainFrame;
 
 import app.fileOperations.IconReader;
+import app.fileOperations.TxtReader;
+import app.fileOperations.TxtWriter;
 import app.query.*;
 import app.weatherAPI.results.Response;
 import app.weatherAPI.results.JsonResults;
@@ -56,7 +58,7 @@ public class WeatherApp extends JFrame {
     private JTextField sunriseValue, sunsetValue, overcastValue;
 
     // variables used for loading last search
-    public File lastSearchFile;
+    private File lastSearchFile = new File("lastSearch.txt");
     private String lastSearchCity;
 
     WeatherApp() {
@@ -81,6 +83,7 @@ public class WeatherApp extends JFrame {
     // TODO move writing to files and reading from files to another class
 
     // TODO move this fat guy to another class or use external GUI builder
+
     /**
      * Initialize GUI components and add them to the main frame
      *
@@ -376,11 +379,12 @@ public class WeatherApp extends JFrame {
         // create file if it doesn't exist
         // in other case, try to read from file
         if (lastSearchFile.exists()) {
-
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile))) {
-                if ((lastSearchCity = bufferedReader.readLine()) == null) lastSearch.setEnabled(false);
-                lastSearch.setEnabled(true);
+            try {
+                lastSearchCity = TxtReader.readLine(lastSearchFile);
+                if (lastSearchCity != null)
+                    lastSearch.setEnabled(true);
             } catch (IOException e) {
+                // when something gone wrong when reading from file
                 return false;
             }
         }
@@ -579,15 +583,14 @@ public class WeatherApp extends JFrame {
             else overcastValue.setText("");
 
             // write name of the city in file with last search
-            FileWriter fileWriter;
             try {
-                fileWriter = new FileWriter(lastSearchFile);
-                fileWriter.write(query.getCity());
-                fileWriter.close();
+                String cityToWrite = query.getCity();
+                TxtWriter.writeLine(lastSearchFile, cityToWrite);
                 lastSearch.setEnabled(true);
-                lastSearchCity = query.getCity();
+                lastSearchCity = cityToWrite;
             } catch (IOException e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Could not write file!",
+                        "Writing error", JOptionPane.ERROR_MESSAGE);
             }
 
             setVisibilityOfResults(true);
