@@ -4,7 +4,7 @@ import app.query.Language;
 import app.query.Query;
 import app.query.Units;
 import app.weatherAPI.results.Response;
-import app.weatherAPI.results.Results;
+import app.weatherAPI.results.JsonResults;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 import java.awt.Dimension;
@@ -502,7 +502,7 @@ public class WeatherApp extends JFrame {
         // query is correct
         else {
 
-            Results results = response.getResults();
+            JsonResults jsonResults = response.getResults();
 
             String temperatureUnit;
             if (query.getUnits() == Units.METRIC) temperatureUnit = "C";
@@ -510,36 +510,36 @@ public class WeatherApp extends JFrame {
 
             // set values from results
 
-            if (!results.getCurrentTemperature().equals(""))
-                currentTemperatureValue.setText(results.getCurrentTemperature() + " °" + temperatureUnit);
+            if (!jsonResults.getCurrentTemperature().equals(""))
+                currentTemperatureValue.setText(jsonResults.getCurrentTemperature() + " °" + temperatureUnit);
             else currentTemperatureValue.setText("");
 
-            if (!results.getMinimalTemperature().equals(""))
-                minimalTemperatureValue.setText(results.getMinimalTemperature() + " °" + temperatureUnit);
+            if (!jsonResults.getMinimalTemperature().equals(""))
+                minimalTemperatureValue.setText(jsonResults.getMinimalTemperature() + " °" + temperatureUnit);
             else minimalTemperatureValue.setText("");
 
-            if (!results.getMaximalTemperature().equals(""))
-                maximalTemperatureValue.setText(results.getMaximalTemperature() + " °" + temperatureUnit);
+            if (!jsonResults.getMaximalTemperature().equals(""))
+                maximalTemperatureValue.setText(jsonResults.getMaximalTemperature() + " °" + temperatureUnit);
             else maximalTemperatureValue.setText("");
 
-            if (!results.getFeelsLike().equals(""))
-                feelsLikeValue.setText(results.getFeelsLike() + " °" + temperatureUnit);
+            if (!jsonResults.getFeelsLike().equals(""))
+                feelsLikeValue.setText(jsonResults.getFeelsLike() + " °" + temperatureUnit);
             else feelsLikeValue.setText("");
 
-            if (!results.getHumidity().equals(""))
-                humidityValue.setText(results.getHumidity() + "%");
+            if (!jsonResults.getHumidity().equals(""))
+                humidityValue.setText(jsonResults.getHumidity() + "%");
             else humidityValue.setText("");
 
-            if (!results.getPressure().equals(""))
-                pressureValue.setText(results.getPressure() + " hPa");
+            if (!jsonResults.getPressure().equals(""))
+                pressureValue.setText(jsonResults.getPressure() + " hPa");
             else pressureValue.setText("");
 
-            description.setText(results.getDescription());
+            description.setText(jsonResults.getDescription());
 
             // try to read icon from file
             try {
                 BufferedImage currentIcon =
-                        ImageIO.read(new File("src/main/resources/" + results.getIcon() + ".png"));
+                        ImageIO.read(new File("src/main/resources/" + jsonResults.getIcon() + ".png"));
                 iconLabel.setIcon(new ImageIcon(currentIcon));
                 iconLabel.setVisible(true);
             } catch (IOException e) {
@@ -550,12 +550,12 @@ public class WeatherApp extends JFrame {
             String windSpeedUnit;
             if (query.getUnits() == Units.METRIC) windSpeedUnit = "m/s";
             else windSpeedUnit = "mph";
-            windSpeedValue.setText(results.getWindSpeed() + " " + windSpeedUnit);
+            windSpeedValue.setText(jsonResults.getWindSpeed() + " " + windSpeedUnit);
 
-            windDirectionValue.setText(results.getWindDirection());
+            windDirectionValue.setText(jsonResults.getWindDirection());
 
-            if (results.getSunrise() != 0) {
-                LocalDateTime sunriseDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(results.getSunrise()),
+            if (jsonResults.getSunrise() != 0) {
+                LocalDateTime sunriseDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(jsonResults.getSunrise()),
                         TimeZone.getDefault().toZoneId()); // creates date from unix time (GMT)
 
                 String hours = Integer.toString(sunriseDate.getHour());
@@ -564,8 +564,8 @@ public class WeatherApp extends JFrame {
                 sunriseValue.setText(hours + ":" + minutes);
             } else sunriseValue.setText("");
 
-            if (results.getSunset() != 0) {
-                LocalDateTime sunsetDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(results.getSunset()),
+            if (jsonResults.getSunset() != 0) {
+                LocalDateTime sunsetDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(jsonResults.getSunset()),
                         TimeZone.getDefault().toZoneId()); // creates date from unix time (GMT)
 
                 String hours = Integer.toString(sunsetDate.getHour());
@@ -574,8 +574,8 @@ public class WeatherApp extends JFrame {
                 sunsetValue.setText(hours + ":" + minutes);
             } else sunriseValue.setText("");
 
-            if (!results.getOvercast().equals(""))
-                overcastValue.setText(results.getOvercast() + "%");
+            if (!jsonResults.getOvercast().equals(""))
+                overcastValue.setText(jsonResults.getOvercast() + "%");
             else overcastValue.setText("");
 
             // write name of the city in file with last search

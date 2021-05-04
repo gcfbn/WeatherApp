@@ -5,16 +5,16 @@ import com.mashape.unirest.http.JsonNode;
 
 public class Response {
 
-    private final Results results;
+    private final JsonResults jsonResults;
     private final int status;
 
     public Response(HttpResponse<JsonNode> httpResponse, int status){
-        results = ResultsMapper.mapResults(httpResponse);
+        jsonResults = JsonResultsMapper.mapResults(httpResponse);
         this.status = status;
     }
 
-    public Results getResults() {
-        return results;
+    public JsonResults getResults() {
+        return jsonResults;
     }
 
     public int getStatus() {

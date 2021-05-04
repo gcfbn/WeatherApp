@@ -1,6 +1,6 @@
 package app.weatherAPI.results;
 
-public class Results {
+public class JsonResults {
 
     // FIELDS
     private String icon = "", currentTemperature = "", description = "", minimalTemperature = "", maximalTemperature = "",
