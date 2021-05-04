@@ -1,5 +1,6 @@
 package app.mainFrame;
 
+import app.fileOperations.IconReader;
 import app.query.*;
 import app.weatherAPI.results.Response;
 import app.weatherAPI.results.JsonResults;
@@ -178,10 +179,10 @@ public class WeatherApp extends JFrame {
 
         // try to read empty icon from resources
         try {
-            BufferedImage icon = ImageIO.read(new File("src/main/resources/empty.png"));
-            iconLabel = new JLabel(new ImageIcon(icon));
+            iconLabel = new JLabel(IconReader.readIcon("empty"));
             add(iconLabel, constraints);
         } catch (IOException e) {
+            // if icon was not loaded properly
             return false;
         }
 
@@ -539,9 +540,7 @@ public class WeatherApp extends JFrame {
 
             // try to read icon from file
             try {
-                BufferedImage currentIcon =
-                        ImageIO.read(new File("src/main/resources/" + jsonResults.getIcon() + ".png"));
-                iconLabel.setIcon(new ImageIcon(currentIcon));
+                iconLabel.setIcon(IconReader.readIcon(jsonResults.getIcon()));
                 iconLabel.setVisible(true);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Could not load resource file!",
