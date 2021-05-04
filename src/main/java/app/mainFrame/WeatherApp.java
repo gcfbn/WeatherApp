@@ -80,8 +80,6 @@ public class WeatherApp extends JFrame {
         }
     }
 
-    // TODO move writing to files and reading from files to another class
-
     // TODO move this fat guy to another class or use external GUI builder
 
     /**
