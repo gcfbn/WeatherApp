@@ -1,8 +1,6 @@
 package app.mainFrame;
 
-import app.query.Language;
-import app.query.Query;
-import app.query.Units;
+import app.query.*;
 import app.weatherAPI.results.Response;
 import app.weatherAPI.results.JsonResults;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
@@ -399,7 +397,7 @@ public class WeatherApp extends JFrame {
             } else if (polishLanguage == actionSource) {
                 setLanguage(Language.POLISH);
             } else if (searchButton == actionSource)
-                search(getQuery());
+                search(buildQuery());
 
             else if (reset == actionSource) resetApp();
 
@@ -597,12 +595,8 @@ public class WeatherApp extends JFrame {
         }
     }
 
-    // TODO rename these method so it won't look like a getter
-
-    private Query getQuery() {
-        String cityName = city.getText();
-        String noSpacesCityName = HexSpaceConverter.spacesToHex(cityName);
-        return new Query(noSpacesCityName, getUnits(), getLanguage());
+    private Query buildQuery() {
+        return QueryBuilder.buildQuery(city.getText(), getUnits(), getLanguage());
     }
 
     private Language getLanguage() {

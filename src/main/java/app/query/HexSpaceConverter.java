@@ -1,4 +1,4 @@
-package app.mainFrame;
+package app.query;
 
 public class HexSpaceConverter {
 
