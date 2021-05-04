@@ -3,6 +3,7 @@ package app.mainFrame;
 import app.query.Language;
 import app.query.Query;
 import app.query.Units;
+import app.weatherAPI.results.Response;
 import app.weatherAPI.results.Results;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
@@ -474,8 +475,11 @@ public class WeatherApp extends JFrame {
     private void search(Query query) {
 
         OpenWeatherMapCaller openWeatherMapCaller = new OpenWeatherMapCaller(query);
+
+        Response response = openWeatherMapCaller.buildResponse();
+
         // checks if query is correct
-        int status = openWeatherMapCaller.getStatus();
+        int status = response.getStatus();
 
         // show error if status is not equal 200
         if (status != 200) {
@@ -498,7 +502,7 @@ public class WeatherApp extends JFrame {
         // query is correct
         else {
 
-            Results results = openWeatherMapCaller.getResults();
+            Results results = response.getResults();
 
             String temperatureUnit;
             if (query.getUnits() == Units.METRIC) temperatureUnit = "C";

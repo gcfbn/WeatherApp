@@ -1,12 +1,17 @@
 package app.weatherAPI.results;
 
-import app.weatherAPI.results.Results;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
+
 public class ResultsMapper {
 
-    public static Results mapResults(JSONObject resultsObject){
+    public static Results mapResults(HttpResponse<JsonNode> httpResponse){
+
+        // get JSONObject from HttpResponse
+        JSONObject resultsObject = new JSONObject(httpResponse.getBody().toString());
 
         Results results = new Results();
 
