@@ -1,4 +1,4 @@
-package app.mainFrame.GUI;
+package app.GUI;
 
 import app.fileOperations.IconReader;
 import app.fileOperations.TxtReader;
