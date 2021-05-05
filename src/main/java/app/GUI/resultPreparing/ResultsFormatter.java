@@ -35,27 +35,27 @@ public class ResultsFormatter {
     }
 
     public String currentTemperature(){
-        return (info.getTemp().equals("")) ? info.getTemp() + " " + temperatureUnit : "";
+        return temperature.getTemp() + " " + temperatureUnit;
     }
 
     public String minimumTemperature(){
-        return (temperature.getTemp_min().equals("")) ? temperature.getTemp_min() + " " + temperatureUnit : "";
+        return temperature.getTemp_max() + " " + temperatureUnit;
     }
 
     public String maximumTemperature(){
-        return (temperature.getTemp_max().equals("")) ? temperature.getTemp_max() + " " + temperatureUnit : "";
+        return temperature.getTemp_min() + " " + temperatureUnit;
     }
 
     public String feelsLike(){
-        return (temperature.getFeels_like().equals("")) ? temperature.getFeels_like() + " " + temperatureUnit : "";
+        return temperature.getFeels_like() + " " + temperatureUnit;
     }
 
     public String humidity(){
-        return (temperature.getHumidity().equals("")) ? temperature.getHumidity() + " " + temperatureUnit : "";
+        return temperature.getHumidity() + " %";
     }
 
     public String pressure(){
-        return (temperature.getPressure().equals("")) ? temperature.getPressure() + " " + "hPa" : "";
+        return temperature.getPressure() + " hPa";
     }
 
     public String description(){
@@ -83,6 +83,6 @@ public class ResultsFormatter {
     }
 
     public String overcast(){
-        return clouds.getAll();
+        return clouds.getAll() + " %";
     }
 }

@@ -2,26 +2,30 @@ package app.weatherAPI.results.items;
 
 public class Temperature {
 
-    private String temp_min = "", temp_max = "",
-            feels_like = "", pressure = "", humidity = "";
+    private double temp, temp_min, temp_max,
+            feels_like, pressure, humidity;
 
-    public String getTemp_min() {
+    public double getTemp() {
+        return temp;
+    }
+
+    public double getTemp_min() {
         return temp_min;
     }
 
-    public String getTemp_max() {
+    public double getTemp_max() {
         return temp_max;
     }
 
-    public String getFeels_like() {
+    public double getFeels_like() {
         return feels_like;
     }
 
-    public String getPressure() {
+    public double getPressure() {
         return pressure;
     }
 
-    public String getHumidity() {
+    public double getHumidity() {
         return humidity;
     }
 }
