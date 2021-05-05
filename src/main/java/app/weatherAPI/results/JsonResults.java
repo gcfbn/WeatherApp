@@ -6,11 +6,11 @@ import app.weatherAPI.results.items.*;
 
 public class JsonResults {
 
-    private Clouds clouds;
-    private Info info;
-    private Sun sun;
-    private Temperature temperature;
-    private Wind wind;
+    private final Clouds clouds;
+    private final Info info;
+    private final Sun sun;
+    private final Temperature temperature;
+    private final Wind wind;
 
     public JsonResults(Clouds clouds, Info info, Sun sun, Temperature temperature, Wind wind) {
         this.clouds = clouds;
@@ -18,5 +18,25 @@ public class JsonResults {
         this.sun = sun;
         this.temperature = temperature;
         this.wind = wind;
+    }
+
+    public Clouds getClouds() {
+        return clouds;
+    }
+
+    public Info getInfo() {
+        return info;
+    }
+
+    public Sun getSun() {
+        return sun;
+    }
+
+    public Temperature getTemperature() {
+        return temperature;
+    }
+
+    public Wind getWind() {
+        return wind;
     }
 }

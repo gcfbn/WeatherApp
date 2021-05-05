@@ -1,5 +1,6 @@
 package app.GUI;
 
+import app.GUI.resultPreparing.ResultsFormatter;
 import app.fileOperations.IconReader;
 import app.fileOperations.TxtReader;
 import app.fileOperations.TxtWriter;
@@ -13,9 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.TimeZone;
 
 public class WeatherApp extends JFrame {
 
@@ -81,7 +79,6 @@ public class WeatherApp extends JFrame {
         pack();
 
         setVisible(true);
-
 
         lastSearchFile = new File("lastSearch.txt");
 
@@ -212,98 +209,48 @@ public class WeatherApp extends JFrame {
 
         // show error if status is not equal 200
         if (status != 200) {
+            String errorText = StatusErrorBuilder.buildErrorText(status, query.getLanguage());
+            String errorTitle = StatusErrorBuilder.buildErrorTitle(query.getLanguage());
 
-            String error;
-
-            if (status == 400 || status == 404) {   // invalid request
-                error = (query.getLanguage() == Language.ENGLISH) ? "Invalid city name!" : "Nieprawidłowe miasto!";
-            } else if (status == 401 || status == 403) {    // authentication error
-                error = (query.getLanguage() == Language.ENGLISH) ? "Authentication error!" : "Błąd autoryzacji!";
-            } else if (status == 900) {  // UnirestException, my own code
-                error = (query.getLanguage() == Language.ENGLISH) ? "Unirest error!" : "Wystąpił problem z Unirest!";
-            } else { // server error 500/501
-                error = (query.getLanguage() == Language.ENGLISH) ? "Server error!" : "Błąd serwera!";
-            }
-
-            JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, errorText, errorTitle, JOptionPane.ERROR_MESSAGE);
         }
 
         // query is correct
         else {
 
+            // get results from response
             JsonResults jsonResults = response.getResults();
 
-            String temperatureUnit;
-            if (query.getUnits() == Units.METRIC) temperatureUnit = "C";
-            else temperatureUnit = "F";
+            // create ResultsFormatter
+            ResultsFormatter resultsFormatter = new ResultsFormatter(query.getUnits(), jsonResults);
 
-            // set values from results
+            // set formatted values
 
-            if (!jsonResults.getCurrentTemperature().equals(""))
-                currentTemperatureValue.setText(jsonResults.getCurrentTemperature() + " °" + temperatureUnit);
-            else currentTemperatureValue.setText("");
+            currentTemperatureValue.setText(resultsFormatter.currentTemperature());
+            minimumTemperatureValue.setText(resultsFormatter.minimumTemperature());
+            maximumTemperatureValue.setText(resultsFormatter.maximumTemperature());
+            feelsLikeValue.setText(resultsFormatter.feelsLike());
+            humidityValue.setText(resultsFormatter.humidity());
+            pressureValue.setText(resultsFormatter.pressure());
 
-            if (!jsonResults.getMinimalTemperature().equals(""))
-                minimumTemperatureValue.setText(jsonResults.getMinimalTemperature() + " °" + temperatureUnit);
-            else minimumTemperatureValue.setText("");
-
-            if (!jsonResults.getMaximalTemperature().equals(""))
-                maximumTemperatureValue.setText(jsonResults.getMaximalTemperature() + " °" + temperatureUnit);
-            else maximumTemperatureValue.setText("");
-
-            if (!jsonResults.getFeelsLike().equals(""))
-                feelsLikeValue.setText(jsonResults.getFeelsLike() + " °" + temperatureUnit);
-            else feelsLikeValue.setText("");
-
-            if (!jsonResults.getHumidity().equals(""))
-                humidityValue.setText(jsonResults.getHumidity() + "%");
-            else humidityValue.setText("");
-
-            if (!jsonResults.getPressure().equals(""))
-                pressureValue.setText(jsonResults.getPressure() + " hPa");
-            else pressureValue.setText("");
-
-            description.setText(jsonResults.getDescription());
+            description.setText(resultsFormatter.description());
 
             // try to read icon from file
             try {
-                iconLabel.setIcon(IconReader.readIcon(jsonResults.getIcon()));
+                iconLabel.setIcon(IconReader.readIcon(resultsFormatter.icon()));
                 iconLabel.setVisible(true);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Could not load resource file!",
                         "Resource error", JOptionPane.ERROR_MESSAGE);
             }
 
-            String windSpeedUnit;
-            if (query.getUnits() == Units.METRIC) windSpeedUnit = "m/s";
-            else windSpeedUnit = "mph";
-            windSpeedValue.setText(jsonResults.getWindSpeed() + " " + windSpeedUnit);
+            windSpeedValue.setText(resultsFormatter.windSpeed());
+            windDirectionValue.setText(resultsFormatter.windDirection());
 
-            windDirectionValue.setText(jsonResults.getWindDirection());
+            sunriseValue.setText(resultsFormatter.sunrise());
+            sunsetValue.setText(resultsFormatter.sunset());
 
-            if (jsonResults.getSunrise() != 0) {
-                LocalDateTime sunriseDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(jsonResults.getSunrise()),
-                        TimeZone.getDefault().toZoneId()); // creates date from unix time (GMT)
-
-                String hours = Integer.toString(sunriseDate.getHour());
-                String minutes = (sunriseDate.getMinute() < 10) ? "0" + sunriseDate.getMinute() :
-                        Integer.toString(sunriseDate.getMinute());
-                sunriseValue.setText(hours + ":" + minutes);
-            } else sunriseValue.setText("");
-
-            if (jsonResults.getSunset() != 0) {
-                LocalDateTime sunsetDate = LocalDateTime.ofInstant(Instant.ofEpochSecond(jsonResults.getSunset()),
-                        TimeZone.getDefault().toZoneId()); // creates date from unix time (GMT)
-
-                String hours = Integer.toString(sunsetDate.getHour());
-                String minutes = (sunsetDate.getMinute() < 10) ? "0" + sunsetDate.getMinute() :
-                        Integer.toString(sunsetDate.getMinute());
-                sunsetValue.setText(hours + ":" + minutes);
-            } else sunriseValue.setText("");
-
-            if (!jsonResults.getOvercast().equals(""))
-                overcastValue.setText(jsonResults.getOvercast() + "%");
-            else overcastValue.setText("");
+            overcastValue.setText(resultsFormatter.overcast());
 
             // write name of the city in file with last search
             try {
