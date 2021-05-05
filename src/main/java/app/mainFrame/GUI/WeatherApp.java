@@ -60,12 +60,11 @@ public class WeatherApp extends JFrame {
     // panel containing all components above
     private JPanel mainPanel;
 
-    private File lastSearchFile;
+    private final File lastSearchFile;
     private String lastSearchCity;
 
     public static void main(String[] args) {
-        WeatherApp weatherApp = new WeatherApp();
-
+        new WeatherApp();
     }
 
     WeatherApp() {
