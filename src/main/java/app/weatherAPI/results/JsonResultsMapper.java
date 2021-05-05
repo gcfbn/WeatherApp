@@ -1,7 +1,10 @@
 package app.weatherAPI.results;
 
+import app.weatherAPI.results.items.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import kong.unirest.JsonObjectMapper;
+import kong.unirest.ObjectMapper;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
@@ -13,7 +16,15 @@ public class JsonResultsMapper {
         // get JSONObject from HttpResponse
         JSONObject resultsObject = new JSONObject(httpResponse.getBody().toString());
 
-        JsonResults jsonResults = new JsonResults();
+        // create ObjectMapper
+        ObjectMapper objectMapper = new JsonObjectMapper();
+
+        // create all results object with default values
+        Temperature temperature = new Temperature();
+        Clouds clouds = new Clouds();
+        Wind wind = new Wind();
+        Sun sun = new Sun();
+        Info info = new Info();
 
         // get data from JSONObject
 
@@ -21,55 +32,45 @@ public class JsonResultsMapper {
         if (resultsObject.has("main")) {
             JSONObject temperatureObject = resultsObject.getJSONObject("main");
 
-            if (temperatureObject.has("temp"))
-                jsonResults.setCurrentTemperature(Double.toString(temperatureObject.getDouble("temp")));
-            if (temperatureObject.has("temp_min"))
-                jsonResults.setMinimalTemperature(Double.toString(temperatureObject.getDouble("temp_min")));
-            if (temperatureObject.has("temp_max"))
-                jsonResults.setMaximalTemperature(Double.toString(temperatureObject.getDouble("temp_max")));
-            if (temperatureObject.has("humidity"))
-                jsonResults.setHumidity(Integer.toString(temperatureObject.getInt("humidity")));
-            if (temperatureObject.has("pressure"))
-                jsonResults.setPressure(Double.toString(temperatureObject.getDouble("pressure")));
-            if (temperatureObject.has("feels_like"))
-                jsonResults.setFeelsLike(Double.toString(temperatureObject.getDouble("feels_like")));
+            temperature = objectMapper.readValue(temperatureObject.toString(), Temperature.class);
         }
 
         // overcast
         if (resultsObject.has("clouds")){
             JSONObject cloudsObject = resultsObject.getJSONObject("clouds");
-            if (cloudsObject.has("all"))
-                jsonResults.setOvercast(Integer.toString(cloudsObject.getInt("all")));
+
+            clouds = objectMapper.readValue(cloudsObject.toString(), Clouds.class);
         }
 
         // wind
         if (resultsObject.has("wind")) {
             JSONObject windObject = resultsObject.getJSONObject("wind");
 
-            if (windObject.has("deg")) {
-                int windAngle = windObject.getInt("deg");
-                String windDirection;
+            wind = objectMapper.readValue(windObject.toString(), Wind.class);
 
-                if ((windAngle >= 330 && windAngle < 360) || (windAngle >= 0 && windAngle < 30)) windDirection = "N";
-                else if (windAngle >= 30 && windAngle < 60) windDirection = "NE";
-                else if (windAngle >= 60 && windAngle < 120) windDirection = "E";
-                else if (windAngle >= 120 && windAngle < 150) windDirection = "SE";
-                else if (windAngle >= 150 && windAngle < 210) windDirection = "S";
-                else if (windAngle >= 210 && windAngle < 240) windDirection = "SW";
-                else if (windAngle >= 240 && windAngle < 300) windDirection = "W";
-                else windDirection = "NW";
-
-                jsonResults.setWindDirection(windDirection);
-            }
-            if (windObject.has("speed")) jsonResults.setWindSpeed(Double.toString(windObject.getDouble("speed")));
+//            if (windObject.has("deg")) {
+//                int windAngle = windObject.getInt("deg");
+//                String windDirection;
+//
+//                if ((windAngle >= 330 && windAngle < 360) || (windAngle >= 0 && windAngle < 30)) windDirection = "N";
+//                else if (windAngle >= 30 && windAngle < 60) windDirection = "NE";
+//                else if (windAngle >= 60 && windAngle < 120) windDirection = "E";
+//                else if (windAngle >= 120 && windAngle < 150) windDirection = "SE";
+//                else if (windAngle >= 150 && windAngle < 210) windDirection = "S";
+//                else if (windAngle >= 210 && windAngle < 240) windDirection = "SW";
+//                else if (windAngle >= 240 && windAngle < 300) windDirection = "W";
+//                else windDirection = "NW";
+//
+//                jsonResults.setDeg(windDirection);
+//            }
+//            if (windObject.has("speed")) jsonResults.setSpeed(Double.toString(windObject.getDouble("speed")));
         }
 
         // sun
         if (resultsObject.has("sys")) {
             JSONObject sunObject = resultsObject.getJSONObject("sys");
 
-            if (sunObject.has("sunrise")) jsonResults.setSunrise(sunObject.getLong("sunrise"));
-            if (sunObject.has("sunset")) jsonResults.setSunset(sunObject.getLong("sunset"));
+            sun = objectMapper.readValue(sunObject.toString(), Sun.class);
         }
 
         // icon & description
@@ -78,9 +79,10 @@ public class JsonResultsMapper {
         if (resultsObject.has("weather")) {
             JSONArray iconArray = (JSONArray) resultsObject.get("weather");
             JSONObject iconObject = (JSONObject) iconArray.get(0);
-            if (iconObject.has("icon")) jsonResults.setIcon(iconObject.getString("icon"));
-            if (iconObject.has("description")) jsonResults.setDescription(iconObject.getString("description"));
+
+            info = objectMapper.readValue(iconObject.toString(), Info.class);
         }
-        return jsonResults;
+
+        return new JsonResults(clouds, info, sun, temperature, wind);
     }
 }
