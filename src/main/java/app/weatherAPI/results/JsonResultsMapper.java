@@ -10,6 +10,7 @@ import kong.unirest.json.JSONObject;
 
 public class JsonResultsMapper {
 
+    // TODO maybe use some builder with annotations (check how could it be done in Java)
     public static JsonResults mapResults(HttpResponse<JsonNode> httpResponse) {
 
         // get JSONObject from HttpResponse
@@ -18,16 +19,10 @@ public class JsonResultsMapper {
         // create ObjectMapper
         ObjectMapper objectMapper = new JsonObjectMapper();
 
-        // create all results object with default values
-        Temperature temperature = new Temperature();
-        Clouds clouds = new Clouds();
-        Wind wind = new Wind();
-        Sun sun = new Sun();
-        Info info = new Info();
-
         // get data from JSONObject
 
         // temperature etc.
+        Temperature temperature = new Temperature();
         if (resultsObject.has("main")) {
             JSONObject temperatureObject = resultsObject.getJSONObject("main");
 
@@ -35,6 +30,7 @@ public class JsonResultsMapper {
         }
 
         // overcast
+        Clouds clouds = new Clouds();
         if (resultsObject.has("clouds")) {
             JSONObject cloudsObject = resultsObject.getJSONObject("clouds");
 
@@ -42,6 +38,7 @@ public class JsonResultsMapper {
         }
 
         // wind
+        Wind wind = new Wind();
         if (resultsObject.has("wind")) {
             JSONObject windObject = resultsObject.getJSONObject("wind");
 
@@ -49,6 +46,7 @@ public class JsonResultsMapper {
         }
 
         // sun
+        Sun sun = new Sun();
         if (resultsObject.has("sys")) {
             JSONObject sunObject = resultsObject.getJSONObject("sys");
 
@@ -58,6 +56,7 @@ public class JsonResultsMapper {
         // icon & description
         // "weather" key in returned JSON file is an array
         // first element of this array will be displayed
+        Info info = new Info();
         if (resultsObject.has("weather")) {
             JSONArray iconArray = (JSONArray) resultsObject.get("weather");
             JSONObject iconObject = (JSONObject) iconArray.get(0);

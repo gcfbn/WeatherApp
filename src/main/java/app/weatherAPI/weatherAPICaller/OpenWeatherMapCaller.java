@@ -36,6 +36,7 @@ public class OpenWeatherMapCaller {
         return new Response(httpResponse, status);
     }
 
+    // TODO rewrite this method using String.format()
     private String buildURL(Query query) {
         return "http://api.openweathermap.org/data/2.5/weather" + "?q=" + query.getCity() +
                 // TODO hide API key

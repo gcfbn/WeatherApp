@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class WeatherApp extends JFrame {
 
@@ -87,7 +88,7 @@ public class WeatherApp extends JFrame {
         if (lastSearchFile.exists()) {
             try {
                 lastSearchCity = TxtReader.readLine(lastSearchFile);
-                if (lastSearchCity != null && !lastSearchCity.equals(""))
+                if (!Objects.equals(lastSearchCity, ""))
                     lastSearchButton.setEnabled(true);
             } catch (IOException e) {
                 // when something gone wrong when reading from file
@@ -200,6 +201,7 @@ public class WeatherApp extends JFrame {
     // TODO refactor and shorten this method
     private void search(Query query) {
 
+        // TODO refactor - first create object, then call API
         OpenWeatherMapCaller openWeatherMapCaller = new OpenWeatherMapCaller(query);
 
         Response response = openWeatherMapCaller.buildResponse();
@@ -207,6 +209,7 @@ public class WeatherApp extends JFrame {
         // checks if query is correct
         int status = response.getStatus();
 
+        // TODO don't use status, instead use boolean like isSuccessful
         // show error if status is not equal 200
         if (status != 200) {
             String errorText = StatusErrorBuilder.buildErrorText(status, query.getLanguage());
@@ -235,6 +238,15 @@ public class WeatherApp extends JFrame {
 
             description.setText(resultsFormatter.description());
 
+            windSpeedValue.setText(resultsFormatter.windSpeed());
+            windDirectionValue.setText(resultsFormatter.windDirection());
+
+            sunriseValue.setText(resultsFormatter.sunrise());
+            sunsetValue.setText(resultsFormatter.sunset());
+
+            overcastValue.setText(resultsFormatter.overcast());
+
+            // TODO move icon reading to another method or class (if possible)
             // try to read icon from file
             try {
                 iconLabel.setIcon(IconReader.readIcon(resultsFormatter.icon()));
@@ -244,14 +256,7 @@ public class WeatherApp extends JFrame {
                         "Resource error", JOptionPane.ERROR_MESSAGE);
             }
 
-            windSpeedValue.setText(resultsFormatter.windSpeed());
-            windDirectionValue.setText(resultsFormatter.windDirection());
-
-            sunriseValue.setText(resultsFormatter.sunrise());
-            sunsetValue.setText(resultsFormatter.sunset());
-
-            overcastValue.setText(resultsFormatter.overcast());
-
+            // TODO move file writing to another method or class (if possible)
             // write name of the city in file with last search
             try {
                 String cityToWrite = query.getCity();
