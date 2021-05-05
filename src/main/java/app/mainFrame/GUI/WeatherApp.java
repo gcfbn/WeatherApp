@@ -136,6 +136,7 @@ public class WeatherApp extends JFrame {
         lastSearchButton.addActionListener(mainActionListener);
     }
 
+    // TODO use some multi-language-support library
     private void setLanguage(Language l) {
         cityLabel.setText(l.cityLabel);
         units.setText(l.units);
