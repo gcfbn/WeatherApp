@@ -8,7 +8,7 @@ public class Response {
     private final JsonResults jsonResults;
     private final int status;
 
-    public Response(HttpResponse<JsonNode> httpResponse, int status){
+    public Response(HttpResponse<JsonNode> httpResponse, int status) {
         jsonResults = JsonResultsMapper.mapResults(httpResponse);
         this.status = status;
     }

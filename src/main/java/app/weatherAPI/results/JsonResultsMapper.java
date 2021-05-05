@@ -8,10 +8,9 @@ import kong.unirest.ObjectMapper;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 
-// TODO use external JSON Mapper (for example JacksonObjectMapper)
 public class JsonResultsMapper {
 
-    public static JsonResults mapResults(HttpResponse<JsonNode> httpResponse){
+    public static JsonResults mapResults(HttpResponse<JsonNode> httpResponse) {
 
         // get JSONObject from HttpResponse
         JSONObject resultsObject = new JSONObject(httpResponse.getBody().toString());
@@ -36,7 +35,7 @@ public class JsonResultsMapper {
         }
 
         // overcast
-        if (resultsObject.has("clouds")){
+        if (resultsObject.has("clouds")) {
             JSONObject cloudsObject = resultsObject.getJSONObject("clouds");
 
             clouds = objectMapper.readValue(cloudsObject.toString(), Clouds.class);
@@ -47,23 +46,6 @@ public class JsonResultsMapper {
             JSONObject windObject = resultsObject.getJSONObject("wind");
 
             wind = objectMapper.readValue(windObject.toString(), Wind.class);
-
-//            if (windObject.has("deg")) {
-//                int windAngle = windObject.getInt("deg");
-//                String windDirection;
-//
-//                if ((windAngle >= 330 && windAngle < 360) || (windAngle >= 0 && windAngle < 30)) windDirection = "N";
-//                else if (windAngle >= 30 && windAngle < 60) windDirection = "NE";
-//                else if (windAngle >= 60 && windAngle < 120) windDirection = "E";
-//                else if (windAngle >= 120 && windAngle < 150) windDirection = "SE";
-//                else if (windAngle >= 150 && windAngle < 210) windDirection = "S";
-//                else if (windAngle >= 210 && windAngle < 240) windDirection = "SW";
-//                else if (windAngle >= 240 && windAngle < 300) windDirection = "W";
-//                else windDirection = "NW";
-//
-//                jsonResults.setDeg(windDirection);
-//            }
-//            if (windObject.has("speed")) jsonResults.setSpeed(Double.toString(windObject.getDouble("speed")));
         }
 
         // sun

@@ -2,8 +2,6 @@ package app.GUI;
 
 import app.query.Language;
 
-import javax.swing.*;
-
 public class StatusErrorBuilder {
 
     public static String buildErrorText(int status, Language l) {
@@ -21,7 +19,7 @@ public class StatusErrorBuilder {
         return error;
     }
 
-    public static String buildErrorTitle(Language l){
+    public static String buildErrorTitle(Language l) {
 
         return (l == Language.ENGLISH) ? "Error" : "Błąd";
     }

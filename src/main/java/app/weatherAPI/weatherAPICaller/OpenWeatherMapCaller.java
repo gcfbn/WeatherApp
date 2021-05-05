@@ -16,13 +16,13 @@ public class OpenWeatherMapCaller {
     private HttpResponse<JsonNode> httpResponse = null;
     private final int status;
 
-    public OpenWeatherMapCaller(Query query){
+    public OpenWeatherMapCaller(Query query) {
 
         // create URL from query
         String URL = buildURL(query);
 
         // call for response
-        try{
+        try {
             httpResponse = Unirest.get(URL).asJson();
         } catch (UnirestException e) {
             status = UNIREST_EXCEPTION;
@@ -32,7 +32,7 @@ public class OpenWeatherMapCaller {
         status = httpResponse.getStatus();
     }
 
-    public Response buildResponse(){
+    public Response buildResponse() {
         return new Response(httpResponse, status);
     }
 
