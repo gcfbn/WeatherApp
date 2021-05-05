@@ -1,5 +1,7 @@
 package app.weatherAPI.results;
 
+// TODO use Lombok here and maybe in other classes too
+
 public class JsonResults {
 
     // FIELDS
