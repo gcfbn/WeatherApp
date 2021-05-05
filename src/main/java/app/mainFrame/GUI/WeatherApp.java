@@ -94,8 +94,8 @@ public class WeatherApp extends JFrame {
                     lastSearchButton.setEnabled(true);
             } catch (IOException e) {
                 // when something gone wrong when reading from file
-                // TODO show error
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Could not read from file!",
+                        "Reading error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -125,7 +125,6 @@ public class WeatherApp extends JFrame {
         }
     }
 
-    // TODO make ActionListeners working
 
     private void addActionListeners() {
 
