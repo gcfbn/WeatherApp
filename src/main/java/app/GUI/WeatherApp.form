@@ -134,6 +134,7 @@
         <properties>
           <editable value="false"/>
           <enabled value="true"/>
+          <font name="Arial" size="20" style="0"/>
         </properties>
       </component>
       <component id="f0502" class="javax.swing.JLabel" binding="minimumTemperatureLabel">
@@ -382,6 +383,7 @@
         <properties>
           <editable value="false"/>
           <enabled value="true"/>
+          <font name="Arial" size="16" style="0"/>
         </properties>
       </component>
     </children>
