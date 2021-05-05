@@ -3,22 +3,21 @@ package app.mainFrame.GUI;
 import app.fileOperations.IconReader;
 import app.fileOperations.TxtReader;
 import app.fileOperations.TxtWriter;
-import app.query.Language;
-import app.query.Query;
-import app.query.QueryBuilder;
-import app.query.Units;
+import app.query.*;
 import app.weatherAPI.results.JsonResults;
 import app.weatherAPI.results.Response;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
 
-public class WeatherApp extends JFrame{
+public class WeatherApp extends JFrame {
 
     private JLabel cityLabel;
     private JTextField city;
@@ -64,12 +63,12 @@ public class WeatherApp extends JFrame{
     private File lastSearchFile;
     private String lastSearchCity;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         WeatherApp weatherApp = new WeatherApp();
 
     }
 
-    WeatherApp(){
+    WeatherApp() {
         setContentPane(this.mainPanel);
         setTitle("Weather app");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -100,9 +99,44 @@ public class WeatherApp extends JFrame{
                 e.printStackTrace();
             }
         }
+
+        // add ActionListeners to buttons and radiobuttons
+        addActionListeners();
+    }
+
+    private class MainActionListener implements ActionListener {
+
+        // set events
+        public void actionPerformed(ActionEvent arg0) {
+
+            Object actionSource = arg0.getSource();
+            if (englishLanguage == actionSource) {
+                setLanguage(Language.ENGLISH);
+            } else if (polishLanguage == actionSource) {
+                setLanguage(Language.POLISH);
+            } else if (searchButton == actionSource) {
+                search(buildQuery());
+            } else if (resetButton == actionSource) {
+                resetApp();
+            } else if (lastSearchButton == actionSource) {
+                search(new Query(lastSearchCity, getUnits(), getLanguage()));
+                // replace spaces with hex code of space ("%20")
+                city.setText(HexSpaceConverter.hexToSpaces(lastSearchCity));
+            }
+        }
     }
 
     // TODO make ActionListeners working
+
+    private void addActionListeners() {
+
+        MainActionListener mainActionListener = new MainActionListener();
+        englishLanguage.addActionListener(mainActionListener);
+        polishLanguage.addActionListener(mainActionListener);
+        searchButton.addActionListener(mainActionListener);
+        resetButton.addActionListener(mainActionListener);
+        lastSearchButton.addActionListener(mainActionListener);
+    }
 
     private void setLanguage(Language l) {
         cityLabel.setText(l.cityLabel);
