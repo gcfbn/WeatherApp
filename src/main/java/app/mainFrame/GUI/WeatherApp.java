@@ -90,7 +90,7 @@ public class WeatherApp extends JFrame {
         if (lastSearchFile.exists()) {
             try {
                 lastSearchCity = TxtReader.readLine(lastSearchFile);
-                if (lastSearchCity != null)
+                if (lastSearchCity != null && !lastSearchCity.equals(""))
                     lastSearchButton.setEnabled(true);
             } catch (IOException e) {
                 // when something gone wrong when reading from file
@@ -118,7 +118,7 @@ public class WeatherApp extends JFrame {
             } else if (resetButton == actionSource) {
                 resetApp();
             } else if (lastSearchButton == actionSource) {
-                search(new Query(lastSearchCity, getUnits(), getLanguage()));
+                search(QueryBuilder.buildQuery(lastSearchCity, getUnits(), getLanguage()));
                 // replace spaces with hex code of space ("%20")
                 city.setText(HexSpaceConverter.hexToSpaces(lastSearchCity));
             }
@@ -316,6 +316,7 @@ public class WeatherApp extends JFrame {
                         "Writing error", JOptionPane.ERROR_MESSAGE);
             }
 
+            // show components containing results
             setVisibilityOfResults(true);
         }
     }

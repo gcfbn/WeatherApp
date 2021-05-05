@@ -9,7 +9,9 @@ public class TxtReader {
 
     public static String readLine(File file) throws IOException{
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        return bufferedReader.readLine();
+        String result = bufferedReader.readLine();
+        bufferedReader.close();
+        return result;
     }
 
 }
