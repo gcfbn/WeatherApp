@@ -12,6 +12,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 public class OpenWeatherMapCaller {
 
     private final static int UNIREST_EXCEPTION = 900;
+    private final static String urlBegin = "http://api.openweathermap.org/data/2.5/weather?q=";
+    private final static String apiKey = "&appid=a52958f9ad25d7d64c67d97957bc6119";
 
     private HttpResponse<JsonNode> httpResponse = null;
     private final int status;
@@ -36,14 +38,9 @@ public class OpenWeatherMapCaller {
         return new Response(httpResponse, status);
     }
 
-    // TODO rewrite this method using String.format()
     private String buildURL(Query query) {
-        return "http://api.openweathermap.org/data/2.5/weather" + "?q=" + query.getCity() +
-                // TODO hide API key
-                "&appid=a52958f9ad25d7d64c67d97957bc6119" +  // API key
-                "&units=" +
-                ((query.getUnits() == Units.METRIC) ? "metric" : "imperial") +
-                "&lang=" +
-                ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
+        String units = ((query.getUnits() == Units.METRIC) ? "metric" : "imperial");
+        String language = ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
+        return String.format(urlBegin + "%s" + apiKey + "&units=" + "%s" + "&lang=" + "%s", query.getCity(), units, language);
     }
 }
