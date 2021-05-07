@@ -15,26 +15,23 @@ public class OpenWeatherMapCaller {
     private final static String urlBegin = "http://api.openweathermap.org/data/2.5/weather?q=";
     private final static String apiKey = "&appid=a52958f9ad25d7d64c67d97957bc6119";
 
-    private HttpResponse<JsonNode> httpResponse = null;
-    private final int status;
 
-    public OpenWeatherMapCaller(Query query) {
+    public Response callApiAndGetResponse(Query query) {
 
         // create URL from query
         String URL = buildURL(query);
 
+        int status;
+        HttpResponse<JsonNode> httpResponse = null;
+
         // call for response
         try {
             httpResponse = Unirest.get(URL).asJson();
+            status = httpResponse.getStatus();
         } catch (UnirestException e) {
             status = UNIREST_EXCEPTION;
-            return;
         }
 
-        status = httpResponse.getStatus();
-    }
-
-    public Response buildResponse() {
         return new Response(httpResponse, status);
     }
 

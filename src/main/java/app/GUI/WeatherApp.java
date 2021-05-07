@@ -188,13 +188,9 @@ public class WeatherApp extends JFrame {
         this.pack(); // resizes the window
     }
 
-    // TODO refactor and shorten this method
     private void search(Query query) {
 
-        // TODO refactor - first create object, then call API
-        OpenWeatherMapCaller openWeatherMapCaller = new OpenWeatherMapCaller(query);
-
-        Response response = openWeatherMapCaller.buildResponse();
+        Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
 
         // show error if response does not contain results
         if (!response.isSuccessful()) {
