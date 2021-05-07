@@ -1,4 +1,4 @@
-package app;
+package app.query;
 
 public class Query {
 
@@ -6,7 +6,7 @@ public class Query {
     private final Units units;
     private final Language language;
 
-    Query(String city, Units units, Language language) {
+    public Query(String city, Units units, Language language) {
         this.city = city;
         this.units = units;
         this.language = language;
