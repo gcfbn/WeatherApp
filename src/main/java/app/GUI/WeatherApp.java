@@ -85,17 +85,7 @@ public class WeatherApp extends JFrame {
 
         // create file if it doesn't exist
         // in other case, try to read from file
-        if (lastSearchFile.exists()) {
-            try {
-                lastSearchCity = TxtReader.readLine(lastSearchFile);
-                if (!Objects.equals(lastSearchCity, ""))
-                    lastSearchButton.setEnabled(true);
-            } catch (IOException e) {
-                // when something gone wrong when reading from file
-                JOptionPane.showMessageDialog(this, "Could not read from file!",
-                        "Reading error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        createOrReadLastSearch(lastSearchFile);
 
         // add ActionListeners to buttons and radiobuttons
         addActionListeners();
@@ -246,27 +236,10 @@ public class WeatherApp extends JFrame {
 
             overcastValue.setText(resultsFormatter.overcast());
 
-            // TODO move icon reading to another method or class (if possible)
-            // try to read icon from file
-            try {
-                iconLabel.setIcon(IconReader.readIcon(resultsFormatter.icon()));
-                iconLabel.setVisible(true);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Could not load resource file!",
-                        "Resource error", JOptionPane.ERROR_MESSAGE);
-            }
+            setAndShowIcon(iconLabel, resultsFormatter.icon());
 
-            // TODO move file writing to another method or class (if possible)
             // write name of the city in file with last search
-            try {
-                String cityToWrite = query.getCity();
-                TxtWriter.writeLine(lastSearchFile, cityToWrite);
-                lastSearchButton.setEnabled(true);
-                lastSearchCity = cityToWrite;
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Could not write file!",
-                        "Writing error", JOptionPane.ERROR_MESSAGE);
-            }
+            writeLastSearch(query.getCity());
 
             // show components containing results
             setVisibilityOfResults(true);
@@ -285,5 +258,40 @@ public class WeatherApp extends JFrame {
     private Units getUnits() {
         if (metricUnits.isSelected()) return Units.METRIC;
         else return Units.IMPERIAL;
+    }
+
+    private void createOrReadLastSearch(File file) {
+        if (file.exists()) {
+            try {
+                lastSearchCity = TxtReader.readLine(file);
+                if (!Objects.equals(lastSearchCity, ""))
+                    lastSearchButton.setEnabled(true);
+            } catch (IOException e) {
+                // when something gone wrong when reading from file
+                JOptionPane.showMessageDialog(this, "Could not read from file!",
+                        "Reading error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void writeLastSearch(String cityName) {
+        try {
+            TxtWriter.writeLine(lastSearchFile, cityName);
+            lastSearchButton.setEnabled(true);
+            lastSearchCity = cityName;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Could not write file!",
+                    "Writing error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void setAndShowIcon(JLabel iconLabel, String icon) {
+        try {
+            iconLabel.setIcon(IconReader.readIcon(icon));
+            iconLabel.setVisible(true);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Could not load resource file!",
+                    "Resource error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
