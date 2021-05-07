@@ -196,13 +196,9 @@ public class WeatherApp extends JFrame {
 
         Response response = openWeatherMapCaller.buildResponse();
 
-        // checks if query is correct
-        int status = response.getStatus();
-
-        // TODO don't use status, instead use boolean like isSuccessful
-        // show error if status is not equal 200
-        if (status != 200) {
-            String errorText = StatusErrorBuilder.buildErrorText(status, query.getLanguage());
+        // show error if response does not contain results
+        if (!response.isSuccessful()) {
+            String errorText = StatusErrorBuilder.buildErrorText(response.getStatus(), query.getLanguage());
             String errorTitle = StatusErrorBuilder.buildErrorTitle(query.getLanguage());
 
             JOptionPane.showMessageDialog(this, errorText, errorTitle, JOptionPane.ERROR_MESSAGE);
