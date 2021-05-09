@@ -1,7 +1,5 @@
 package app.weatherAPI.results;
 
-// TODO use Lombok here and maybe in other classes too
-
 import app.weatherAPI.results.items.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
