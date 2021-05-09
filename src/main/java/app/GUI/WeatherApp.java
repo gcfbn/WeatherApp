@@ -204,7 +204,7 @@ public class WeatherApp extends JFrame {
         else {
 
             // get results from response
-            JsonResults jsonResults = response.getResults();
+            JsonResults jsonResults = response.getJsonResults();
 
             // create ResultsFormatter
             ResultsFormatter resultsFormatter = new ResultsFormatter(query.getUnits(), jsonResults);

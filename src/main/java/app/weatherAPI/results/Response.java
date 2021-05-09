@@ -2,7 +2,9 @@ package app.weatherAPI.results;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import lombok.Getter;
 
+@Getter
 public class Response {
 
     private final JsonResults jsonResults;
@@ -13,17 +15,5 @@ public class Response {
         jsonResults = JsonResultsMapper.mapResults(httpResponse);
         this.status = status;
         isSuccessful = (status == 200);
-    }
-
-    public JsonResults getResults() {
-        return jsonResults;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public boolean isSuccessful() {
-        return isSuccessful;
     }
 }
