@@ -1,14 +1,9 @@
 package app.weatherAPI.results.items;
 
+import lombok.Getter;
+
+@Getter
 public class Wind {
 
     private String deg = "", speed = "";
-
-    public String getDeg() {
-        return deg;
-    }
-
-    public String getSpeed() {
-        return speed;
-    }
 }
