@@ -1,16 +1,26 @@
 package app.weatherAPI.results;
 
 import app.weatherAPI.results.items.*;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
+@Setter
 public class JsonResults {
 
-    private final Clouds clouds;
-    private final Info info;
-    private final Sun sun;
-    private final Temperature temperature;
-    private final Wind wind;
+    @JsonProperty("clouds")
+    private Clouds clouds;
+
+    @JsonProperty("weather")
+    private Info info;
+
+    @JsonProperty("sys")
+    private Sun sun;
+
+    @JsonProperty("main")
+    private Temperature temperature;
+
+    @JsonProperty("wind")
+    private Wind wind;
 }
