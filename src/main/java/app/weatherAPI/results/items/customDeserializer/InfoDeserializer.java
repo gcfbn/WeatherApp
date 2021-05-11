@@ -16,9 +16,15 @@ public class InfoDeserializer extends JsonDeserializer<Info> {
     @Override
     public Info deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         System.out.println("kajak");
-        // TODO something goes wrong here
         JsonNode jsonNode = p.getCodec().readTree(p);
         JsonNode firstArrayElement = jsonNode.get(0);
-        return firstArrayElement.traverse().readValueAs(Info.class);
+        JsonParser parser = firstArrayElement.traverse();
+        parser.setCodec(p.getCodec());
+        // TODO something goes wrong here
+        // readValueAs tries to read value from 0-indexed array element
+        // using this, InfoDeserializer parser
+        // however, it should parse it like a normal POJO class using default object mapper
+        // try to fix it
+        return parser.readValueAs(Info.class);
     }
 }
