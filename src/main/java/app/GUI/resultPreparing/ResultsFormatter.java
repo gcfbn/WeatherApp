@@ -18,8 +18,8 @@ public class ResultsFormatter {
     public ResultsFormatter(Units units, JsonResults results) {
         this.clouds = results.getClouds();
         this.temperature = results.getTemperature();
-        this.info = results.getWeather();
-        this.sun = results.getSys();
+        this.info = results.getInfo();
+        this.sun = results.getSun();
         this.wind = results.getWind();
 
         this.temperatureUnit = calculateTemperatureUnit(units);
