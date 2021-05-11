@@ -1,6 +1,7 @@
 package app.GUI;
 
 import app.query.Language;
+import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 public class StatusErrorBuilder {
 
@@ -12,8 +13,12 @@ public class StatusErrorBuilder {
             error = (l == Language.ENGLISH) ? "Invalid city name!" : "Nieprawidłowe miasto!";
         } else if (status == 401 || status == 403) {    // authentication error
             error = (l == Language.ENGLISH) ? "Authentication error!" : "Błąd autoryzacji!";
-        } else { // server error 500/501
+        } else if (status == 500 || status == 501){
             error = (l == Language.ENGLISH) ? "Server error!" : "Błąd serwera!";
+        } else if (status == OpenWeatherMapCaller.UNIREST_EXCEPTION){
+            error = (l == Language.ENGLISH) ? "Unirest error!" : "Błąd biblioteki Unirest";
+        } else { // status == OpenWeatherMapCaller.JACKSON_EXCEPTION
+            error = (l == Language.ENGLISH) ? "Jackson error!" : "Błąd biblioteki Jackson";
         }
 
         return error;

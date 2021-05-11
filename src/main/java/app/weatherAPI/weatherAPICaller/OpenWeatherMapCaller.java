@@ -11,7 +11,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class OpenWeatherMapCaller {
 
-    private final static int UNIREST_EXCEPTION = 900;
+    public final static int UNIREST_EXCEPTION = 900;
+    public final static int JACKSON_EXCEPTION = 1000;
     private final static String urlBegin = "http://api.openweathermap.org/data/2.5/weather?q=";
     private final static String apiKey = "&appid=a52958f9ad25d7d64c67d97957bc6119";
 
