@@ -1,32 +1,68 @@
 package app.weatherAPI.results;
 
 import app.weatherAPI.results.items.*;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
 public class JsonResults {
 
-    private final Clouds clouds;
+    @JsonProperty("clouds")
+    private Clouds clouds;
 
-    private final Info info;
+    @JsonProperty("weather")
+    private Info weather;
 
-    private final Sun sun;
+    @JsonProperty("sys")
+    private Sun sys;
 
-    private final Temperature temperature;
+    @JsonProperty("main")
+    private Temperature temperature;
 
-    private final Wind wind;
+    @JsonProperty("wind")
+    private Wind wind;
 
-    @JsonCreator
-    public JsonResults(@JsonProperty("clouds") final Clouds clouds, @JsonProperty("weather") final Info info,
-                       @JsonProperty("sys") final Sun sun, @JsonProperty("main") final Temperature temperature,
-                       @JsonProperty("wind") final Wind wind) {
+    public Clouds getClouds() {
+        return clouds;
+    }
+
+    public void setClouds(Clouds clouds) {
         this.clouds = clouds;
-        this.info = info;
-        this.sun = sun;
+    }
+
+    public Sun getSys() {
+        return sys;
+    }
+
+    public void setSys(Sun sys) {
+        this.sys = sys;
+    }
+
+    @JsonProperty("main")
+    public Temperature getTemperature() {
+        return temperature;
+    }
+
+    @JsonProperty("main")
+    public void setTemperature(Temperature temperature) {
         this.temperature = temperature;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
+
+    public void setWind(Wind wind) {
         this.wind = wind;
+    }
+
+    public Info getWeather() {
+        return weather;
+    }
+
+    public void setWeather(Info weather) {
+        this.weather = weather;
     }
 }
