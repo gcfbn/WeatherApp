@@ -38,7 +38,7 @@ public class OpenWeatherMapCaller {
 
     private String buildURL(Query query) {
         String units = ((query.getUnits() == Units.METRIC) ? "metric" : "imperial");
-        String language = ((query.getLanguage() == Language.ENGLISH) ? "en" : "pl");
+        String language = (query.getLanguage().getLanguageCode());
         return String.format(urlBegin + "%s" + apiKey + "&units=" + "%s" + "&lang=" + "%s", query.getCity(), units, language);
     }
 }
