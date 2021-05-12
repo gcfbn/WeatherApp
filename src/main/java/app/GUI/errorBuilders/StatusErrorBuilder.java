@@ -6,8 +6,7 @@ import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 public class StatusErrorBuilder {
 
-    public static Error buildErrorText(int status, Language l) {
-
+    public static Error buildStatusError(int status, Language l) {
 
         ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("statusErrors", l);
 

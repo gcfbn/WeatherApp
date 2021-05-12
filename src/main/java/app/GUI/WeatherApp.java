@@ -204,7 +204,7 @@ public class WeatherApp extends JFrame {
 
         // show error if response is not successful
         if (!response.isSuccessful()) {
-            Error error = StatusErrorBuilder.buildErrorText(response.getStatus(), query.getLanguage());
+            Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.getLanguage());
 
             JOptionPane.showMessageDialog(this, error.getText(), error.getTitle(),
                     JOptionPane.ERROR_MESSAGE);
