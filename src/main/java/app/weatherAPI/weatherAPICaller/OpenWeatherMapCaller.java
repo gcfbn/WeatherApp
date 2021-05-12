@@ -1,7 +1,6 @@
 package app.weatherAPI.weatherAPICaller;
 
 import app.query.Query;
-import app.query.Units;
 import app.weatherAPI.results.Response;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -36,7 +35,7 @@ public class OpenWeatherMapCaller {
     }
 
     private String buildURL(Query query) {
-        String units = ((query.getUnits() == Units.METRIC) ? "metric" : "imperial");
+        String units = query.getUnits().getUnitsCode();
         String language = (query.getLanguage().getLanguageCode());
         return String.format(urlBegin + "%s" + apiKey + "&units=" + "%s" + "&lang=" + "%s", query.getCity(), units, language);
     }
