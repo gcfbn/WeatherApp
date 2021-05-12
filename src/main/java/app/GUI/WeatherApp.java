@@ -1,6 +1,7 @@
 package app.GUI;
 
 import app.GUI.errorBuilders.Error;
+import app.GUI.errorBuilders.ReadingErrorBuilder;
 import app.GUI.errorBuilders.StatusErrorBuilder;
 import app.GUI.resultPreparing.ResultsFormatter;
 import app.fileOperations.IconReader;
@@ -266,8 +267,7 @@ public class WeatherApp extends JFrame {
                     lastSearchButton.setEnabled(true);
             } catch (IOException e) {
                 // when something gone wrong when reading from file
-                JOptionPane.showMessageDialog(this, "Could not read from file!",
-                        "Reading error", JOptionPane.ERROR_MESSAGE);
+                showError(ReadingErrorBuilder.buildReadingError(getLanguage()));
             }
         }
     }
@@ -288,8 +288,12 @@ public class WeatherApp extends JFrame {
             iconLabel.setIcon(IconReader.readIcon(icon));
             iconLabel.setVisible(true);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Could not load resource file!",
-                    "Resource error", JOptionPane.ERROR_MESSAGE);
+            showError(ReadingErrorBuilder.buildReadingError(getLanguage()));
         }
+    }
+
+    private void showError(Error error) {
+        JOptionPane.showMessageDialog(this, error.getText(), error.getTitle(),
+                JOptionPane.ERROR_MESSAGE);
     }
 }
