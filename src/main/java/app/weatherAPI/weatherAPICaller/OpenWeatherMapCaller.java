@@ -1,6 +1,5 @@
 package app.weatherAPI.weatherAPICaller;
 
-import app.language.Language;
 import app.query.Query;
 import app.query.Units;
 import app.weatherAPI.results.Response;
