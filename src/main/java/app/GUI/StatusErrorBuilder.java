@@ -1,6 +1,6 @@
 package app.GUI;
 
-import app.query.Language;
+import app.language.Language;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 public class StatusErrorBuilder {

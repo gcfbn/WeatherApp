@@ -1,5 +1,6 @@
 package app.query;
 
+import app.language.Language;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

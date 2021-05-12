@@ -4,6 +4,7 @@ import app.GUI.resultPreparing.ResultsFormatter;
 import app.fileOperations.IconReader;
 import app.fileOperations.TxtReader;
 import app.fileOperations.TxtWriter;
+import app.language.Language;
 import app.query.*;
 import app.weatherAPI.results.JsonResults;
 import app.weatherAPI.results.Response;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
 public class WeatherApp extends JFrame {
