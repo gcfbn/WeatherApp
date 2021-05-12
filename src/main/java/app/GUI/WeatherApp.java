@@ -3,6 +3,7 @@ package app.GUI;
 import app.GUI.errorBuilders.Error;
 import app.GUI.errorBuilders.ReadingErrorBuilder;
 import app.GUI.errorBuilders.StatusErrorBuilder;
+import app.GUI.errorBuilders.WritingErrorBuilder;
 import app.GUI.resultPreparing.ResultsFormatter;
 import app.fileOperations.IconReader;
 import app.fileOperations.TxtReader;
@@ -278,8 +279,7 @@ public class WeatherApp extends JFrame {
             lastSearchButton.setEnabled(true);
             lastSearchCity = cityName;
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Could not write file!",
-                    "Writing error", JOptionPane.ERROR_MESSAGE);
+            showError(WritingErrorBuilder.buildWritingError(getLanguage()));
         }
     }
 
