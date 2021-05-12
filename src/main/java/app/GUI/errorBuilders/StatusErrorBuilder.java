@@ -9,7 +9,7 @@ public class StatusErrorBuilder {
     public static Error buildErrorText(int status, Language l) {
 
 
-        ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("errors", l);
+        ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("statusErrors", l);
 
         String title = resourceBundleLoader.getString("title");
 
