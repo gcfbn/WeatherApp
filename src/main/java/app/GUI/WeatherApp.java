@@ -5,6 +5,7 @@ import app.fileOperations.IconReader;
 import app.fileOperations.TxtReader;
 import app.fileOperations.TxtWriter;
 import app.language.Language;
+import app.language.ResourceBundleLoader;
 import app.query.*;
 import app.weatherAPI.results.JsonResults;
 import app.weatherAPI.results.Response;
@@ -57,7 +58,6 @@ public class WeatherApp extends JFrame {
     private JLabel overcastLabel;
     private JTextField overcastValue;
 
-
     // panel containing all components above
     private JPanel mainPanel;
 
@@ -65,6 +65,8 @@ public class WeatherApp extends JFrame {
     private String lastSearchCity;
 
     public static void main(String[] args) {
+        // app will start in english
+        Locale.setDefault(new Locale(Language.ENGLISH.getLanguageCode(), Language.ENGLISH.getCountryCode()));
         new WeatherApp();
     }
 
@@ -126,30 +128,32 @@ public class WeatherApp extends JFrame {
         lastSearchButton.addActionListener(mainActionListener);
     }
 
-    // TODO use some multi-language-support library
     private void setLanguage(Language l) {
-        cityLabel.setText(l.cityLabel);
-        units.setText(l.units);
-        metricUnits.setText(l.metricUnits);
-        imperialUnits.setText(l.imperialUnits);
-        language.setText(l.language);
-        englishLanguage.setText(l.englishLanguage);
-        polishLanguage.setText(l.polishLangauge);
-        searchButton.setText(l.searchButton);
-        resetButton.setText(l.reset);
-        lastSearchButton.setText(l.lastSearch);
-        minimumTemperatureLabel.setText(l.minimalTemperatureLabel);
-        maximumTemperatureLabel.setText(l.maximalTemperatureLabel);
-        feelsLikeLabel.setText(l.feelsLikeLabel);
-        pressureLabel.setText(l.pressureLabel);
-        humidityLabel.setText(l.humidityLabel);
-        wind.setText(l.wind);
-        windSpeedLabel.setText(l.windSpeedLabel);
-        windDirectionLabel.setText(l.windDirectionLabel);
-        sky.setText(l.sky);
-        sunriseLabel.setText(l.sunriseLabel);
-        sunsetLabel.setText(l.sunsetLabel);
-        overcastLabel.setText(l.overcastLabel);
+        // create bundle loader
+        ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("components", l);
+
+        cityLabel.setText(resourceBundleLoader.getString("city"));
+        units.setText(resourceBundleLoader.getString("units"));
+        metricUnits.setText(resourceBundleLoader.getString("metric"));
+        imperialUnits.setText(resourceBundleLoader.getString("imperial"));
+        language.setText(resourceBundleLoader.getString("language"));
+        englishLanguage.setText(resourceBundleLoader.getString("english"));
+        polishLanguage.setText(resourceBundleLoader.getString("polish"));
+        searchButton.setText(resourceBundleLoader.getString("search"));
+        resetButton.setText(resourceBundleLoader.getString("reset"));
+        lastSearchButton.setText(resourceBundleLoader.getString("last.search"));
+        minimumTemperatureLabel.setText(resourceBundleLoader.getString("minimum.temperature"));
+        maximumTemperatureLabel.setText(resourceBundleLoader.getString("maximum.temperature"));
+        feelsLikeLabel.setText(resourceBundleLoader.getString("feels.like"));
+        pressureLabel.setText(resourceBundleLoader.getString("atmospheric.pressure"));
+        humidityLabel.setText(resourceBundleLoader.getString("humidity"));
+        wind.setText(resourceBundleLoader.getString("wind"));
+        windSpeedLabel.setText(resourceBundleLoader.getString("speed"));
+        windDirectionLabel.setText(resourceBundleLoader.getString("direction"));
+        sky.setText(resourceBundleLoader.getString("sky"));
+        sunriseLabel.setText(resourceBundleLoader.getString("sunrise"));
+        sunsetLabel.setText(resourceBundleLoader.getString("sunset"));
+        overcastLabel.setText(resourceBundleLoader.getString("overcast"));
         pack(); // resize window
     }
 

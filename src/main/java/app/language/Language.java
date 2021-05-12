@@ -7,8 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Language {
 
-    ENGLISH("en"),
-    POLISH("pl");
+    ENGLISH("en", "US"),
+    POLISH("pl", "PL");
 
     private final String languageCode;
+    private final String countryCode;
 }
