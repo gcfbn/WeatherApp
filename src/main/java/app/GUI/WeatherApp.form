@@ -66,7 +66,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="16" style="0"/>
-          <selected value="false"/>
+          <selected value="true"/>
           <text resource-bundle="components" key="english"/>
         </properties>
       </component>

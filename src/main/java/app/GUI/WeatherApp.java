@@ -249,13 +249,11 @@ public class WeatherApp extends JFrame {
     }
 
     private Language getLanguage() {
-        if (englishLanguage.isSelected()) return Language.ENGLISH;
-        else return Language.POLISH;
+        return (englishLanguage.isSelected()) ? Language.ENGLISH : Language.POLISH;
     }
 
     private Units getUnits() {
-        if (metricUnits.isSelected()) return Units.METRIC;
-        else return Units.IMPERIAL;
+        return (metricUnits.isSelected()) ? Units.METRIC : Units.IMPERIAL;
     }
 
     private void createOrReadLastSearch(File file) {
