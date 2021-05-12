@@ -1,5 +1,7 @@
 package app.GUI;
 
+import app.GUI.errorBuilders.Error;
+import app.GUI.errorBuilders.StatusErrorBuilder;
 import app.GUI.resultPreparing.ResultsFormatter;
 import app.fileOperations.IconReader;
 import app.fileOperations.TxtReader;
@@ -198,12 +200,12 @@ public class WeatherApp extends JFrame {
 
         Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
 
-        // show error if response does not contain results
+        // show error if response is not successful
         if (!response.isSuccessful()) {
-            String errorText = StatusErrorBuilder.buildErrorText(response.getStatus(), query.getLanguage());
-            String errorTitle = StatusErrorBuilder.buildErrorTitle(query.getLanguage());
+            Error error = StatusErrorBuilder.buildErrorText(response.getStatus(), query.getLanguage());
 
-            JOptionPane.showMessageDialog(this, errorText, errorTitle, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, error.getText(), error.getTitle(),
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         // query is correct
