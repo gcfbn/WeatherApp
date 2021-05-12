@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="10" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="3" vgap="5">
     <margin top="3" left="3" bottom="3" right="3"/>
     <constraints>
-      <xy x="20" y="25" width="810" height="416"/>
+      <xy x="20" y="25" width="849" height="416"/>
     </constraints>
     <properties>
       <font name="Arial" size="16" style="0"/>
@@ -16,7 +16,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="26" style="0"/>
-          <text value="City:"/>
+          <text resource-bundle="components" key="city"/>
         </properties>
       </component>
       <component id="c4786" class="javax.swing.JLabel" binding="language">
@@ -25,7 +25,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="20" style="0"/>
-          <text value="Language:"/>
+          <text resource-bundle="components" key="language"/>
         </properties>
       </component>
       <component id="99015" class="javax.swing.JLabel" binding="units">
@@ -34,7 +34,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="20" style="0"/>
-          <text value="Units: "/>
+          <text resource-bundle="components" key="units"/>
         </properties>
       </component>
       <component id="f5d87" class="javax.swing.JRadioButton" binding="metricUnits">
@@ -44,9 +44,10 @@
           </grid>
         </constraints>
         <properties>
+          <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
           <selected value="true"/>
-          <text value="Metric"/>
+          <text resource-bundle="components" key="metric"/>
         </properties>
       </component>
       <component id="394b5" class="javax.swing.JRadioButton" binding="imperialUnits">
@@ -56,7 +57,7 @@
         <properties>
           <font name="Arial" size="16" style="0"/>
           <selected value="false"/>
-          <text value="Imperial"/>
+          <text resource-bundle="components" key="imperial"/>
         </properties>
       </component>
       <component id="82abc" class="javax.swing.JRadioButton" binding="englishLanguage">
@@ -65,8 +66,8 @@
         </constraints>
         <properties>
           <font name="Arial" size="16" style="0"/>
-          <selected value="true"/>
-          <text value="English"/>
+          <selected value="false"/>
+          <text resource-bundle="components" key="english"/>
         </properties>
       </component>
       <component id="9f972" class="javax.swing.JRadioButton" binding="polishLanguage">
@@ -75,7 +76,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="16" style="0"/>
-          <text value="Polish"/>
+          <text resource-bundle="components" key="polish"/>
         </properties>
       </component>
       <component id="d3c01" class="javax.swing.JButton" binding="searchButton">
@@ -84,7 +85,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="32" style="1"/>
-          <text value="Search"/>
+          <text resource-bundle="components" key="search"/>
         </properties>
       </component>
       <component id="d632e" class="javax.swing.JButton" binding="resetButton">
@@ -93,7 +94,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="32" style="1"/>
-          <text value="Reset"/>
+          <text resource-bundle="components" key="reset"/>
         </properties>
       </component>
       <component id="e0008" class="javax.swing.JButton" binding="lastSearchButton">
@@ -103,7 +104,7 @@
         <properties>
           <enabled value="false"/>
           <font name="Arial" size="32" style="1"/>
-          <text value="Last search"/>
+          <text resource-bundle="components" key="last.search"/>
         </properties>
       </component>
       <component id="deacb" class="javax.swing.JLabel" binding="iconLabel">
@@ -144,7 +145,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Minimum temperature:"/>
+          <text resource-bundle="components" key="minimum.temperature"/>
         </properties>
       </component>
       <component id="23c39" class="javax.swing.JTextField" binding="minimumTemperatureValue">
@@ -177,7 +178,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Maximum temperature:"/>
+          <text resource-bundle="components" key="maximum.temperature"/>
         </properties>
       </component>
       <component id="d4d9a" class="javax.swing.JTextField" binding="maximumTemperatureValue">
@@ -199,7 +200,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Feels like:"/>
+          <text resource-bundle="components" key="feels.like"/>
         </properties>
       </component>
       <component id="a8ea5" class="javax.swing.JTextField" binding="feelsLikeValue">
@@ -221,7 +222,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Atmospheric pressure:"/>
+          <text resource-bundle="components" key="atmospheric.pressure"/>
         </properties>
       </component>
       <component id="8901b" class="javax.swing.JTextField" binding="pressureValue">
@@ -243,7 +244,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Humidity:"/>
+          <text resource-bundle="components" key="humidity"/>
         </properties>
       </component>
       <component id="adb6d" class="javax.swing.JTextField" binding="humidityValue">
@@ -264,7 +265,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="20" style="1"/>
-          <text value="Wind:"/>
+          <text resource-bundle="components" key="wind"/>
         </properties>
       </component>
       <component id="21294" class="javax.swing.JLabel" binding="sky">
@@ -273,7 +274,7 @@
         </constraints>
         <properties>
           <font name="Arial" size="20" style="1"/>
-          <text value="Sky:"/>
+          <text resource-bundle="components" key="sky"/>
         </properties>
       </component>
       <component id="4990c" class="javax.swing.JLabel" binding="windSpeedLabel">
@@ -283,7 +284,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Speed:"/>
+          <text resource-bundle="components" key="speed"/>
         </properties>
       </component>
       <component id="cad1" class="javax.swing.JTextField" binding="windSpeedValue">
@@ -305,7 +306,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Direction:"/>
+          <text resource-bundle="components" key="direction"/>
         </properties>
       </component>
       <component id="4acc5" class="javax.swing.JTextField" binding="windDirectionValue">
@@ -327,7 +328,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Sunrise:"/>
+          <text resource-bundle="components" key="sunrise"/>
         </properties>
       </component>
       <component id="cdad8" class="javax.swing.JTextField" binding="sunriseValue">
@@ -349,7 +350,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Sunset:"/>
+          <text resource-bundle="components" key="sunset"/>
         </properties>
       </component>
       <component id="87e56" class="javax.swing.JTextField" binding="sunsetValue">
@@ -371,7 +372,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
-          <text value="Overcast:"/>
+          <text resource-bundle="components" key="overcast"/>
         </properties>
       </component>
       <component id="15002" class="javax.swing.JTextField" binding="overcastValue">
