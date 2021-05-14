@@ -17,9 +17,7 @@ public class DateBuilder {
     }
 
     private static String buildTime(int hours, int minutes){
-        String stringHours = Integer.toString(hours);
-        String stringMinutes = (minutes < 10) ? "0" + minutes :
-                Integer.toString(minutes);
-        return stringHours + ":" + stringMinutes;
+        String stringMinutes = (minutes < 10) ? "0" + minutes : Integer.toString(minutes);
+        return String.format("%d:%s", hours, stringMinutes);
     }
 }

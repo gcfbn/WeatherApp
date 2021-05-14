@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 
-public class WeatherApp extends JFrame {
+public class MainView extends JFrame {
 
     private JLabel cityLabel;
     private JTextField city;
@@ -68,13 +68,7 @@ public class WeatherApp extends JFrame {
     private final File lastSearchFile;
     private String lastSearchCity;
 
-    public static void main(String[] args) {
-        // app will start in english
-        Locale.setDefault(new Locale(Language.ENGLISH.getLanguageCode(), Language.ENGLISH.getCountryCode()));
-        new WeatherApp();
-    }
-
-    WeatherApp() {
+    public MainView() {
         setContentPane(this.mainPanel);
         setTitle("Weather app");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -264,7 +258,7 @@ public class WeatherApp extends JFrame {
         if (file.exists()) {
             try {
                 lastSearchCity = TxtReader.readLine(file);
-                if (!Objects.equals(lastSearchCity, ""))
+                if (!Objects.equals(lastSearchCity, ""))   // TODO: !"".equals(lastSearchCity)
                     lastSearchButton.setEnabled(true);
             } catch (IOException e) {
                 // when something gone wrong when reading from file

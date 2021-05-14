@@ -12,8 +12,7 @@ class ReadingErrorBuilderTest {
 
     @BeforeAll
     static void setLocale() {
-        Locale.setDefault(
-                new Locale(Language.ENGLISH.getLanguageCode(), Language.ENGLISH.getCountryCode()));
+        Locale.setDefault(new Locale(Language.ENGLISH.getLanguageCode(), Language.ENGLISH.getCountryCode()));
     }
 
     @Test
