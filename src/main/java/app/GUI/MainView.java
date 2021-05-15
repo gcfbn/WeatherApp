@@ -1,10 +1,10 @@
 package app.GUI;
 
-import app.GUI.errorBuilders.Error;
-import app.GUI.errorBuilders.ReadingErrorBuilder;
+import app.errorBuilders.Error;
+import app.errorBuilders.ReadingErrorBuilder;
 import app.GUI.resultPreparing.ResultsFormatter;
 import app.MainViewPresenter;
-import app.fileOperations.IconReader;
+import app.fileIO.IconReader;
 import app.language.Language;
 import app.language.ResourceBundleLoader;
 import app.query.*;

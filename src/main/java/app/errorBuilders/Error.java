@@ -1,4 +1,4 @@
-package app.GUI.errorBuilders;
+package app.errorBuilders;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

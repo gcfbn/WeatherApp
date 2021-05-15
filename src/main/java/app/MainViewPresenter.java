@@ -1,12 +1,12 @@
 package app;
 
 import app.GUI.MainView;
-import app.GUI.errorBuilders.Error;
-import app.GUI.errorBuilders.ReadingErrorBuilder;
-import app.GUI.errorBuilders.StatusErrorBuilder;
-import app.GUI.errorBuilders.WritingErrorBuilder;
+import app.errorBuilders.Error;
+import app.errorBuilders.ReadingErrorBuilder;
+import app.errorBuilders.StatusErrorBuilder;
+import app.errorBuilders.WritingErrorBuilder;
 import app.GUI.resultPreparing.ResultsFormatter;
-import app.fileOperations.LastSearchFile;
+import app.fileIO.LastSearchFile;
 import app.language.Language;
 import app.query.HexSpaceConverter;
 import app.query.Query;
@@ -18,6 +18,7 @@ import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Optional;
 
 public class MainViewPresenter {
     private final MainView view;
@@ -29,7 +30,7 @@ public class MainViewPresenter {
     private Units defaultUnits = Units.METRIC;
     private Units units = defaultUnits;
 
-    private String lastSearchCity;
+    private Optional<String> lastSearchCity;
     private LastSearchFile lastSearchFile;
 
     public MainViewPresenter(MainView view, MainViewModel model) {
@@ -46,7 +47,7 @@ public class MainViewPresenter {
 
         try {
             this.lastSearchCity = lastSearchFile.createOrReadLastSearchedCity();
-            var enable = this.lastSearchCity != null && !"".equals(lastSearchCity);
+            var enable = this.lastSearchCity.isPresent() && !"".equals(this.lastSearchCity.get());
             this.view.setEnabledForLastSearchButton(enable);
         } catch (IOException e) {
             // when something gone wrong when reading from file
@@ -70,11 +71,11 @@ public class MainViewPresenter {
     }
 
     public void onLastSearch(Component senderComponent, Units units, Language language) {
-        onSearch( senderComponent, lastSearchCity, units, language);
+        onSearch( senderComponent, lastSearchCity.get(), units, language);
 
         // replace spaces with hex code of space ("%20")
         // HexSpaceConverter.hexToSpaces(lastSearchCity)
-        this.view.setCity(lastSearchCity);
+        this.view.setCity(lastSearchCity.get());
     }
 
     public void onSearch(Component senderComponent, String city, Units units, Language language) {
@@ -101,7 +102,7 @@ public class MainViewPresenter {
             try {
                 this.lastSearchFile.writeLastSearch(city);
                 this.view.setEnabledForLastSearchButton(true);
-                lastSearchCity = city;
+                lastSearchCity = Optional.of(city);
             } catch (IOException e) {
                 showError(null, WritingErrorBuilder.buildWritingError(language));
             }

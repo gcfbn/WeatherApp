@@ -1,18 +1,17 @@
-package app.GUI.errorBuilders;
+package app.errorBuilders;
 
 import app.language.Language;
 import app.language.ResourceBundleLoader;
 
-public class ReadingErrorBuilder {
+public class WritingErrorBuilder {
 
-    public static Error buildReadingError(Language l){
+    public static Error buildWritingError(Language l){
 
-        ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("readingErrors", l);
+        ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("writingErrors", l);
 
         String title = resourceBundleLoader.getString("title");
         String text = resourceBundleLoader.getString("text");
 
         return new Error(title, text);
     }
-
 }

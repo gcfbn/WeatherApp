@@ -1,4 +1,4 @@
-package app.GUI.errorBuilders;
+package app.errorBuilders;
 
 import app.language.Language;
 import app.language.ResourceBundleLoader;
