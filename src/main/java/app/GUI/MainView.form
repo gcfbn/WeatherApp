@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="app.GUI.MainView">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="10" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="3" vgap="5">
-    <margin top="3" left="3" bottom="3" right="3"/>
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="10" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="3" vgap="5">
+    <margin top="10" left="20" bottom="5" right="5"/>
     <constraints>
-      <xy x="20" y="25" width="1005" height="416"/>
+      <xy x="20" y="25" width="1005" height="433"/>
     </constraints>
     <properties>
       <font name="Arial" size="16" style="0"/>
+      <name value=""/>
     </properties>
     <border type="none"/>
     <children>
@@ -16,15 +17,17 @@
         </constraints>
         <properties>
           <font name="Arial" size="26" style="0"/>
+          <name value="city"/>
           <text resource-bundle="components" key="city"/>
         </properties>
       </component>
       <component id="c4786" class="javax.swing.JLabel" binding="language">
         <constraints>
-          <grid row="0" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial" size="20" style="0"/>
+          <name value="language"/>
           <text resource-bundle="components" key="language"/>
         </properties>
       </component>
@@ -34,57 +37,65 @@
         </constraints>
         <properties>
           <font name="Arial" size="20" style="0"/>
+          <name value="units"/>
           <text resource-bundle="components" key="units"/>
         </properties>
       </component>
       <component id="f5d87" class="javax.swing.JRadioButton" binding="metricUnits">
         <constraints>
-          <grid row="1" column="2" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="66" height="28"/>
+          <grid row="1" column="2" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false">
+            <preferred-size width="150" height="28"/>
           </grid>
         </constraints>
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="metric"/>
           <selected value="true"/>
           <text resource-bundle="components" key="metric"/>
         </properties>
       </component>
       <component id="394b5" class="javax.swing.JRadioButton" binding="imperialUnits">
         <constraints>
-          <grid row="1" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="197" height="23"/>
+          </grid>
         </constraints>
         <properties>
           <font name="Arial" size="16" style="0"/>
+          <name value="imperial"/>
           <selected value="false"/>
           <text resource-bundle="components" key="imperial"/>
         </properties>
       </component>
       <component id="82abc" class="javax.swing.JRadioButton" binding="englishLanguage">
         <constraints>
-          <grid row="1" column="4" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="5" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial" size="16" style="0"/>
+          <name value="english"/>
           <selected value="true"/>
           <text resource-bundle="components" key="english"/>
         </properties>
       </component>
       <component id="9f972" class="javax.swing.JRadioButton" binding="polishLanguage">
         <constraints>
-          <grid row="1" column="5" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="6" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial" size="16" style="0"/>
+          <name value="polish"/>
           <text resource-bundle="components" key="polish"/>
         </properties>
       </component>
       <component id="d3c01" class="javax.swing.JButton" binding="searchButton">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial" size="32" style="1"/>
+          <name value="search"/>
           <text resource-bundle="components" key="search"/>
         </properties>
       </component>
@@ -94,16 +105,18 @@
         </constraints>
         <properties>
           <font name="Arial" size="32" style="1"/>
+          <name value="reset"/>
           <text resource-bundle="components" key="reset"/>
         </properties>
       </component>
       <component id="e0008" class="javax.swing.JButton" binding="lastSearchButton">
         <constraints>
-          <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="false"/>
           <font name="Arial" size="32" style="1"/>
+          <name value="last.search"/>
           <text resource-bundle="components" key="last.search"/>
         </properties>
       </component>
@@ -145,6 +158,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="minimum.temperature"/>
           <text resource-bundle="components" key="minimum.temperature"/>
         </properties>
       </component>
@@ -178,6 +192,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="maximum.temperature"/>
           <text resource-bundle="components" key="maximum.temperature"/>
         </properties>
       </component>
@@ -200,6 +215,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="feels.like"/>
           <text resource-bundle="components" key="feels.like"/>
         </properties>
       </component>
@@ -222,6 +238,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="atmospheric.pressure"/>
           <text resource-bundle="components" key="atmospheric.pressure"/>
         </properties>
       </component>
@@ -244,6 +261,7 @@
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="humidity"/>
           <text resource-bundle="components" key="humidity"/>
         </properties>
       </component>
@@ -265,32 +283,37 @@
         </constraints>
         <properties>
           <font name="Arial" size="20" style="1"/>
+          <name value="wind"/>
           <text resource-bundle="components" key="wind"/>
         </properties>
       </component>
       <component id="21294" class="javax.swing.JLabel" binding="sky">
         <constraints>
-          <grid row="5" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial" size="20" style="1"/>
+          <name value="sky"/>
           <text resource-bundle="components" key="sky"/>
         </properties>
       </component>
       <component id="4990c" class="javax.swing.JLabel" binding="windSpeedLabel">
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="114" height="19"/>
+          </grid>
         </constraints>
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="speed"/>
           <text resource-bundle="components" key="speed"/>
         </properties>
       </component>
       <component id="cad1" class="javax.swing.JTextField" binding="windSpeedValue">
         <constraints>
           <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="197" height="30"/>
           </grid>
         </constraints>
         <properties>
@@ -301,18 +324,21 @@
       </component>
       <component id="f6912" class="javax.swing.JLabel" binding="windDirectionLabel">
         <constraints>
-          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="114" height="19"/>
+          </grid>
         </constraints>
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="direction"/>
           <text resource-bundle="components" key="direction"/>
         </properties>
       </component>
       <component id="4acc5" class="javax.swing.JTextField" binding="windDirectionValue">
         <constraints>
           <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="197" height="30"/>
           </grid>
         </constraints>
         <properties>
@@ -323,17 +349,18 @@
       </component>
       <component id="ca2d1" class="javax.swing.JLabel" binding="sunriseLabel">
         <constraints>
-          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="sunrise"/>
           <text resource-bundle="components" key="sunrise"/>
         </properties>
       </component>
       <component id="cdad8" class="javax.swing.JTextField" binding="sunriseValue">
         <constraints>
-          <grid row="6" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -345,17 +372,18 @@
       </component>
       <component id="41a03" class="javax.swing.JLabel" binding="sunsetLabel">
         <constraints>
-          <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="sunset"/>
           <text resource-bundle="components" key="sunset"/>
         </properties>
       </component>
       <component id="87e56" class="javax.swing.JTextField" binding="sunsetValue">
         <constraints>
-          <grid row="7" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="7" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -367,17 +395,18 @@
       </component>
       <component id="e2432" class="javax.swing.JLabel" binding="overcastLabel">
         <constraints>
-          <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="true"/>
           <font name="Arial" size="16" style="0"/>
+          <name value="overcast"/>
           <text resource-bundle="components" key="overcast"/>
         </properties>
       </component>
       <component id="15002" class="javax.swing.JTextField" binding="overcastValue">
         <constraints>
-          <grid row="8" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>

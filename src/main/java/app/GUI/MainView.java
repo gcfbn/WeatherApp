@@ -2,28 +2,26 @@ package app.GUI;
 
 import app.GUI.errorBuilders.Error;
 import app.GUI.errorBuilders.ReadingErrorBuilder;
-import app.GUI.errorBuilders.StatusErrorBuilder;
-import app.GUI.errorBuilders.WritingErrorBuilder;
 import app.GUI.resultPreparing.ResultsFormatter;
+import app.MainViewPresenter;
 import app.fileOperations.IconReader;
-import app.fileOperations.TxtReader;
-import app.fileOperations.TxtWriter;
 import app.language.Language;
 import app.language.ResourceBundleLoader;
 import app.query.*;
-import app.weatherAPI.results.JsonResults;
-import app.weatherAPI.results.Response;
-import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Objects;
+
+import lombok.Setter;
+
+import static app.utils.SwingUtils.setSwingObjectText;
 
 public class MainView extends JFrame {
+    @Setter
+    private MainViewPresenter presenter;
 
     private JLabel cityLabel;
     private JTextField city;
@@ -65,9 +63,6 @@ public class MainView extends JFrame {
     // panel containing all components above
     private JPanel mainPanel;
 
-    private final File lastSearchFile;
-    private String lastSearchCity;
-
     public MainView() {
         setContentPane(this.mainPanel);
         setTitle("Weather app");
@@ -80,14 +75,6 @@ public class MainView extends JFrame {
 
         // resize the window
         pack();
-
-        setVisible(true);
-
-        lastSearchFile = new File("lastSearch.txt");
-
-        // create file if it doesn't exist
-        // in other case, try to read from file
-        createOrReadLastSearch(lastSearchFile);
 
         // add ActionListeners to buttons and radiobuttons
         addActionListeners();
@@ -104,20 +91,16 @@ public class MainView extends JFrame {
             } else if (polishLanguage == actionSource) {
                 setLanguage(Language.POLISH);
             } else if (searchButton == actionSource) {
-                search(buildQuery());
+                presenter.onSearch((java.awt.Component)arg0.getSource(), city.getText(), selectedUnits(), selectedLanguage() );
             } else if (resetButton == actionSource) {
-                resetApp();
+                presenter.onReset();
             } else if (lastSearchButton == actionSource) {
-                search(QueryBuilder.buildQuery(lastSearchCity, getUnits(), getLanguage()));
-                // replace spaces with hex code of space ("%20")
-                city.setText(HexSpaceConverter.hexToSpaces(lastSearchCity));
+                presenter.onLastSearch((java.awt.Component)arg0.getSource(), selectedUnits(), selectedLanguage() );
             }
         }
     }
 
-
     private void addActionListeners() {
-
         MainActionListener mainActionListener = new MainActionListener();
         englishLanguage.addActionListener(mainActionListener);
         polishLanguage.addActionListener(mainActionListener);
@@ -126,42 +109,65 @@ public class MainView extends JFrame {
         lastSearchButton.addActionListener(mainActionListener);
     }
 
-    private void setLanguage(Language l) {
-        // create bundle loader
-        ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("components", l);
+    public void setCity( String city ) {
+        this.city.setText( city );
+    }
 
-        cityLabel.setText(resourceBundleLoader.getString("city"));
-        units.setText(resourceBundleLoader.getString("units"));
-        metricUnits.setText(resourceBundleLoader.getString("metric"));
-        imperialUnits.setText(resourceBundleLoader.getString("imperial"));
-        language.setText(resourceBundleLoader.getString("language"));
-        englishLanguage.setText(resourceBundleLoader.getString("english"));
-        polishLanguage.setText(resourceBundleLoader.getString("polish"));
-        searchButton.setText(resourceBundleLoader.getString("search"));
-        resetButton.setText(resourceBundleLoader.getString("reset"));
-        lastSearchButton.setText(resourceBundleLoader.getString("last.search"));
-        minimumTemperatureLabel.setText(resourceBundleLoader.getString("minimum.temperature"));
-        maximumTemperatureLabel.setText(resourceBundleLoader.getString("maximum.temperature"));
-        feelsLikeLabel.setText(resourceBundleLoader.getString("feels.like"));
-        pressureLabel.setText(resourceBundleLoader.getString("atmospheric.pressure"));
-        humidityLabel.setText(resourceBundleLoader.getString("humidity"));
-        wind.setText(resourceBundleLoader.getString("wind"));
-        windSpeedLabel.setText(resourceBundleLoader.getString("speed"));
-        windDirectionLabel.setText(resourceBundleLoader.getString("direction"));
-        sky.setText(resourceBundleLoader.getString("sky"));
-        sunriseLabel.setText(resourceBundleLoader.getString("sunrise"));
-        sunsetLabel.setText(resourceBundleLoader.getString("sunset"));
-        overcastLabel.setText(resourceBundleLoader.getString("overcast"));
+    public void selectLanguage(Language language ){
+        this.setLanguage(language);
+
+        switch(language) {
+            case ENGLISH: {
+                englishLanguage.setSelected(true);
+                polishLanguage.setSelected(false);
+                break;
+            }
+            case POLISH: {
+                polishLanguage.setSelected(true);
+                englishLanguage.setSelected(false);
+                break;
+            }
+        }
+    }
+
+    public void selectUnits(Units units) {
+        switch( units ) {
+            case METRIC: {
+                metricUnits.setSelected(true);
+                imperialUnits.setSelected(false);
+                break;
+            }
+
+            case IMPERIAL: {
+                imperialUnits.setSelected(true);
+                metricUnits.setSelected(false);
+                break;
+            }
+        }
+    }
+
+    private void setLanguage(Language language) {
+        // create bundle loader
+        ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("components", language);
+
+        for (Component component:  this.mainPanel.getComponents() ) {
+            String stringId = component.getName();
+            if (stringId != null) {
+                setSwingObjectText(component, resourceBundleLoader.getString(stringId));
+            }
+        }
+
         pack(); // resize window
     }
 
-    private void resetApp() {
-        setLanguage(Language.ENGLISH);
-        englishLanguage.setSelected(true);
-        polishLanguage.setSelected(false);
+    public void reset() {
         city.setText("");
         description.setText("");
         setVisibilityOfResults(false);
+    }
+
+    public void setEnabledForLastSearchButton(boolean value) {
+        lastSearchButton.setEnabled(value);
     }
 
     private void setVisibilityOfResults(boolean bool) {
@@ -192,89 +198,37 @@ public class MainView extends JFrame {
         this.pack(); // resizes the window
     }
 
-    private void search(Query query) {
+    public void viewResults(ResultsFormatter resultsFormatter) {
+        // set formatted values
+        currentTemperatureValue.setText(resultsFormatter.currentTemperature());
+        minimumTemperatureValue.setText(resultsFormatter.minimumTemperature());
+        maximumTemperatureValue.setText(resultsFormatter.maximumTemperature());
+        feelsLikeValue.setText(resultsFormatter.feelsLike());
+        humidityValue.setText(resultsFormatter.humidity());
+        pressureValue.setText(resultsFormatter.pressure());
 
-        Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
+        description.setText(resultsFormatter.description());
 
-        // show error if response is not successful
-        if (!response.isSuccessful()) {
-            Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.getLanguage());
+        windSpeedValue.setText(resultsFormatter.windSpeed());
+        windDirectionValue.setText(resultsFormatter.windDirection());
 
-            JOptionPane.showMessageDialog(this, error.getText(), error.getTitle(),
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        sunriseValue.setText(resultsFormatter.sunrise());
+        sunsetValue.setText(resultsFormatter.sunset());
 
-        // query is correct
-        else {
+        overcastValue.setText(resultsFormatter.overcast());
 
-            // get results from response
-            JsonResults jsonResults = response.getJsonResults();
+        setAndShowIcon(iconLabel, resultsFormatter.icon());
 
-            // create ResultsFormatter
-            ResultsFormatter resultsFormatter = new ResultsFormatter(query.getUnits(), jsonResults);
-
-            // set formatted values
-
-            currentTemperatureValue.setText(resultsFormatter.currentTemperature());
-            minimumTemperatureValue.setText(resultsFormatter.minimumTemperature());
-            maximumTemperatureValue.setText(resultsFormatter.maximumTemperature());
-            feelsLikeValue.setText(resultsFormatter.feelsLike());
-            humidityValue.setText(resultsFormatter.humidity());
-            pressureValue.setText(resultsFormatter.pressure());
-
-            description.setText(resultsFormatter.description());
-
-            windSpeedValue.setText(resultsFormatter.windSpeed());
-            windDirectionValue.setText(resultsFormatter.windDirection());
-
-            sunriseValue.setText(resultsFormatter.sunrise());
-            sunsetValue.setText(resultsFormatter.sunset());
-
-            overcastValue.setText(resultsFormatter.overcast());
-
-            setAndShowIcon(iconLabel, resultsFormatter.icon());
-
-            // write name of the city in file with last search
-            writeLastSearch(query.getCity());
-
-            // show components containing results
-            setVisibilityOfResults(true);
-        }
+        // show components containing results
+        setVisibilityOfResults(true);
     }
 
-    private Query buildQuery() {
-        return QueryBuilder.buildQuery(city.getText(), getUnits(), getLanguage());
-    }
-
-    private Language getLanguage() {
+    private Language selectedLanguage() {
         return (englishLanguage.isSelected()) ? Language.ENGLISH : Language.POLISH;
     }
 
-    private Units getUnits() {
+    private Units selectedUnits() {
         return (metricUnits.isSelected()) ? Units.METRIC : Units.IMPERIAL;
-    }
-
-    private void createOrReadLastSearch(File file) {
-        if (file.exists()) {
-            try {
-                lastSearchCity = TxtReader.readLine(file);
-                if (!Objects.equals(lastSearchCity, ""))   // TODO: !"".equals(lastSearchCity)
-                    lastSearchButton.setEnabled(true);
-            } catch (IOException e) {
-                // when something gone wrong when reading from file
-                showError(ReadingErrorBuilder.buildReadingError(getLanguage()));
-            }
-        }
-    }
-
-    private void writeLastSearch(String cityName) {
-        try {
-            TxtWriter.writeLine(lastSearchFile, cityName);
-            lastSearchButton.setEnabled(true);
-            lastSearchCity = cityName;
-        } catch (IOException e) {
-            showError(WritingErrorBuilder.buildWritingError(getLanguage()));
-        }
     }
 
     private void setAndShowIcon(JLabel iconLabel, String icon) {
@@ -282,12 +236,11 @@ public class MainView extends JFrame {
             iconLabel.setIcon(IconReader.readIcon(icon));
             iconLabel.setVisible(true);
         } catch (IOException e) {
-            showError(ReadingErrorBuilder.buildReadingError(getLanguage()));
+            showError(ReadingErrorBuilder.buildReadingError(selectedLanguage()));
         }
     }
 
     private void showError(Error error) {
-        JOptionPane.showMessageDialog(this, error.getText(), error.getTitle(),
-                JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, error.getText(), error.getTitle(), JOptionPane.ERROR_MESSAGE);
     }
 }
