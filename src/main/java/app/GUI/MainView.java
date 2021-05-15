@@ -2,7 +2,7 @@ package app.GUI;
 
 import app.errorBuilders.Error;
 import app.errorBuilders.ReadingErrorBuilder;
-import app.GUI.resultPreparing.ResultsFormatter;
+import app.resultPreparing.ResultsFormatter;
 import app.MainViewPresenter;
 import app.fileIO.IconReader;
 import app.language.Language;

@@ -1,4 +1,4 @@
-package app.GUI.resultPreparing;
+package app.resultPreparing;
 
 public class WindDirectionBuilder {
 

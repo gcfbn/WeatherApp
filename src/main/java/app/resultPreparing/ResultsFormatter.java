@@ -1,4 +1,4 @@
-package app.GUI.resultPreparing;
+package app.resultPreparing;
 
 import app.query.Units;
 import app.weatherAPI.results.JsonResults;

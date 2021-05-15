@@ -1,4 +1,4 @@
-package app.GUI.resultPreparing;
+package app.resultPreparing;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

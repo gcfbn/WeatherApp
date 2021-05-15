@@ -5,7 +5,7 @@ import app.errorBuilders.Error;
 import app.errorBuilders.ReadingErrorBuilder;
 import app.errorBuilders.StatusErrorBuilder;
 import app.errorBuilders.WritingErrorBuilder;
-import app.GUI.resultPreparing.ResultsFormatter;
+import app.resultPreparing.ResultsFormatter;
 import app.fileIO.LastSearchFile;
 import app.language.Language;
 import app.query.HexSpaceConverter;
