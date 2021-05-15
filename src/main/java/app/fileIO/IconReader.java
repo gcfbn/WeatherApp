@@ -1,4 +1,4 @@
-package app.fileOperations;
+package app.fileIO;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
