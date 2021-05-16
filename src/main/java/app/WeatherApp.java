@@ -36,10 +36,12 @@ public class WeatherApp implements Runnable {
         }
     }
 
-    private static void registerWindowClosingEvent(JFrame view) {
-        view.addWindowListener(new java.awt.event.WindowAdapter() {
+    private static void registerWindowClosingEvent(JFrame mainFrame) {
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(WindowEvent winEvt) {
                 // JOptionPane.showMessageDialog(null, "Exiting ...");
+                mainFrame.setVisible(false );
                 System.exit(0);
             }
         });
