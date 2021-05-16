@@ -6,22 +6,35 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import lombok.Getter;
 
+import java.util.Optional;
+
 @Getter
 public class Response {
 
-    private JsonResults jsonResults;
+    private Optional<JsonResults> jsonResults;
     private int status;
-    private boolean isSuccessful;
+    private boolean isError;
 
     public Response(HttpResponse<JsonNode> httpResponse, int status) {
 
         try {
-            jsonResults = JsonResultsMapper.mapResults(httpResponse);
+            jsonResults = Optional.of(JsonResultsMapper.mapResults(httpResponse));
             this.status = status;
-            isSuccessful = (status == 200);
+            this.isError = false;
         } catch (JsonProcessingException e) {
+            this.jsonResults = Optional.empty();
             this.status = OpenWeatherMapCaller.JACKSON_EXCEPTION;
-            isSuccessful = false;
+            isError = true;
         }
+    }
+
+    private Response(int status, boolean isError) {
+        this.jsonResults = Optional.empty();
+        this.status = status;
+        this.isError = isError;
+    }
+
+    public static Response fromStatus(int status, boolean isError) {
+        return new Response(status, isError);
     }
 }

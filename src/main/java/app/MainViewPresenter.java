@@ -88,27 +88,28 @@ public class MainViewPresenter {
         var query = new Query(HexSpaceConverter.spacesToHex(city), units, language);
 
         Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
-        if (!response.isSuccessful()) {
+        if (response.isError()) {
             Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.getLanguage());
             this.showError(senderComponent, error);
-        } else {
-            // get results from response
-            JsonResults jsonResults = response.getJsonResults();
-
-            // create ResultsFormatter
-            ResultsFormatter resultsFormatter = new ResultsFormatter(query.getUnits(), jsonResults);
-
-            // write name of the city in file with last search
-            try {
-                this.lastSearchFile.writeLastSearch(city);
-                this.view.setEnabledForLastSearchButton(true);
-                lastSearchCity = Optional.of(city);
-            } catch (IOException e) {
-                showError(null, WritingErrorBuilder.buildWritingError(language));
-            }
-
-            this.view.viewResults(resultsFormatter);
+            return;
         }
+
+        // get results from response
+        JsonResults jsonResults = response.getJsonResults().get();
+
+        // create ResultsFormatter
+        ResultsFormatter resultsFormatter = new ResultsFormatter(query.getUnits(), jsonResults);
+
+        // write name of the city in file with last search
+        try {
+            this.lastSearchFile.writeLastSearch(city);
+            this.view.setEnabledForLastSearchButton(true);
+            lastSearchCity = Optional.of(city);
+        } catch (IOException e) {
+            showError(null, WritingErrorBuilder.buildWritingError(language));
+        }
+
+        this.view.viewResults(resultsFormatter);
     }
 
     private void showError(Component parentComponent, String errorMessage) {

@@ -1,11 +1,18 @@
 package app.weatherAPI.weatherAPICaller;
 
+import app.dto.raw_data.RawWeatherDataJsonReader;
 import app.query.Query;
+import app.weatherAPI.results.JsonResults;
+import app.weatherAPI.results.JsonResultsMapper;
 import app.weatherAPI.results.Response;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.Getter;
+
+import java.util.Optional;
 
 public class OpenWeatherMapCaller {
 
@@ -14,29 +21,70 @@ public class OpenWeatherMapCaller {
     private final static String urlBegin = "http://api.openweathermap.org/data/2.5/weather?q=";
     private final static String apiKey = "&appid=a52958f9ad25d7d64c67d97957bc6119";
 
+    private RawWeatherDataJsonReader rawWeatherDataJsonReader;
+
+    public OpenWeatherMapCaller() {
+        this.rawWeatherDataJsonReader = new RawWeatherDataJsonReader();
+    }
 
     public Response callApiAndGetResponse(Query query) {
 
+        var callResult = callService(query);
+        if (callResult.isError()) {
+            return Response.fromStatus(callResult.getStatus(), callResult.isError());
+        }
+
+        /*
+        Optional<JsonResults> jsonResults;
+
+        try {
+            // var x = rawWeatherDataJsonReader.fromJson(callResult.getHttpResponse().get().getBody().toString());
+            jsonResults = Optional.of(JsonResultsMapper.mapResults(callResult.getHttpResponse().get()));
+        } catch (JsonProcessingException e) {
+            jsonResults = Optional.empty();
+        }
+         */
+
+        return new Response(callResult.getHttpResponse().get(), callResult.getStatus());
+    }
+
+    public ServiceCallResult callService(Query query) {
         // create URL from query
         String URL = buildURL(query);
 
-        int status;
-        HttpResponse<JsonNode> httpResponse = null;
-
-        // call for response
         try {
-            httpResponse = Unirest.get(URL).asJson();
-            status = httpResponse.getStatus();
+            return ServiceCallResult.fromResponse(Unirest.get(URL).asJson());
         } catch (UnirestException e) {
-            status = UNIREST_EXCEPTION;
+            return ServiceCallResult.fromException(e);
         }
-
-        return new Response(httpResponse, status);
     }
 
     private String buildURL(Query query) {
         String units = query.getUnits().getUnitsCode();
         String language = (query.getLanguage().getLanguageCode());
         return String.format(urlBegin + "%s" + apiKey + "&units=" + "%s" + "&lang=" + "%s", query.getCity(), units, language);
+    }
+
+    @Getter
+    private static class ServiceCallResult {
+        int status;
+        Optional<HttpResponse<JsonNode>> httpResponse;
+
+        private ServiceCallResult(int status, Optional<HttpResponse<JsonNode>> httpResponse) {
+            this.status = status;
+            this.httpResponse = httpResponse;
+        }
+
+        public boolean isError() {
+            return this.status != 200;
+        }
+
+        public static ServiceCallResult fromResponse(HttpResponse<JsonNode> httpResponse) {
+            return new ServiceCallResult(httpResponse.getStatus(), Optional.of(httpResponse));
+        }
+
+        public static ServiceCallResult fromException(UnirestException  err) {
+            return new ServiceCallResult(UNIREST_EXCEPTION, Optional.empty());
+        }
     }
 }
