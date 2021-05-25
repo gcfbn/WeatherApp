@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 
@@ -24,7 +26,10 @@ public record RawWeatherData(
     int id,
     String base,
     Wind wind
-) {}
+) implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -2828039723245689673L;
+}
 
 
 

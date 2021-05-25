@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @JsonSerialize
 @JsonDeserialize
 public record MainData(
@@ -13,5 +16,7 @@ public record MainData(
     @JsonProperty("feels_like") double tempFeelsLike,
     int humidity,
     int pressure
-) {
+) implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 7642469280002391246L;
 }
