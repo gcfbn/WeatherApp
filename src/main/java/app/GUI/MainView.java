@@ -62,6 +62,8 @@ public class MainView extends JFrame {
 
     // panel containing all components above
     private JPanel mainPanel;
+    private JPanel statusBar;
+    private JLabel statusMessage;
 
     public MainView() {
         setContentPane(this.mainPanel);
