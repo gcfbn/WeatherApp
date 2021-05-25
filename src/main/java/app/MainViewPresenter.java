@@ -89,7 +89,7 @@ public class MainViewPresenter {
 
         Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
         if (response.isError()) {
-            Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.getLanguage());
+            Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.language());
             this.showError(senderComponent, error);
             return;
         }
@@ -98,7 +98,7 @@ public class MainViewPresenter {
         JsonResults jsonResults = response.getJsonResults().get();
 
         // create ResultsFormatter
-        ResultsFormatter resultsFormatter = new ResultsFormatter(query.getUnits(), jsonResults);
+        ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), jsonResults);
 
         // write name of the city in file with last search
         try {

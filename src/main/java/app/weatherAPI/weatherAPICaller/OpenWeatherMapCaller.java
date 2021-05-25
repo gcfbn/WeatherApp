@@ -2,10 +2,7 @@ package app.weatherAPI.weatherAPICaller;
 
 import app.dto.raw_data.RawWeatherDataJsonReader;
 import app.query.Query;
-import app.weatherAPI.results.JsonResults;
-import app.weatherAPI.results.JsonResultsMapper;
 import app.weatherAPI.results.Response;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -62,9 +59,9 @@ public class OpenWeatherMapCaller {
     }
 
     private String buildURL(Query query) {
-        String units = query.getUnits().getUnitsCode();
-        String language = (query.getLanguage().getLanguageCode());
-        return String.format(urlBegin + "%s" + apiKey + "&units=" + "%s" + "&lang=" + "%s", query.getCity(), units, language);
+        String units = query.units().getUnitsCode();
+        String language = (query.language().getLanguageCode());
+        return String.format(urlBegin + "%s" + apiKey + "&units=" + "%s" + "&lang=" + "%s", query.city(), units, language);
     }
 
     @Getter
