@@ -1,26 +1,27 @@
 package app.resultPreparing;
 
+import app.dto.raw_data.RawWeatherData;
 import app.query.Units;
 import app.weatherAPI.results.JsonResults;
 import app.weatherAPI.results.items.*;
 
+import java.time.Instant;
+
 public class ResultsFormatter {
 
-    private final Clouds clouds;
-    private final Temperature temperature;
-    private final Info info;
-    private final Sun sun;
-    private final Wind wind;
+//    private final Clouds clouds;
+//    private final Temperature temperature;
+//    private final Info info;
+//    private final Sun sun;
+//    private final Wind wind;
+
+    private final RawWeatherData results;
 
     private final String temperatureUnit;
     private final String speedUnit;
 
-    public ResultsFormatter(Units units, JsonResults results) {
-        this.clouds = results.getClouds();
-        this.temperature = results.getTemperature();
-        this.info = results.getInfo();
-        this.sun = results.getSun();
-        this.wind = results.getWind();
+    public ResultsFormatter(Units units, RawWeatherData results) {
+        this.results = results;
 
         this.temperatureUnit = calculateTemperatureUnit(units);
         this.speedUnit = calculateSpeedUnit(units);
@@ -35,54 +36,56 @@ public class ResultsFormatter {
     }
 
     public String currentTemperature(){
-        return temperature.getTemp() + " " + temperatureUnit;
+        return results.mainData().temp() + " " + temperatureUnit;
     }
 
     public String minimumTemperature(){
-        return temperature.getTemp_max() + " " + temperatureUnit;
+        return results.mainData().tempMin() + " " + temperatureUnit;
     }
 
     public String maximumTemperature(){
-        return temperature.getTemp_min() + " " + temperatureUnit;
+        return results.mainData().tempMax() + " " + temperatureUnit;
     }
 
     public String feelsLike(){
-        return temperature.getFeels_like() + " " + temperatureUnit;
+        return results.mainData().tempFeelsLike() + " " + temperatureUnit;
     }
 
     public String humidity(){
-        return temperature.getHumidity() + " %";
+        return results.mainData().humidity() + " %";
     }
 
     public String pressure(){
-        return temperature.getPressure() + " hPa";
+        return results.mainData().tempFeelsLike() + " hPa";
     }
 
     public String description(){
-        return info.getDescription();
+        return results.weather().get(0).description();
     }
 
     public String icon(){
-        return info.getIcon();
+        return results.weather().get(0).icon();
     }
 
     public String windSpeed(){
-        return wind.getSpeed() + " " + speedUnit;
+        return Double.toString(results.wind().speed());
     }
 
     public String windDirection(){
-        return WindDirectionBuilder.buildDirection(Integer.parseInt(wind.getDeg()));
+        return WindDirectionBuilder.buildDirection(results.wind().deg());
     }
 
     public String sunrise(){
-        return (sun.getSunrise() == 0) ? " " : DateBuilder.time(sun.getSunrise());
+        return (results.sysData().sunrise().equals(Instant.ofEpochSecond(0L))) ?
+                " " : DateBuilder.time(results.sysData().sunrise());
     }
 
     public String sunset(){
-        return (sun.getSunset() == 0) ? " " : DateBuilder.time(sun.getSunset());
+        return (results.sysData().sunset().equals(Instant.ofEpochSecond(0L))) ?
+                " " : DateBuilder.time(results.sysData().sunset());
     }
 
     public String overcast(){
-        return clouds.getAll() + " %";
+        return results.clouds().all() + " %";
     }
 }

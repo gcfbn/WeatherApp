@@ -1,17 +1,15 @@
 package app;
 
 import app.GUI.MainView;
+import app.dto.raw_data.RawWeatherData;
+import app.errorBuilders.*;
 import app.errorBuilders.Error;
-import app.errorBuilders.ReadingErrorBuilder;
-import app.errorBuilders.StatusErrorBuilder;
-import app.errorBuilders.WritingErrorBuilder;
 import app.resultPreparing.ResultsFormatter;
 import app.fileIO.LastSearchFile;
 import app.language.Language;
 import app.query.HexSpaceConverter;
 import app.query.Query;
 import app.query.Units;
-import app.weatherAPI.results.JsonResults;
 import app.weatherAPI.results.Response;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
@@ -71,7 +69,7 @@ public class MainViewPresenter {
     }
 
     public void onLastSearch(Component senderComponent, Units units, Language language) {
-        onSearch( senderComponent, lastSearchCity.get(), units, language);
+        onSearch(senderComponent, lastSearchCity.get(), units, language);
 
         // replace spaces with hex code of space ("%20")
         // HexSpaceConverter.hexToSpaces(lastSearchCity)
@@ -80,8 +78,8 @@ public class MainViewPresenter {
 
     public void onSearch(Component senderComponent, String city, Units units, Language language) {
 
-        if ( city.equals( "" ) ) {
-            this.showError( senderComponent, "City field is empty !");
+        if (city.equals("")) {
+            this.showError(senderComponent, "City field is empty !");
             return;
         }
 
@@ -95,10 +93,10 @@ public class MainViewPresenter {
         }
 
         // get results from response
-        JsonResults jsonResults = response.getJsonResults().get();
+        RawWeatherData rawWeatherData = response.getJsonResults().get();
 
         // create ResultsFormatter
-        ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), jsonResults);
+        ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), rawWeatherData);
 
         // write name of the city in file with last search
         try {

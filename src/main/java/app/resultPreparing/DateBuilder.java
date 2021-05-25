@@ -11,6 +11,10 @@ public class DateBuilder {
         return buildTime(date.getHour(), date.getMinute());
     }
 
+    public static String time(Instant instant){
+        return DateBuilder.time(instant.toEpochMilli());
+    }
+
     private static LocalDateTime buildDateFromUnix(long unix){
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(unix),
                 TimeZone.getDefault().toZoneId()); // creates date from unix time (GMT)

@@ -1,5 +1,7 @@
 package app.weatherAPI.results;
 
+import app.dto.raw_data.RawWeatherData;
+import app.dto.raw_data.RawWeatherDataJsonReader;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpResponse;
@@ -11,14 +13,14 @@ import java.util.Optional;
 @Getter
 public class Response {
 
-    private Optional<JsonResults> jsonResults;
+    private Optional<RawWeatherData> jsonResults;
     private int status;
     private boolean isError;
 
     public Response(HttpResponse<JsonNode> httpResponse, int status) {
 
         try {
-            jsonResults = Optional.of(JsonResultsMapper.mapResults(httpResponse));
+            jsonResults = Optional.of(new RawWeatherDataJsonReader().fromJson(httpResponse.getBody().toString()));
             this.status = status;
             this.isError = false;
         } catch (JsonProcessingException e) {
