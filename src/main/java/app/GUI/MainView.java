@@ -118,33 +118,17 @@ public class MainView extends JFrame {
     public void selectLanguage(Language language ){
         this.setLanguage(language);
 
-        switch(language) {
-            case ENGLISH: {
-                englishLanguage.setSelected(true);
-                polishLanguage.setSelected(false);
-                break;
-            }
-            case POLISH: {
-                polishLanguage.setSelected(true);
-                englishLanguage.setSelected(false);
-                break;
-            }
+        switch (language) {
+            case ENGLISH -> englishLanguage.setSelected(true);
+            case POLISH -> polishLanguage.setSelected(true);
         }
     }
 
     public void selectUnits(Units units) {
-        switch( units ) {
-            case METRIC: {
-                metricUnits.setSelected(true);
-                imperialUnits.setSelected(false);
-                break;
-            }
+        switch (units) {
+            case METRIC -> metricUnits.setSelected(true);
 
-            case IMPERIAL: {
-                imperialUnits.setSelected(true);
-                metricUnits.setSelected(false);
-                break;
-            }
+            case IMPERIAL -> imperialUnits.setSelected(true);
         }
     }
 
