@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public record MainData(
     double temp,
     @JsonProperty("temp_min") double tempMin,
-    @JsonProperty("temo_max") double tempMax,
+    @JsonProperty("temp_max") double tempMax,
     @JsonProperty("feels_like") double tempFeelsLike,
     int humidity,
     int pressure
