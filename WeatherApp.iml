@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_X">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -42,5 +42,13 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.4.20" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20" level="project" />
+    <orderEntry type="library" name="Maven: io.objectbox:objectbox-java:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.objectbox:objectbox-java-api:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.greenrobot:essentials:3.1.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.google.flatbuffers:flatbuffers-java:1.12.0" level="project" />
+    <orderEntry type="library" name="Maven: io.objectbox:objectbox-linux:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.objectbox:objectbox-macos:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.objectbox:objectbox-windows:2.9.1" level="project" />
   </component>
 </module>

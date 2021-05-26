@@ -6,6 +6,11 @@
     <version>1.0</version>
     <name>WeatherApp</name>
     <description>Weather App using free API</description>
+
+    <properties>
+        <objectboxVersion>2.9.1</objectboxVersion>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.konghq</groupId>
@@ -73,12 +78,30 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-java</artifactId>
+            <version>${objectboxVersion}</version>
         </dependency>
+
+        <!-- Native libraries, you can remove the ones for systems you do not support -->
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-linux</artifactId>
+            <version>${objectboxVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-macos</artifactId>
+            <version>${objectboxVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-windows</artifactId>
+            <version>${objectboxVersion}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -114,6 +137,12 @@
                     <source>16</source>
                     <target>16</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
             </plugin>
         </plugins>
     </build>
