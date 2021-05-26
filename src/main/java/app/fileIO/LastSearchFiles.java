@@ -3,23 +3,22 @@ package app.fileIO;
 import app.dto.raw_data.RawWeatherData;
 import app.timeCalculation.TimeCalculator;
 import com.mashape.unirest.http.Headers;
-import lombok.Cleanup;
 
 import java.io.*;
 import java.util.Optional;
 
-public class LastSearchJsonFile {
+public class LastSearchFiles {
 
     private File weatherDataFile;
     private File headersFile;
 
-    public LastSearchJsonFile(String weatherDataPathname, String headersPathname) {
+    public LastSearchFiles(String weatherDataPathname, String headersPathname) {
         this.weatherDataFile = new File(weatherDataPathname);
         this.headersFile = new File(headersPathname);
     }
 
     public LastSearchData readFreshData() {
-        Optional<RawWeatherData> optWeatherData = readJson();
+        Optional<RawWeatherData> optWeatherData = readWeatherData();
 
         if (optWeatherData.isEmpty()) return new LastSearchData(Optional.empty(), Optional.empty());
 
@@ -35,15 +34,11 @@ public class LastSearchJsonFile {
         // create file if it doesn't exist
         // in other case, try to read from file
 
-        if (weatherDataFile.exists()) {
-            @Cleanup BufferedReader bufferedReader = new BufferedReader(new FileReader(weatherDataFile));
-            return Optional.of(bufferedReader.readLine());
-        }
-
+        if (weatherDataFile.exists()) return Optional.of(readWeatherData().get().name());
         return Optional.empty();
     }
 
-    private Optional<RawWeatherData> readJson() {
+    private Optional<RawWeatherData> readWeatherData() {
 
         try (var inputStream =
                      new ObjectInputStream(
