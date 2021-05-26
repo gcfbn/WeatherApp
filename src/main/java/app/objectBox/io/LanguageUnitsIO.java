@@ -1,7 +1,5 @@
 package app.objectBox.io;
 
-import app.language.Language;
-import app.language.MyObjectBox;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.query.Query;
@@ -9,25 +7,25 @@ import io.objectbox.query.Query;
 import java.util.List;
 import java.util.Optional;
 
-public class LanguageIO {
+public class LanguageUnitsIO {
 
     private BoxStore store;
-    private Box<Language> box;
-    private Query<Language> emptyQuery;
+    private Box<LanguageUnits> box;
+    private Query<LanguageUnits> emptyQuery;
 
-    public LanguageIO(String name){
+    public LanguageUnitsIO(String name){
         store = MyObjectBox.builder().name(name).build();
-        box = store.boxFor(Language.class);
+        box = store.boxFor(LanguageUnits.class);
         emptyQuery = box.query().build();
     }
 
-    public Optional<Language> readLastLanguage(){
-        List<Language> records = emptyQuery.find();
+    public Optional<LanguageUnits> readLast(){
+        List<LanguageUnits> records = emptyQuery.find();
         return (records.isEmpty()) ? Optional.empty() : Optional.of(records.get(0));
     }
 
-    public void writeLastLanguage(Language l){
+    public void writeLast(LanguageUnits lu){
         emptyQuery.remove();
-        box.put(l);
+        box.put(lu);
     }
 }

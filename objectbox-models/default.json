@@ -4,37 +4,33 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "3:3262422407430345512",
-      "lastPropertyId": "4:2050706012521822490",
-      "name": "Language",
+      "id": "4:3699326988046816752",
+      "lastPropertyId": "3:6797738623299989595",
+      "name": "LanguageUnits",
       "properties": [
         {
-          "id": "1:7724807228794758072",
-          "name": "languageCode",
-          "type": 9
-        },
-        {
-          "id": "2:8169878969401519042",
-          "name": "countryCode",
-          "type": 9
-        },
-        {
-          "id": "3:7783402894228872214",
-          "name": "index",
-          "type": 5,
-          "flags": 4
-        },
-        {
-          "id": "4:2050706012521822490",
+          "id": "1:1961953824728753698",
           "name": "id",
           "type": 6,
           "flags": 1
+        },
+        {
+          "id": "2:6293082174835341209",
+          "name": "language",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:6797738623299989595",
+          "name": "units",
+          "type": 5,
+          "flags": 2
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "3:3262422407430345512",
+  "lastEntityId": "4:3699326988046816752",
   "lastIndexId": "1:3090295589691215635",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
@@ -42,7 +38,8 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [
     3933128565911493157,
-    7178154334903197832
+    7178154334903197832,
+    3262422407430345512
   ],
   "retiredIndexUids": [
     3090295589691215635
@@ -55,7 +52,11 @@
     6057137087001882821,
     2901898756722170661,
     3283097185310696449,
-    1761978285305474303
+    1761978285305474303,
+    7724807228794758072,
+    8169878969401519042,
+    7783402894228872214,
+    2050706012521822490
   ],
   "retiredRelationUids": [],
   "version": 1

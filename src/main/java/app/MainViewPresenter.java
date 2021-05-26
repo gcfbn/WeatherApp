@@ -6,6 +6,8 @@ import app.errorBuilders.*;
 import app.errorBuilders.Error;
 import app.fileIO.LastSearchData;
 import app.fileIO.LastSearchFiles;
+import app.objectBox.io.LanguageUnits;
+import app.objectBox.io.LanguageUnitsIO;
 import app.resultPreparing.ResultsFormatter;
 import app.language.Language;
 import app.query.HexSpaceConverter;
@@ -29,6 +31,8 @@ public class MainViewPresenter {
     private Units defaultUnits = Units.METRIC;
     private Units units = defaultUnits;
 
+    private LanguageUnitsIO languageUnitsIO;
+
     private Optional<String> lastSearchCity;
     private LastSearchFiles lastSearchFiles;
 
@@ -37,10 +41,18 @@ public class MainViewPresenter {
         this.model = model;
 
         this.lastSearchFiles = new LastSearchFiles("rawData.ser", "headers.ser");
+
+        this.languageUnitsIO = new LanguageUnitsIO("language_units");
     }
 
     public void initialize() {
         // TODO: odczytaj ostatnie ustawienia użytkownika z dysku: język, jednostkę miary;
+
+        Optional<LanguageUnits> lastLUOpt = languageUnitsIO.readLast();
+        if (lastLUOpt.isPresent()) {
+            language = lastLUOpt.get().language;
+            units = lastLUOpt.get().units;
+        }
 
         this.initView();
 
@@ -111,6 +123,9 @@ public class MainViewPresenter {
         // write object containing data
         this.lastSearchFiles.writeWeatherData(rawWeatherData);
         this.view.setEnabledForLastSearchButton(true);
+
+        // write language
+        languageUnitsIO.writeLast(new LanguageUnits(language, units));
 
         this.view.viewResults(resultsFormatter);
     }
