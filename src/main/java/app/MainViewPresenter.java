@@ -4,6 +4,8 @@ import app.GUI.MainView;
 import app.dto.raw_data.RawWeatherData;
 import app.errorBuilders.*;
 import app.errorBuilders.Error;
+import app.fileIO.LastSearchData;
+import app.fileIO.LastSearchJsonFile;
 import app.resultPreparing.ResultsFormatter;
 import app.fileIO.LastSearchFile;
 import app.language.Language;
@@ -30,12 +32,14 @@ public class MainViewPresenter {
 
     private Optional<String> lastSearchCity;
     private LastSearchFile lastSearchFile;
+    private LastSearchJsonFile lastSearchJsonFile;
 
     public MainViewPresenter(MainView view, MainViewModel model) {
         this.view = view;
         this.model = model;
 
         this.lastSearchFile = new LastSearchFile("lastSearch.txt");
+        this.lastSearchJsonFile = new LastSearchJsonFile("rawData.ser", "headers.ser");
     }
 
     public void initialize() {
@@ -69,11 +73,20 @@ public class MainViewPresenter {
     }
 
     public void onLastSearch(Component senderComponent, Units units, Language language) {
-        onSearch(senderComponent, lastSearchCity.get(), units, language);
+        LastSearchData lastSearchData = lastSearchJsonFile.readFreshData();
+
+        if (lastSearchData.data().isPresent()) {
+            ResultsFormatter resultsFormatter = new ResultsFormatter(units, lastSearchData.data().get());
+            this.view.viewResults(resultsFormatter);
+        } else {
+            onSearch(senderComponent, lastSearchData.city().get(), units, language);
+        }
+
+        this.view.setCity(lastSearchData.city().get());
 
         // replace spaces with hex code of space ("%20")
         // HexSpaceConverter.hexToSpaces(lastSearchCity)
-        this.view.setCity(lastSearchCity.get());
+        // this.view.setCity(lastSearchCity.get());
     }
 
     public void onSearch(Component senderComponent, String city, Units units, Language language) {
@@ -106,6 +119,10 @@ public class MainViewPresenter {
         } catch (IOException e) {
             showError(null, WritingErrorBuilder.buildWritingError(language));
         }
+
+        // write object containing data
+        this.lastSearchJsonFile.writeWeatherData(rawWeatherData);
+        this.view.setEnabledForLastSearchButton(true);
 
         this.view.viewResults(resultsFormatter);
     }
