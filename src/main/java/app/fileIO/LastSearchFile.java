@@ -1,14 +1,12 @@
 package app.fileIO;
 
-import lombok.Cleanup;
-
 import java.io.*;
 import java.util.Optional;
 
 public class LastSearchFile {
     File lastSearchFile;
 
-    public LastSearchFile( String pathName ) {
+    public LastSearchFile(String pathName) {
         this.lastSearchFile = new File(pathName);
     }
 
@@ -17,15 +15,17 @@ public class LastSearchFile {
         // in other case, try to read from file
 
         if (lastSearchFile.exists()) {
-            @Cleanup BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile));
-            return Optional.of(bufferedReader.readLine());
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(lastSearchFile))) {
+                return Optional.of(bufferedReader.readLine());
+            }
         }
 
         return Optional.empty();
     }
 
-    public void writeLastSearch( String city ) throws IOException {
-        @Cleanup BufferedWriter fileWriter = new BufferedWriter(new FileWriter(lastSearchFile));
-        fileWriter.write(city);
+    public void writeLastSearch(String city) throws IOException {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(lastSearchFile))) {
+            fileWriter.write(city);
+        }
     }
 }

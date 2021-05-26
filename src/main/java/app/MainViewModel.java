@@ -1,12 +1,13 @@
 package app;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class MainViewModel {
-    @Getter @Setter
     private String city = "";
 
-    public MainViewModel() {
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
