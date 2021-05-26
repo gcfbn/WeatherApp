@@ -81,6 +81,11 @@ public class MainViewPresenter {
         this.view.reset();
     }
 
+    public void onSettingsSwitch(Component senderComponent, Units units, Language language){
+        // write language and units
+        languageUnitsIO.writeLast(new LanguageUnits(language, units));
+    }
+
     public void onLastSearch(Component senderComponent, Units units, Language language) {
         LastSearchData lastSearchData = lastSearchFiles.readFreshData();
 
@@ -123,9 +128,6 @@ public class MainViewPresenter {
         // write object containing data
         this.lastSearchFiles.writeWeatherData(rawWeatherData);
         this.view.setEnabledForLastSearchButton(true);
-
-        // write language
-        languageUnitsIO.writeLast(new LanguageUnits(language, units));
 
         this.view.viewResults(resultsFormatter);
     }

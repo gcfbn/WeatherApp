@@ -87,14 +87,20 @@ public class MainView extends JFrame {
             Object actionSource = arg0.getSource();
             if (englishLanguage == actionSource) {
                 setLanguage(Language.ENGLISH);
+                presenter.onSettingsSwitch((Component) arg0.getSource(), selectedUnits(), selectedLanguage());
             } else if (polishLanguage == actionSource) {
                 setLanguage(Language.POLISH);
+                presenter.onSettingsSwitch((Component) arg0.getSource(), selectedUnits(), selectedLanguage());
+            } else if (metricUnits == actionSource) {
+                presenter.onSettingsSwitch((Component) arg0.getSource(), selectedUnits(), selectedLanguage());
+            } else if (imperialUnits == actionSource) {
+                presenter.onSettingsSwitch((Component) arg0.getSource(), selectedUnits(), selectedLanguage());
             } else if (searchButton == actionSource) {
-                presenter.onSearch((java.awt.Component)arg0.getSource(), city.getText(), selectedUnits(), selectedLanguage() );
+                presenter.onSearch((java.awt.Component) arg0.getSource(), city.getText(), selectedUnits(), selectedLanguage());
             } else if (resetButton == actionSource) {
                 presenter.onReset();
             } else if (lastSearchButton == actionSource) {
-                presenter.onLastSearch((java.awt.Component)arg0.getSource(), selectedUnits(), selectedLanguage() );
+                presenter.onLastSearch((java.awt.Component) arg0.getSource(), selectedUnits(), selectedLanguage());
             }
         }
     }
@@ -103,6 +109,8 @@ public class MainView extends JFrame {
         MainActionListener mainActionListener = new MainActionListener();
         englishLanguage.addActionListener(mainActionListener);
         polishLanguage.addActionListener(mainActionListener);
+        metricUnits.addActionListener(mainActionListener);
+        imperialUnits.addActionListener(mainActionListener);
         searchButton.addActionListener(mainActionListener);
         resetButton.addActionListener(mainActionListener);
         lastSearchButton.addActionListener(mainActionListener);
@@ -112,11 +120,11 @@ public class MainView extends JFrame {
         this.presenter = presenter;
     }
 
-    public void setCity(String city ) {
-        this.city.setText( city );
+    public void setCity(String city) {
+        this.city.setText(city);
     }
 
-    public void selectLanguage(Language language ){
+    public void selectLanguage(Language language) {
         this.setLanguage(language);
 
         switch (language) {
@@ -137,7 +145,7 @@ public class MainView extends JFrame {
         // create bundle loader
         ResourceBundleLoader resourceBundleLoader = new ResourceBundleLoader("components", language);
 
-        for (Component component:  this.mainPanel.getComponents() ) {
+        for (Component component : this.mainPanel.getComponents()) {
             String stringId = component.getName();
             if (stringId != null) {
                 setSwingObjectText(component, resourceBundleLoader.getString(stringId));
