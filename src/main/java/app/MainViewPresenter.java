@@ -5,9 +5,8 @@ import app.dto.raw_data.RawWeatherData;
 import app.errorBuilders.*;
 import app.errorBuilders.Error;
 import app.fileIO.LastSearchData;
-import app.fileIO.LastSearchJsonFile;
+import app.fileIO.LastSearchFiles;
 import app.resultPreparing.ResultsFormatter;
-import app.fileIO.LastSearchFile;
 import app.language.Language;
 import app.query.HexSpaceConverter;
 import app.query.Query;
@@ -31,15 +30,13 @@ public class MainViewPresenter {
     private Units units = defaultUnits;
 
     private Optional<String> lastSearchCity;
-    private LastSearchFile lastSearchFile;
-    private LastSearchJsonFile lastSearchJsonFile;
+    private LastSearchFiles lastSearchFiles;
 
     public MainViewPresenter(MainView view, MainViewModel model) {
         this.view = view;
         this.model = model;
 
-        this.lastSearchFile = new LastSearchFile("lastSearch.txt");
-        this.lastSearchJsonFile = new LastSearchJsonFile("rawData.ser", "headers.ser");
+        this.lastSearchFiles = new LastSearchFiles("rawData.ser", "headers.ser");
     }
 
     public void initialize() {
@@ -48,7 +45,7 @@ public class MainViewPresenter {
         this.initView();
 
         try {
-            this.lastSearchCity = lastSearchFile.createOrReadLastSearchedCity();
+            this.lastSearchCity = lastSearchFiles.createOrReadLastSearchedCity();
             var enable = this.lastSearchCity.isPresent() && !"".equals(this.lastSearchCity.get());
             this.view.setEnabledForLastSearchButton(enable);
         } catch (IOException e) {
@@ -73,7 +70,7 @@ public class MainViewPresenter {
     }
 
     public void onLastSearch(Component senderComponent, Units units, Language language) {
-        LastSearchData lastSearchData = lastSearchJsonFile.readFreshData();
+        LastSearchData lastSearchData = lastSearchFiles.readFreshData();
 
         if (lastSearchData.data().isPresent()) {
             ResultsFormatter resultsFormatter = new ResultsFormatter(units, lastSearchData.data().get());
@@ -111,17 +108,8 @@ public class MainViewPresenter {
         // create ResultsFormatter
         ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), rawWeatherData);
 
-        // write name of the city in file with last search
-        try {
-            this.lastSearchFile.writeLastSearch(city);
-            this.view.setEnabledForLastSearchButton(true);
-            lastSearchCity = Optional.of(city);
-        } catch (IOException e) {
-            showError(null, WritingErrorBuilder.buildWritingError(language));
-        }
-
         // write object containing data
-        this.lastSearchJsonFile.writeWeatherData(rawWeatherData);
+        this.lastSearchFiles.writeWeatherData(rawWeatherData);
         this.view.setEnabledForLastSearchButton(true);
 
         this.view.viewResults(resultsFormatter);
