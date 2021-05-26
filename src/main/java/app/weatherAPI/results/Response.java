@@ -7,11 +7,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.Headers;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import lombok.Getter;
 
 import java.util.Optional;
 
-@Getter
 public class Response {
 
     private Optional<RawWeatherData> jsonResults;
@@ -43,5 +41,21 @@ public class Response {
 
     public static Response fromStatus(int status, boolean isError) {
         return new Response(status, isError);
+    }
+
+    public Optional<RawWeatherData> getJsonResults() {
+        return jsonResults;
+    }
+
+    public Optional<Headers> getJsonHeaders() {
+        return jsonHeaders;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public boolean isError() {
+        return isError;
     }
 }

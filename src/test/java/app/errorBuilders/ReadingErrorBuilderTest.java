@@ -19,15 +19,15 @@ class ReadingErrorBuilderTest {
     public void englishError() {
         Error expectedError = new Error("Reading error", "Could not read from file!");
         Error actualError = ReadingErrorBuilder.buildReadingError(Language.ENGLISH);
-        assertEquals(expectedError.getTitle(), actualError.getTitle());
-        assertEquals(expectedError.getText(), actualError.getText());
+        assertEquals(expectedError.title(), actualError.title());
+        assertEquals(expectedError.text(), actualError.text());
     }
 
     @Test
     public void polishError() {
         Error expectedError = new Error("Błąd odczytu", "Nie udało się odczytać z pliku!");
         Error actualError = ReadingErrorBuilder.buildReadingError(Language.POLISH);
-        assertEquals(expectedError.getTitle(), actualError.getTitle());
-        assertEquals(expectedError.getText(), actualError.getText());
+        assertEquals(expectedError.title(), actualError.title());
+        assertEquals(expectedError.text(), actualError.text());
     }
 }

@@ -1,10 +1,5 @@
 package app.language;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
 public enum Language {
 
     ENGLISH("en", "US"),
@@ -12,4 +7,17 @@ public enum Language {
 
     private final String languageCode;
     private final String countryCode;
+
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    Language(String languageCode, String countryCode) {
+        this.languageCode = languageCode;
+        this.countryCode = countryCode;
+    }
 }

@@ -7,9 +7,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import java.util.Optional;
 
@@ -64,8 +61,6 @@ public class OpenWeatherMapCaller {
         return String.format(urlBegin + "%s" + apiKey + "&units=" + "%s" + "&lang=" + "%s", query.city(), units, language);
     }
 
-    @Getter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     private static class ServiceCallResult {
         int status;
         Optional<HttpResponse<JsonNode>> httpResponse;
@@ -81,6 +76,19 @@ public class OpenWeatherMapCaller {
 
         public static ServiceCallResult fromException(UnirestException err) {
             return new ServiceCallResult(UNIREST_EXCEPTION, Optional.empty());
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public Optional<HttpResponse<JsonNode>> getHttpResponse() {
+            return httpResponse;
+        }
+
+        private ServiceCallResult(int status, Optional<HttpResponse<JsonNode>> httpResponse) {
+            this.status = status;
+            this.httpResponse = httpResponse;
         }
     }
 }

@@ -20,15 +20,15 @@ class WritingErrorBuilderTest {
     public void englishError() {
         Error expectedError = new Error("Writing error", "Could not write to file!");
         Error actualError = WritingErrorBuilder.buildWritingError(Language.ENGLISH);
-        assertEquals(expectedError.getTitle(), actualError.getTitle());
-        assertEquals(expectedError.getText(), actualError.getText());
+        assertEquals(expectedError.title(), actualError.title());
+        assertEquals(expectedError.text(), actualError.text());
     }
 
     @Test
     public void polishError() {
         Error expectedError = new Error("Błąd zapisu", "Nie udało się zapisać do pliku!");
         Error actualError = WritingErrorBuilder.buildWritingError(Language.POLISH);
-        assertEquals(expectedError.getTitle(), actualError.getTitle());
-        assertEquals(expectedError.getText(), actualError.getText());
+        assertEquals(expectedError.title(), actualError.title());
+        assertEquals(expectedError.text(), actualError.text());
     }
 }

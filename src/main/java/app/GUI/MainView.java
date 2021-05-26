@@ -15,12 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import lombok.Setter;
-
 import static app.utils.SwingUtils.setSwingObjectText;
 
 public class MainView extends JFrame {
-    @Setter
     private MainViewPresenter presenter;
 
     private JLabel cityLabel;
@@ -111,7 +108,11 @@ public class MainView extends JFrame {
         lastSearchButton.addActionListener(mainActionListener);
     }
 
-    public void setCity( String city ) {
+    public void setPresenter(MainViewPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    public void setCity(String city ) {
         this.city.setText( city );
     }
 
@@ -227,6 +228,6 @@ public class MainView extends JFrame {
     }
 
     private void showError(Error error) {
-        JOptionPane.showMessageDialog(this, error.getText(), error.getTitle(), JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, error.text(), error.title(), JOptionPane.ERROR_MESSAGE);
     }
 }

@@ -120,6 +120,6 @@ public class MainViewPresenter {
     }
 
     private void showError(Component parentComponent, Error error) {
-        JOptionPane.showMessageDialog(parentComponent, error.getText(), error.getTitle(), JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parentComponent, error.text(), error.title(), JOptionPane.ERROR_MESSAGE);
     }
 }

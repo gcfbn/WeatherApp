@@ -2,8 +2,6 @@ package app.resultPreparing;
 
 import app.dto.raw_data.RawWeatherData;
 import app.query.Units;
-import app.weatherAPI.results.JsonResults;
-import app.weatherAPI.results.items.*;
 
 import java.time.Instant;
 

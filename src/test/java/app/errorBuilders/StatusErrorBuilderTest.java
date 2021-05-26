@@ -21,8 +21,8 @@ class StatusErrorBuilderTest {
         int statusCode = 400;
         Error expectedResult = new Error("Error", "Invalid city name!");
         Error actualResult = StatusErrorBuilder.buildStatusError(statusCode, Language.ENGLISH);
-        assertEquals(expectedResult.getTitle(), actualResult.getTitle());
-        assertEquals(expectedResult.getText(), actualResult.getText());
+        assertEquals(expectedResult.title(), actualResult.title());
+        assertEquals(expectedResult.text(), actualResult.text());
     }
 
     @Test
@@ -30,8 +30,8 @@ class StatusErrorBuilderTest {
         int statusCode = 401;
         Error expectedResult = new Error("Błąd", "Błąd autoryzacji!");
         Error actualResult = StatusErrorBuilder.buildStatusError(statusCode, Language.POLISH);
-        assertEquals(expectedResult.getTitle(), actualResult.getTitle());
-        assertEquals(expectedResult.getText(), actualResult.getText());
+        assertEquals(expectedResult.title(), actualResult.title());
+        assertEquals(expectedResult.text(), actualResult.text());
     }
 
     @Test
@@ -39,7 +39,7 @@ class StatusErrorBuilderTest {
         int statusCode = 500;
         Error expectedResult = new Error("Error", "Server error!");
         Error actualResult = StatusErrorBuilder.buildStatusError(statusCode, Language.ENGLISH);
-        assertEquals(expectedResult.getTitle(), actualResult.getTitle());
-        assertEquals(expectedResult.getText(), actualResult.getText());
+        assertEquals(expectedResult.title(), actualResult.title());
+        assertEquals(expectedResult.text(), actualResult.text());
     }
 }
