@@ -4,3 +4,9 @@ target
 *.iml
 .idea
 
+# ObjectBox
+*.mdb
+
+# Serialized
+*.ser
+
