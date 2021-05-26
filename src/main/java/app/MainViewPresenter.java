@@ -46,7 +46,6 @@ public class MainViewPresenter {
     }
 
     public void initialize() {
-        // TODO: odczytaj ostatnie ustawienia użytkownika z dysku: język, jednostkę miary;
 
         Optional<LanguageUnits> lastLUOpt = languageUnitsIO.readLast();
         if (lastLUOpt.isPresent()) {
@@ -93,6 +92,7 @@ public class MainViewPresenter {
             ResultsFormatter resultsFormatter = new ResultsFormatter(units, lastSearchData.data().get());
             this.view.viewResults(resultsFormatter);
         } else {
+            // TODO: use units from lastSearchData, not from GUI
             onSearch(senderComponent, lastSearchData.city().get(), units, language);
         }
 
