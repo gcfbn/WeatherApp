@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public class LastSearchJsonFile {
 
-    private File jsonResultsFile;
+    private File weatherDataFile;
     private File headersFile;
 
-    public LastSearchJsonFile(String jsonPathname, String headersPathname) {
-        this.jsonResultsFile = new File(jsonPathname);
+    public LastSearchJsonFile(String weatherDataPathname, String headersPathname) {
+        this.weatherDataFile = new File(weatherDataPathname);
         this.headersFile = new File(headersPathname);
     }
 
@@ -35,8 +35,8 @@ public class LastSearchJsonFile {
         // create file if it doesn't exist
         // in other case, try to read from file
 
-        if (jsonResultsFile.exists()) {
-            @Cleanup BufferedReader bufferedReader = new BufferedReader(new FileReader(jsonResultsFile));
+        if (weatherDataFile.exists()) {
+            @Cleanup BufferedReader bufferedReader = new BufferedReader(new FileReader(weatherDataFile));
             return Optional.of(bufferedReader.readLine());
         }
 
@@ -45,7 +45,9 @@ public class LastSearchJsonFile {
 
     private Optional<RawWeatherData> readJson() {
 
-        try (var inputStream = new ObjectInputStream(new FileInputStream(jsonResultsFile))) {
+        try (var inputStream =
+                     new ObjectInputStream(
+                             new BufferedInputStream(new FileInputStream(weatherDataFile)))) {
             return Optional.of((RawWeatherData) inputStream.readObject());
         } catch (IOException | ClassNotFoundException e) {
             return Optional.empty();
@@ -54,7 +56,9 @@ public class LastSearchJsonFile {
 
     private Optional<Headers> readHeaders() {
 
-        try (var inputStream = new ObjectInputStream(new FileInputStream(headersFile))) {
+        try (var inputStream =
+                     new ObjectInputStream(
+                             new BufferedInputStream(new FileInputStream(headersFile)))) {
             return Optional.of((Headers) inputStream.readObject());
         } catch (IOException | ClassNotFoundException e) {
             return Optional.empty();
@@ -62,7 +66,9 @@ public class LastSearchJsonFile {
     }
 
     public boolean writeWeatherData(RawWeatherData rawWeatherData) {
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(jsonResultsFile))) {
+        try (var outputStream =
+                     new ObjectOutputStream(
+                             new BufferedOutputStream(new FileOutputStream(weatherDataFile)))) {
             outputStream.writeObject(rawWeatherData);
             return true;
         } catch (IOException e) {
@@ -71,7 +77,9 @@ public class LastSearchJsonFile {
     }
 
     public boolean writeHeaders(Headers headers) {
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(headersFile))) {
+        try (var outputStream =
+                     new ObjectOutputStream(
+                             new BufferedOutputStream(new FileOutputStream(headersFile)))) {
             outputStream.writeObject(headers);
             return true;
         } catch (IOException e) {
