@@ -2,6 +2,7 @@ package app.timeCalculation;
 
 import app.dto.raw_data.RawWeatherData;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -21,7 +22,7 @@ public class TimeCalculator {
 
     public static long calculateMinutesFromNow(long timestamp) {
 
-        return (Instant.now().toEpochMilli() - timestamp * 1000) / 60000;
+        return (Instant.now(Clock.systemUTC()).toEpochMilli() - timestamp * 1000) / 60000;
     }
 
 }
