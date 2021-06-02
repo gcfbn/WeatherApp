@@ -86,17 +86,17 @@ public class MainViewPresenter {
     }
 
     public void onLastSearch(Component senderComponent, Units units, Language language) {
-        LastSearchData lastSearchData = lastSearchFiles.readFreshData();
-
-        if (lastSearchData.data().isPresent()) {
-            ResultsFormatter resultsFormatter = new ResultsFormatter(units, lastSearchData.data().get());
+        Optional<LastSearchData> lastSearchData = lastSearchFiles.readFreshData();
+        RawWeatherData weatherData;
+        if (lastSearchData.isPresent() && (weatherData = lastSearchData.get().data()) != null) {
+            ResultsFormatter resultsFormatter = new ResultsFormatter(units, weatherData);
             this.view.viewResults(resultsFormatter);
         } else {
             // TODO: use units from lastSearchData, not from GUI
-            onSearch(senderComponent, lastSearchData.city().get(), units, language);
+            onSearch(senderComponent, lastSearchData.get().city(), units, language);
         }
 
-        this.view.setCity(lastSearchData.city().get());
+        this.view.setCity(lastSearchData.get().city());
 
         // replace spaces with hex code of space ("%20")
         // HexSpaceConverter.hexToSpaces(lastSearchCity)

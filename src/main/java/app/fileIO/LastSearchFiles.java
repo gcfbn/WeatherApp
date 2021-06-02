@@ -17,17 +17,17 @@ public class LastSearchFiles {
         this.headersFile = new File(headersPathname);
     }
 
-    public LastSearchData readFreshData() {
+    public Optional<LastSearchData> readFreshData() {
         Optional<RawWeatherData> optWeatherData = read(weatherDataFile);
 
-        if (optWeatherData.isEmpty()) return new LastSearchData(Optional.empty(), Optional.empty());
+        if (optWeatherData.isEmpty()) return Optional.empty();
 
-        Optional<String> optCity = Optional.of(optWeatherData.get().name());
+        String city = optWeatherData.get().name();
 
         long timeDifference = TimeCalculator.calculateMinutesFromNow(optWeatherData.get());
 
-        return (timeDifference < 30) ? new LastSearchData(optWeatherData, optCity) :
-                new LastSearchData(Optional.empty(), optCity);
+        return (timeDifference < 30) ? Optional.of(new LastSearchData(optWeatherData.get(), city)) :
+                Optional.of(new LastSearchData(null, city));
     }
 
     public Optional<String> createOrReadLastSearchedCity() throws IOException {
