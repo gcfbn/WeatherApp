@@ -19,4 +19,9 @@ public class TimeCalculator {
         return ChronoUnit.MINUTES.between(searchDateTime, LocalDateTime.now(searchTimeOffset));
     }
 
+    public static long calculateMinutesFromNow(long timestamp) {
+
+        return (Instant.now().toEpochMilli() - timestamp * 1000) / 60000;
+    }
+
 }
