@@ -18,7 +18,7 @@ public class LastSearchFiles {
     }
 
     public LastSearchData readFreshData() {
-        Optional<RawWeatherData> optWeatherData = readWeatherData();
+        Optional<RawWeatherData> optWeatherData = read(weatherDataFile);
 
         if (optWeatherData.isEmpty()) return new LastSearchData(Optional.empty(), Optional.empty());
 
@@ -34,51 +34,35 @@ public class LastSearchFiles {
         // create file if it doesn't exist
         // in other case, try to read from file
 
-        if (weatherDataFile.exists()) return Optional.of(readWeatherData().get().name());
+        if (weatherDataFile.exists()){
+            Optional<RawWeatherData> rawWeatherData = read(weatherDataFile);
+            return Optional.of(rawWeatherData.get().name());
+        }
         return Optional.empty();
     }
 
-    private Optional<RawWeatherData> readWeatherData() {
-
-        try (var inputStream =
-                     new ObjectInputStream(
-                             new BufferedInputStream(new FileInputStream(weatherDataFile)))) {
-            return Optional.of((RawWeatherData) inputStream.readObject());
-        } catch (IOException | ClassNotFoundException e) {
+    private <T> Optional<T> read(File file){
+        try (var inputStream = new ObjectInputStream(new FileInputStream(file))){
+            return Optional.of((T) inputStream.readObject());
+        } catch (IOException | ClassNotFoundException e){
             return Optional.empty();
         }
     }
 
-    private Optional<Headers> readHeaders() {
-
-        try (var inputStream =
-                     new ObjectInputStream(
-                             new BufferedInputStream(new FileInputStream(headersFile)))) {
-            return Optional.of((Headers) inputStream.readObject());
-        } catch (IOException | ClassNotFoundException e) {
-            return Optional.empty();
+    private <T> boolean write(T data, File file){
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(file))){
+            outputStream.writeObject(data);
+            return true;
+        } catch (IOException e){
+            return false;
         }
     }
 
     public boolean writeWeatherData(RawWeatherData rawWeatherData) {
-        try (var outputStream =
-                     new ObjectOutputStream(
-                             new BufferedOutputStream(new FileOutputStream(weatherDataFile)))) {
-            outputStream.writeObject(rawWeatherData);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        return write(rawWeatherData, weatherDataFile);
     }
 
     public boolean writeHeaders(Headers headers) {
-        try (var outputStream =
-                     new ObjectOutputStream(
-                             new BufferedOutputStream(new FileOutputStream(headersFile)))) {
-            outputStream.writeObject(headers);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        return write(headers, headersFile);
     }
 }
