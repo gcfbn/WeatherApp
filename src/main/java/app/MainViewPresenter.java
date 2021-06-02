@@ -25,15 +25,8 @@ public class MainViewPresenter {
     private final MainView view;
     private final MainViewModel model;
 
-    private Language defaultLanguage = Language.ENGLISH;
-    private Language language = defaultLanguage;
-
-    private Units defaultUnits = Units.METRIC;
-    private Units units = defaultUnits;
-
     private LanguageUnitsIO languageUnitsIO;
 
-    private Optional<String> lastSearchCity;
     private LastSearchFiles lastSearchFiles;
 
     public MainViewPresenter(MainView view, MainViewModel model) {
@@ -49,38 +42,39 @@ public class MainViewPresenter {
 
         Optional<LanguageUnits> lastLUOpt = languageUnitsIO.readLast();
         if (lastLUOpt.isPresent()) {
-            language = lastLUOpt.get().language;
-            units = lastLUOpt.get().units;
+            model.setLanguage(lastLUOpt.get().language);
+            model.setUnits(lastLUOpt.get().units);
         }
 
         this.initView();
 
         try {
-            this.lastSearchCity = lastSearchFiles.createOrReadLastSearchedCity();
-            var enable = this.lastSearchCity.isPresent() && !"".equals(this.lastSearchCity.get());
+            Optional<String> lastSearchCity = lastSearchFiles.createOrReadLastSearchedCity();
+            var enable = lastSearchCity.isPresent() && !"".equals(lastSearchCity.get());
             this.view.setEnabledForLastSearchButton(enable);
+            this.model.setLastSearchCity(lastSearchCity.get());
         } catch (IOException e) {
             // when something gone wrong when reading from file
-            showError(null, ReadingErrorBuilder.buildReadingError(language));
+            showError(null, ReadingErrorBuilder.buildReadingError(model.getLanguage()));
         }
 
         view.setVisible(true);
     }
 
     private void initView() {
-        view.selectLanguage(language);
-        view.selectUnits(units);
+        view.selectLanguage(model.getLanguage());
+        view.selectUnits(model.getUnits());
     }
 
     public void onReset() {
-        units = defaultUnits;
-        language = defaultLanguage;
-
+        this.model.reset();
         this.initView();
         this.view.reset();
     }
 
-    public void onSettingsSwitch(Component senderComponent, Units units, Language language){
+    public void onSettingsSwitch(Component senderComponent, Units units, Language language) {
+        model.setUnits(units);
+        model.setLanguage(language);
         // write language and units
         languageUnitsIO.writeLast(new LanguageUnits(language, units));
     }
@@ -96,6 +90,7 @@ public class MainViewPresenter {
             onSearch(senderComponent, lastSearchData.get().city(), units, language);
         }
 
+        this.model.setCity(lastSearchData.get().city());
         this.view.setCity(lastSearchData.get().city());
 
         // replace spaces with hex code of space ("%20")
