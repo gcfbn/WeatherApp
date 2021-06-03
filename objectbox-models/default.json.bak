@@ -4,37 +4,49 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "3:3262422407430345512",
-      "lastPropertyId": "4:2050706012521822490",
-      "name": "Language",
+      "id": "5:2054826237005698686",
+      "lastPropertyId": "6:6046892245121911710",
+      "name": "ResponseRecord",
       "properties": [
         {
-          "id": "1:7724807228794758072",
-          "name": "languageCode",
-          "type": 9
-        },
-        {
-          "id": "2:8169878969401519042",
-          "name": "countryCode",
-          "type": 9
-        },
-        {
-          "id": "3:7783402894228872214",
-          "name": "index",
-          "type": 5,
-          "flags": 4
-        },
-        {
-          "id": "4:2050706012521822490",
+          "id": "1:676881436254303244",
           "name": "id",
           "type": 6,
           "flags": 1
+        },
+        {
+          "id": "2:2570018865667127346",
+          "name": "language",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:3971020150234966003",
+          "name": "units",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "4:1097601330496889866",
+          "name": "cityName",
+          "type": 9
+        },
+        {
+          "id": "5:336459929233989412",
+          "name": "responseFilePath",
+          "type": 9
+        },
+        {
+          "id": "6:6046892245121911710",
+          "name": "timestamp",
+          "type": 6,
+          "flags": 4
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "3:3262422407430345512",
+  "lastEntityId": "5:2054826237005698686",
   "lastIndexId": "1:3090295589691215635",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
@@ -42,7 +54,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [
     3933128565911493157,
-    7178154334903197832
+    7178154334903197832,
+    3262422407430345512,
+    3699326988046816752
   ],
   "retiredIndexUids": [
     3090295589691215635
@@ -55,7 +69,14 @@
     6057137087001882821,
     2901898756722170661,
     3283097185310696449,
-    1761978285305474303
+    1761978285305474303,
+    7724807228794758072,
+    8169878969401519042,
+    7783402894228872214,
+    2050706012521822490,
+    1961953824728753698,
+    6293082174835341209,
+    6797738623299989595
   ],
   "retiredRelationUids": [],
   "version": 1
