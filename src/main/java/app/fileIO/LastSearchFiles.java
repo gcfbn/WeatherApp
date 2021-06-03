@@ -17,6 +17,23 @@ public class LastSearchFiles {
         this.headersFile = new File(headersPathname);
     }
 
+    public static <T> Optional<T> read(String filepath) {
+        File file = new File(filepath);
+        try (var inputStream = new ObjectInputStream(new FileInputStream(file))) {
+            return Optional.of((T) inputStream.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static boolean writeWeatherData(RawWeatherData rawWeatherData, String filepath) {
+        return LastSearchFiles.write(rawWeatherData, new File(filepath));
+    }
+
+    public static boolean writeHeaders(Headers headers, String filepath) {
+        return LastSearchFiles.write(headers, new File(filepath));
+    }
+
     public Optional<LastSearchData> readFreshData() {
         Optional<RawWeatherData> optWeatherData = read(weatherDataFile);
 
@@ -34,26 +51,26 @@ public class LastSearchFiles {
         // create file if it doesn't exist
         // in other case, try to read from file
 
-        if (weatherDataFile.exists()){
+        if (weatherDataFile.exists()) {
             Optional<RawWeatherData> rawWeatherData = read(weatherDataFile);
             return Optional.of(rawWeatherData.get().name());
         }
         return Optional.empty();
     }
 
-    private <T> Optional<T> read(File file){
-        try (var inputStream = new ObjectInputStream(new FileInputStream(file))){
+    private <T> Optional<T> read(File file) {
+        try (var inputStream = new ObjectInputStream(new FileInputStream(file))) {
             return Optional.of((T) inputStream.readObject());
-        } catch (IOException | ClassNotFoundException e){
+        } catch (IOException | ClassNotFoundException e) {
             return Optional.empty();
         }
     }
 
-    private <T> boolean write(T data, File file){
-        try (var outputStream = new ObjectOutputStream(new FileOutputStream(file))){
+    private static <T> boolean write(T data, File file) {
+        try (var outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
             outputStream.writeObject(data);
             return true;
-        } catch (IOException e){
+        } catch (IOException e) {
             return false;
         }
     }
