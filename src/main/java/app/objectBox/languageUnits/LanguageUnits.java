@@ -1,4 +1,4 @@
-package app.objectBox.io;
+package app.objectBox.languageUnits;
 
 import app.language.Language;
 import app.objectBox.converters.LanguageConverter;
