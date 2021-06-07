@@ -1,24 +1,25 @@
 package app;
 
 import app.GUI.MainView;
+import app.cache.CacheService;
 import app.dto.raw_data.RawWeatherData;
 import app.errorBuilders.*;
 import app.errorBuilders.Error;
-import app.fileIO.LastSearchData;
 import app.fileIO.LastSearchFiles;
+import app.language.Language;
 import app.objectBox.languageUnits.LanguageUnits;
 import app.objectBox.languageUnits.LanguageUnitsIO;
-import app.resultPreparing.ResultsFormatter;
-import app.language.Language;
+import app.objectBox.responseCache.ResponseCacheIO;
+import app.objectBox.responseCache.ResponseRecord;
 import app.query.HexSpaceConverter;
 import app.query.Query;
 import app.query.Units;
+import app.resultPreparing.ResultsFormatter;
 import app.weatherAPI.results.Response;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.Optional;
 
 public class MainViewPresenter {
@@ -26,8 +27,11 @@ public class MainViewPresenter {
     private final MainViewModel model;
 
     private LanguageUnitsIO languageUnitsIO;
+    private ResponseCacheIO responseCacheIO;
 
     private LastSearchFiles lastSearchFiles;
+
+    private String filePathBegin = "cache-serialized/";
 
     public MainViewPresenter(MainView view, MainViewModel model) {
         this.view = view;
@@ -36,6 +40,7 @@ public class MainViewPresenter {
         this.lastSearchFiles = new LastSearchFiles("rawData.ser", "headers.ser");
 
         this.languageUnitsIO = new LanguageUnitsIO("language_units");
+        this.responseCacheIO = new ResponseCacheIO("cache");
     }
 
     public void initialize() {
@@ -48,15 +53,15 @@ public class MainViewPresenter {
 
         this.initView();
 
-        try {
-            Optional<String> lastSearchCity = lastSearchFiles.createOrReadLastSearchedCity();
-            var enable = lastSearchCity.isPresent() && !"".equals(lastSearchCity.get());
-            this.view.setEnabledForLastSearchButton(enable);
-            this.model.setLastSearchCity(lastSearchCity.get());
-        } catch (IOException e) {
-            // when something gone wrong when reading from file
-            showError(null, ReadingErrorBuilder.buildReadingError(model.getLanguage()));
-        }
+//        try {
+//            Optional<String> lastSearchCity = lastSearchFiles.createOrReadLastSearchedCity();
+//            var enable = lastSearchCity.isPresent() && !"".equals(lastSearchCity.get());
+//            this.view.setEnabledForLastSearchButton(enable);
+//            this.model.setLastSearchCity(lastSearchCity.get());
+//        } catch (IOException e) {
+//            // when something gone wrong when reading from file
+//            showError(null, ReadingErrorBuilder.buildReadingError(model.getLanguage()));
+//        }
 
         view.setVisible(true);
     }
@@ -79,20 +84,20 @@ public class MainViewPresenter {
         languageUnitsIO.writeLast(new LanguageUnits(language, units));
     }
 
-    public void onLastSearch(Component senderComponent, Units units, Language language) {
-        Optional<LastSearchData> lastSearchData = lastSearchFiles.readFreshData();
-        RawWeatherData weatherData;
-        if (lastSearchData.isPresent() && (weatherData = lastSearchData.get().data()) != null) {
-            ResultsFormatter resultsFormatter = new ResultsFormatter(units, weatherData);
-            this.view.viewResults(resultsFormatter);
-        } else {
-            // TODO: use units from lastSearchData, not from GUI
-            onSearch(senderComponent, lastSearchData.get().city(), units, language);
-        }
+    public void onLastSearch(Component senderComponent) {
+//        Query weatherQuery = new Query(model.getLastSearchCity(), model.getUnits(), model.getLanguage());
+//        RawWeatherData weatherData;
+//        if (lastSearchData.isPresent() && (weatherData = lastSearchData.get().data()) != null) {
+//            ResultsFormatter resultsFormatter = new ResultsFormatter(units, weatherData);
+//            this.view.viewResults(resultsFormatter);
+//        } else {
+//            // TODO: use units from lastSearchData, not from GUI
+//            onSearch(senderComponent, lastSearchData.get().city(), units, language);
+//        }
 
-        this.model.setCity(lastSearchData.get().city());
-        this.view.setCity(lastSearchData.get().city());
+        onSearch(senderComponent, model.getLastSearchCity(), model.getUnits(), model.getLanguage());
 
+        this.view.setCity(model.getLastSearchCity());
         // replace spaces with hex code of space ("%20")
         // HexSpaceConverter.hexToSpaces(lastSearchCity)
         // this.view.setCity(lastSearchCity.get());
@@ -107,21 +112,36 @@ public class MainViewPresenter {
 
         var query = new Query(HexSpaceConverter.spacesToHex(city), units, language);
 
-        Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
-        if (response.isError()) {
-            Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.language());
-            this.showError(senderComponent, error);
-            return;
-        }
+        RawWeatherData rawWeatherData;
+        Optional<RawWeatherData> optWeatherData = CacheService.readFreshData(query, responseCacheIO);
 
-        // get results from response
-        RawWeatherData rawWeatherData = response.getJsonResults().get();
+        if (optWeatherData.isPresent()) rawWeatherData = optWeatherData.get();
+        else {
+            System.out.println("calling query");
+            Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
+            if (response.isError()) {
+                Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.language());
+                this.showError(senderComponent, error);
+                return;
+            }
+            // get results from response
+            rawWeatherData = response.getJsonResults().get();
+
+            // write results
+            String filePath =
+                    filePathBegin + rawWeatherData.name() + "_" + rawWeatherData.dt().getEpochSecond() + ".ser";
+            LastSearchFiles.writeWeatherData(rawWeatherData, filePath);
+
+//             write record containing results filepath to ObjectBox database
+            responseCacheIO.write(new ResponseRecord(query, filePath, rawWeatherData.dt().getEpochSecond()));
+        }
 
         // create ResultsFormatter
         ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), rawWeatherData);
 
-        // write object containing data
-        this.lastSearchFiles.writeWeatherData(rawWeatherData);
+        this.model.setCity(rawWeatherData.name());
+        this.model.setLastSearchCity(rawWeatherData.name());
+
         this.view.setEnabledForLastSearchButton(true);
 
         this.view.viewResults(resultsFormatter);

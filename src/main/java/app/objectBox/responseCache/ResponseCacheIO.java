@@ -18,8 +18,8 @@ public class ResponseCacheIO {
         store = MyObjectBox.builder().name(name).build();
         box = store.boxFor(ResponseRecord.class);
         // clear cache
-        io.objectbox.query.Query<ResponseRecord> emptyQuery = box.query().build();
-        emptyQuery.remove();
+//        io.objectbox.query.Query<ResponseRecord> emptyQuery = box.query().build();
+//        emptyQuery.remove();
     }
 
     public void write(ResponseRecord record) {
@@ -27,6 +27,12 @@ public class ResponseCacheIO {
     }
 
     public List<ResponseRecord> read(Query weatherQuery) {
+
+        io.objectbox.query.Query<ResponseRecord> emptyQuery = box.query().build();
+
+        List list = emptyQuery.find();
+
+        for (Object r : list) System.out.println(r);
 
         // build query
         io.objectbox.query.Query<ResponseRecord> objectBoxQuery = box.query()

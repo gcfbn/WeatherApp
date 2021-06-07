@@ -100,7 +100,7 @@ public class MainView extends JFrame {
             } else if (resetButton == actionSource) {
                 presenter.onReset();
             } else if (lastSearchButton == actionSource) {
-                presenter.onLastSearch((java.awt.Component) arg0.getSource(), selectedUnits(), selectedLanguage());
+                presenter.onLastSearch((java.awt.Component) arg0.getSource());
             }
         }
     }
