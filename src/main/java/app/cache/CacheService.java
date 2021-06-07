@@ -23,7 +23,7 @@ public class CacheService {
         ResponseRecord freshestRecord = recordList.get(0);
 
         for (ResponseRecord record : recordList) {
-            if (record.timestamp < freshestRecord.timestamp)
+            if (record.timestamp > freshestRecord.timestamp)
                 freshestRecord = record;
         }
 
