@@ -9,6 +9,8 @@ import app.fileIO.LastSearchFiles;
 import app.language.Language;
 import app.objectBox.languageUnits.LanguageUnits;
 import app.objectBox.languageUnits.LanguageUnitsIO;
+import app.objectBox.lastSearch.LastSearch;
+import app.objectBox.lastSearch.LastSearchIO;
 import app.objectBox.responseCache.ResponseCacheIO;
 import app.objectBox.responseCache.ResponseRecord;
 import app.query.HexSpaceConverter;
@@ -28,8 +30,7 @@ public class MainViewPresenter {
 
     private LanguageUnitsIO languageUnitsIO;
     private ResponseCacheIO responseCacheIO;
-
-    private LastSearchFiles lastSearchFiles;
+    private LastSearchIO lastSearchIO;
 
     private String filePathBegin = "cache-serialized/";
 
@@ -37,10 +38,9 @@ public class MainViewPresenter {
         this.view = view;
         this.model = model;
 
-        this.lastSearchFiles = new LastSearchFiles("rawData.ser", "headers.ser");
-
         this.languageUnitsIO = new LanguageUnitsIO("language_units");
         this.responseCacheIO = new ResponseCacheIO("cache");
+        this.lastSearchIO = new LastSearchIO("last_search");
     }
 
     public void initialize() {
@@ -53,15 +53,11 @@ public class MainViewPresenter {
 
         this.initView();
 
-//        try {
-//            Optional<String> lastSearchCity = lastSearchFiles.createOrReadLastSearchedCity();
-//            var enable = lastSearchCity.isPresent() && !"".equals(lastSearchCity.get());
-//            this.view.setEnabledForLastSearchButton(enable);
-//            this.model.setLastSearchCity(lastSearchCity.get());
-//        } catch (IOException e) {
-//            // when something gone wrong when reading from file
-//            showError(null, ReadingErrorBuilder.buildReadingError(model.getLanguage()));
-//        }
+        Optional<LastSearch> lastSearchCity = lastSearchIO.readLast();
+        if (lastSearchCity.isPresent()) {
+            view.setEnabledForLastSearchButton(true);
+            model.setLastSearchCity(lastSearchCity.get().city);
+        }
 
         view.setVisible(true);
     }
@@ -85,22 +81,10 @@ public class MainViewPresenter {
     }
 
     public void onLastSearch(Component senderComponent) {
-//        Query weatherQuery = new Query(model.getLastSearchCity(), model.getUnits(), model.getLanguage());
-//        RawWeatherData weatherData;
-//        if (lastSearchData.isPresent() && (weatherData = lastSearchData.get().data()) != null) {
-//            ResultsFormatter resultsFormatter = new ResultsFormatter(units, weatherData);
-//            this.view.viewResults(resultsFormatter);
-//        } else {
-//            // TODO: use units from lastSearchData, not from GUI
-//            onSearch(senderComponent, lastSearchData.get().city(), units, language);
-//        }
 
         onSearch(senderComponent, model.getLastSearchCity(), model.getUnits(), model.getLanguage());
 
         this.view.setCity(model.getLastSearchCity());
-        // replace spaces with hex code of space ("%20")
-        // HexSpaceConverter.hexToSpaces(lastSearchCity)
-        // this.view.setCity(lastSearchCity.get());
     }
 
     public void onSearch(Component senderComponent, String city, Units units, Language language) {
@@ -132,7 +116,7 @@ public class MainViewPresenter {
                     filePathBegin + rawWeatherData.name() + "_" + rawWeatherData.dt().getEpochSecond() + ".ser";
             LastSearchFiles.writeWeatherData(rawWeatherData, filePath);
 
-//             write record containing results filepath to ObjectBox database
+            // write record containing results filepath to ObjectBox database
             responseCacheIO.write(new ResponseRecord(query, filePath, rawWeatherData.dt().getEpochSecond()));
         }
 
@@ -140,6 +124,8 @@ public class MainViewPresenter {
         ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), rawWeatherData);
 
         this.model.setCity(rawWeatherData.name());
+
+        this.lastSearchIO.writeLast(new LastSearch(rawWeatherData.name()));
         this.model.setLastSearchCity(rawWeatherData.name());
 
         this.view.setEnabledForLastSearchButton(true);
