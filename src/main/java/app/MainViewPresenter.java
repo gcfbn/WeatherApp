@@ -28,11 +28,11 @@ public class MainViewPresenter {
     private final MainView view;
     private final MainViewModel model;
 
-    private LanguageUnitsIO languageUnitsIO;
-    private ResponseCacheIO responseCacheIO;
-    private LastSearchIO lastSearchIO;
+    private final LanguageUnitsIO languageUnitsIO;
+    private final ResponseCacheIO responseCacheIO;
+    private final LastSearchIO lastSearchIO;
 
-    private String filePathBegin = "cache-serialized/";
+    private final String filePathBegin = "cache-serialized/";
 
     public MainViewPresenter(MainView view, MainViewModel model) {
         this.view = view;
