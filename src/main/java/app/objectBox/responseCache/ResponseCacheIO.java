@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ResponseCacheIO {
 
-    private BoxStore store;
-    private Box<ResponseRecord> box;
+    private final BoxStore store;
+    private final Box<ResponseRecord> box;
 
     public ResponseCacheIO(String name) {
         store = MyObjectBox.builder().name(name).build();
@@ -24,12 +24,6 @@ public class ResponseCacheIO {
     }
 
     public List<ResponseRecord> read(Query weatherQuery) {
-
-        io.objectbox.query.Query<ResponseRecord> emptyQuery = box.query().build();
-
-        List list = emptyQuery.find();
-
-        for (Object r : list) System.out.println(r);
 
         // build query
         io.objectbox.query.Query<ResponseRecord> objectBoxQuery = box.query()
