@@ -28,5 +28,4 @@ public class LastSearchIO {
         emptyQuery.remove();
         box.put(lastSearch);
     }
-
 }
