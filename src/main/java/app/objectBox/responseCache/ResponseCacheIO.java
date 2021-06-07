@@ -17,9 +17,6 @@ public class ResponseCacheIO {
     public ResponseCacheIO(String name) {
         store = MyObjectBox.builder().name(name).build();
         box = store.boxFor(ResponseRecord.class);
-        // clear cache
-//        io.objectbox.query.Query<ResponseRecord> emptyQuery = box.query().build();
-//        emptyQuery.remove();
     }
 
     public void write(ResponseRecord record) {
