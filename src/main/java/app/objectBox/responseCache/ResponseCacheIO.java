@@ -6,6 +6,7 @@ import app.objectBox.converters.UnitsConverter;
 import app.query.Query;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
+import io.objectbox.query.QueryBuilder;
 
 import java.util.List;
 
@@ -30,8 +31,10 @@ public class ResponseCacheIO {
                 .equal(ResponseRecord_.cityName, weatherQuery.city()).and()
                 .equal(ResponseRecord_.units, new UnitsConverter().convertToDatabaseValue(weatherQuery.units())).and()
                 .equal(ResponseRecord_.language, new LanguageConverter().convertToDatabaseValue(weatherQuery.language()))
+                .order(ResponseRecord_.timestamp, QueryBuilder.DESCENDING)
                 .build();
 
-        return objectBoxQuery.find();
+        // skip 0 elements and return at most 1 result
+        return objectBoxQuery.find(0, 1);
     }
 }
