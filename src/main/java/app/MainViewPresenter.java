@@ -101,7 +101,6 @@ public class MainViewPresenter {
 
         if (optWeatherData.isPresent()) rawWeatherData = optWeatherData.get();
         else {
-            System.out.println("calling query");
             Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
             if (response.isError()) {
                 Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.language());
