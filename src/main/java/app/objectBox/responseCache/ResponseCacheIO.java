@@ -24,6 +24,14 @@ public class ResponseCacheIO {
         box.put(record);
     }
 
+    public void clear() {
+
+        // build empty query
+        io.objectbox.query.Query<ResponseRecord> emptyQuery = box.query().build();
+
+        emptyQuery.remove();
+    }
+
     public List<ResponseRecord> read(Query weatherQuery) {
 
         // build query

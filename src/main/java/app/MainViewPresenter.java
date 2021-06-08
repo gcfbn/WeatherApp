@@ -146,6 +146,7 @@ public class MainViewPresenter {
     public void onClearCache(Component parentComponent) {
         try {
             FileUtils.cleanDirectory(new File("cache-serialized"));
+            responseCacheIO.clear();
         } catch (IOException e) {
             Error error = CleaningErrorBuilder.buildCleaningError(model.getLanguage());
             showError(parentComponent, error);
