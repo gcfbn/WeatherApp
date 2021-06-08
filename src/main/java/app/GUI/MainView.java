@@ -1,10 +1,7 @@
 package app.GUI;
 
-import app.errorBuilders.Error;
-import app.errorBuilders.ReadingErrorBuilder;
 import app.resultPreparing.ResultsFormatter;
 import app.MainViewPresenter;
-import app.fileIO.IconReader;
 import app.language.Language;
 import app.language.ResourceBundleLoader;
 import app.query.*;
@@ -13,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import static app.utils.SwingUtils.setSwingObjectText;
 
@@ -235,9 +231,5 @@ public class MainView extends JFrame {
 
     private Units selectedUnits() {
         return (metricUnits.isSelected()) ? Units.METRIC : Units.IMPERIAL;
-    }
-
-    private void showError(Error error) {
-        JOptionPane.showMessageDialog(this, error.text(), error.title(), JOptionPane.ERROR_MESSAGE);
     }
 }
