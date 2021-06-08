@@ -11,35 +11,32 @@ import static org.junit.jupiter.api.Assertions.*;
 class StatusErrorBuilderTest {
 
     @BeforeAll
-    static void setLocale(){
+    static void setLocale() {
         Locale.setDefault(
                 new Locale(Language.ENGLISH.getLanguageCode(), Language.ENGLISH.getCountryCode()));
     }
 
     @Test
-    public void requestErrorEnglish(){
+    public void requestErrorEnglish() {
         int statusCode = 400;
-        Error expectedResult = new Error("Error", "Invalid city name!");
-        Error actualResult = StatusErrorBuilder.buildStatusError(statusCode, Language.ENGLISH);
-        assertEquals(expectedResult.title(), actualResult.title());
-        assertEquals(expectedResult.text(), actualResult.text());
+        String expectedResult = "Invalid city name!";
+        String actualResult = StatusErrorBuilder.buildStatusMessage(statusCode, Language.ENGLISH);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void autenthicationErrorPolish(){
+    public void autenthicationErrorPolish() {
         int statusCode = 401;
-        Error expectedResult = new Error("Błąd", "Błąd autoryzacji!");
-        Error actualResult = StatusErrorBuilder.buildStatusError(statusCode, Language.POLISH);
-        assertEquals(expectedResult.title(), actualResult.title());
-        assertEquals(expectedResult.text(), actualResult.text());
+        String expectedResult = "Błąd autoryzacji!";
+        String actualResult = StatusErrorBuilder.buildStatusMessage(statusCode, Language.POLISH);
+        assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void serverErrorEnglish(){
+    public void serverErrorEnglish() {
         int statusCode = 500;
-        Error expectedResult = new Error("Error", "Server error!");
-        Error actualResult = StatusErrorBuilder.buildStatusError(statusCode, Language.ENGLISH);
-        assertEquals(expectedResult.title(), actualResult.title());
-        assertEquals(expectedResult.text(), actualResult.text());
+        String expectedResult = "Server error!";
+        String actualResult = StatusErrorBuilder.buildStatusMessage(statusCode, Language.ENGLISH);
+        assertEquals(expectedResult, actualResult);
     }
 }

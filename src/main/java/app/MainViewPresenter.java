@@ -104,7 +104,7 @@ public class MainViewPresenter {
     public void onSearch(Component senderComponent, String city, Units units, Language language) {
 
         if (city.equals("")) {
-            this.showError(senderComponent, "City field is empty !");
+            this.view.setStatusMessage(statusMessageLoader.getString("empty.city.name"));
             return;
         }
 
@@ -113,12 +113,16 @@ public class MainViewPresenter {
         RawWeatherData rawWeatherData;
         Optional<RawWeatherData> optWeatherData = CacheService.readFreshData(query, responseCacheIO);
 
-        if (optWeatherData.isPresent()) rawWeatherData = optWeatherData.get();
-        else {
+        if (optWeatherData.isPresent()) {
+            rawWeatherData = optWeatherData.get();
+            this.view.setStatusMessage(statusMessageLoader.getString("result.from.cache"));
+        } else {
+            this.view.setStatusMessage(statusMessageLoader.getString("communicating.with.api"));
+
             Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
             if (response.isError()) {
-                Error error = StatusErrorBuilder.buildStatusError(response.getStatus(), query.language());
-                this.showError(senderComponent, error);
+                String statusMessage = StatusErrorBuilder.buildStatusMessage(response.getStatus(), query.language());
+                this.view.setStatusMessage(statusMessage);
                 return;
             }
             // get results from response
@@ -131,6 +135,8 @@ public class MainViewPresenter {
 
             // write record containing results filepath to ObjectBox database
             responseCacheIO.write(new ResponseRecord(query, filePath, rawWeatherData.dt().getEpochSecond()));
+
+            this.view.setStatusMessage(statusMessageLoader.getString("result.from.api"));
         }
 
         // create ResultsFormatter
