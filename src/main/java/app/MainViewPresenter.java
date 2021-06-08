@@ -121,7 +121,8 @@ public class MainViewPresenter {
 
             Response response = new OpenWeatherMapCaller().callApiAndGetResponse(query);
             if (response.isError()) {
-                String statusMessage = StatusErrorBuilder.buildStatusMessage(response.getStatus(), query.language());
+                String statusMessage =
+                        MessageFromResponseStatus.buildStatusMessage(response.getStatus(), query.language());
                 this.view.setStatusMessage(statusMessage);
                 return;
             }
