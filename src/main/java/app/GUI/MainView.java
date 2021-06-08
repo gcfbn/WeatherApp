@@ -59,8 +59,6 @@ public class MainView extends JFrame {
     private JLabel statusMessage;
     private JButton clearCacheButton;
 
-    // TODO use status bar
-
     public MainView() {
         setContentPane(this.mainPanel);
         setTitle("Weather app");
@@ -76,7 +74,6 @@ public class MainView extends JFrame {
 
         // add ActionListeners to buttons and radiobuttons
         addActionListeners();
-
     }
 
     private class MainActionListener implements ActionListener {
