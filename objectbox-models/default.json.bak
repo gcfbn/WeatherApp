@@ -28,9 +28,70 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "13:6860771189434763468",
+      "lastPropertyId": "2:7025375939489789418",
+      "name": "LastSearch",
+      "properties": [
+        {
+          "id": "1:6480319812859505803",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7025375939489789418",
+          "name": "city",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "14:3885400528169105320",
+      "lastPropertyId": "6:3162250892582173437",
+      "name": "ResponseRecord",
+      "properties": [
+        {
+          "id": "1:1529020843399089808",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4450686816393557600",
+          "name": "language",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:8344300876684342953",
+          "name": "units",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "4:54887327326982222",
+          "name": "cityName",
+          "type": 9
+        },
+        {
+          "id": "5:8694075792629271360",
+          "name": "responseFilePath",
+          "type": 9
+        },
+        {
+          "id": "6:3162250892582173437",
+          "name": "timestamp",
+          "type": 6,
+          "flags": 4
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "12:491777079211303162",
+  "lastEntityId": "14:3885400528169105320",
   "lastIndexId": "1:3090295589691215635",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
