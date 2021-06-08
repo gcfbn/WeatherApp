@@ -3,7 +3,7 @@ package app;
 import app.GUI.MainView;
 import app.cache.CacheService;
 import app.dto.raw_data.RawWeatherData;
-import app.errorBuilders.*;
+import app.statusMessageBuilders.*;
 import app.fileIO.IconReader;
 import app.fileIO.LastSearchFiles;
 import app.language.Language;

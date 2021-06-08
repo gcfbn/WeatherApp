@@ -1,4 +1,4 @@
-package app.errorBuilders;
+package app.statusMessageBuilders;
 
 import app.language.Language;
 import org.junit.jupiter.api.BeforeAll;
