@@ -5,6 +5,7 @@ import app.cache.CacheService;
 import app.dto.raw_data.RawWeatherData;
 import app.errorBuilders.*;
 import app.errorBuilders.Error;
+import app.fileIO.IconReader;
 import app.fileIO.LastSearchFiles;
 import app.language.Language;
 import app.language.ResourceBundleLoader;
@@ -163,6 +164,15 @@ public class MainViewPresenter {
             statusMessage = statusMessageLoader.getString("clear.cache.error");
         } finally {
             this.view.setStatusMessage(statusMessage);
+        }
+    }
+
+    public void setIconInView(JLabel iconLabel, String icon) {
+        try {
+            iconLabel.setIcon(IconReader.readIcon(icon));
+            iconLabel.setVisible(true);
+        } catch (IOException e) {
+            this.view.setStatusMessage(statusMessageLoader.getString("reading.error"));
         }
     }
 

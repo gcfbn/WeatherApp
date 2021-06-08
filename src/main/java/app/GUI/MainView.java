@@ -223,7 +223,7 @@ public class MainView extends JFrame {
 
         overcastValue.setText(resultsFormatter.overcast());
 
-        setAndShowIcon(iconLabel, resultsFormatter.icon());
+        presenter.setIconInView(iconLabel, resultsFormatter.icon());
 
         // show components containing results
         setVisibilityOfResults(true);
@@ -235,15 +235,6 @@ public class MainView extends JFrame {
 
     private Units selectedUnits() {
         return (metricUnits.isSelected()) ? Units.METRIC : Units.IMPERIAL;
-    }
-
-    private void setAndShowIcon(JLabel iconLabel, String icon) {
-        try {
-            iconLabel.setIcon(IconReader.readIcon(icon));
-            iconLabel.setVisible(true);
-        } catch (IOException e) {
-            showError(ReadingErrorBuilder.buildReadingError(selectedLanguage()));
-        }
     }
 
     private void showError(Error error) {
