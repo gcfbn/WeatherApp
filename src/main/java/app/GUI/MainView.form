@@ -91,7 +91,7 @@
       </component>
       <component id="d3c01" class="javax.swing.JButton" binding="searchButton">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial" size="32" style="1"/>
@@ -444,6 +444,16 @@
           </hspacer>
         </children>
       </grid>
+      <component id="19198" class="javax.swing.JButton" binding="clearCacheButton" default-binding="true">
+        <constraints>
+          <grid row="3" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Arial" size="32" style="1"/>
+          <name value="clear.cache"/>
+          <text value="Clear Cache"/>
+        </properties>
+      </component>
     </children>
   </grid>
   <buttonGroups>

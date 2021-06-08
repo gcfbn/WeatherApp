@@ -61,6 +61,7 @@ public class MainView extends JFrame {
     private JPanel mainPanel;
     private JPanel statusBar;
     private JLabel statusMessage;
+    private JButton clearCacheButton;
 
     public MainView() {
         setContentPane(this.mainPanel);
