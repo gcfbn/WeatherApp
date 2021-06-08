@@ -63,9 +63,6 @@ public class MainView extends JFrame {
     private JLabel statusMessage;
     private JButton clearCacheButton;
 
-    // resource containing status messages
-    private ResourceBundleLoader statusMessageLoader;
-
     // TODO use status bar
 
     public MainView() {
@@ -84,8 +81,6 @@ public class MainView extends JFrame {
         // add ActionListeners to buttons and radiobuttons
         addActionListeners();
 
-        // initialize message loader with current language
-        statusMessageLoader = new ResourceBundleLoader("statusMessages", selectedLanguage());
     }
 
     private class MainActionListener implements ActionListener {
@@ -167,11 +162,14 @@ public class MainView extends JFrame {
         pack(); // resize window
     }
 
+    public void setStatusMessage(String message) {
+        statusMessage.setText(message);
+    }
+
     public void reset() {
         city.setText("");
         description.setText("");
         setVisibilityOfResults(false);
-        statusMessage.setText(statusMessageLoader.getString("reset"));
     }
 
     public void setEnabledForLastSearchButton(boolean value) {

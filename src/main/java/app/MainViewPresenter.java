@@ -7,6 +7,7 @@ import app.errorBuilders.*;
 import app.errorBuilders.Error;
 import app.fileIO.LastSearchFiles;
 import app.language.Language;
+import app.language.ResourceBundleLoader;
 import app.objectBox.languageUnits.LanguageUnits;
 import app.objectBox.languageUnits.LanguageUnitsIO;
 import app.objectBox.lastSearch.LastSearch;
@@ -37,6 +38,9 @@ public class MainViewPresenter {
 
     private final String filePathBegin = "cache-serialized/";
 
+    private ResourceBundleLoader statusMessageLoader;
+    private final String statusMessageBundleName = "statusMessages";
+
     public MainViewPresenter(MainView view, MainViewModel model) {
         this.view = view;
         this.model = model;
@@ -53,6 +57,8 @@ public class MainViewPresenter {
             model.setLanguage(lastLUOpt.get().language);
             model.setUnits(lastLUOpt.get().units);
         }
+
+        statusMessageLoader = new ResourceBundleLoader(statusMessageBundleName, model.getLanguage());
 
         this.initView();
 
