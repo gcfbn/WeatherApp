@@ -1,5 +1,6 @@
 package app.objectBox.languageUnits;
 
+import app.objectBox.MyObjectBox;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.query.Query;

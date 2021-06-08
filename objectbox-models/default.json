@@ -21,9 +21,77 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "8:7542008882522581523",
+      "lastPropertyId": "3:1850520614538517967",
+      "name": "LanguageUnits",
+      "properties": [
+        {
+          "id": "1:4555328848375964828",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:185220325582416415",
+          "name": "language",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:1850520614538517967",
+          "name": "units",
+          "type": 5,
+          "flags": 2
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:7539620710382350236",
+      "lastPropertyId": "6:5945804093086306715",
+      "name": "ResponseRecord",
+      "properties": [
+        {
+          "id": "1:5624047494914672476",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7952598606570896579",
+          "name": "language",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:6413167338903848860",
+          "name": "units",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "4:1448628755522394419",
+          "name": "cityName",
+          "type": 9
+        },
+        {
+          "id": "5:7466115964764601238",
+          "name": "responseFilePath",
+          "type": 9
+        },
+        {
+          "id": "6:5945804093086306715",
+          "name": "timestamp",
+          "type": 6,
+          "flags": 4
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "7:3387051719778852067",
+  "lastEntityId": "9:7539620710382350236",
   "lastIndexId": "1:3090295589691215635",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
