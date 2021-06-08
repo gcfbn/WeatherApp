@@ -73,6 +73,7 @@ public class MainViewPresenter {
     public void onReset() {
         this.model.reset();
         this.initView();
+        onSettingsSwitch(null, model.getUnits(), model.getLanguage());
         this.view.reset();
     }
 
