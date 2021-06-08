@@ -81,6 +81,7 @@ public class MainViewPresenter {
         this.initView();
         onSettingsSwitch(null, model.getUnits(), model.getLanguage());
         this.view.reset();
+        this.view.setStatusMessage(statusMessageLoader.getString("reset"));
     }
 
     public void onSettingsSwitch(Component senderComponent, Units units, Language language) {
