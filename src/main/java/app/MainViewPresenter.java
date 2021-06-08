@@ -89,6 +89,9 @@ public class MainViewPresenter {
         model.setLanguage(language);
         // write language and units
         languageUnitsIO.writeLast(new LanguageUnits(language, units));
+
+        // change locale of status message bundle
+        statusMessageLoader = new ResourceBundleLoader(statusMessageBundleName, model.getLanguage());
     }
 
     public void onLastSearch(Component senderComponent) {
@@ -144,12 +147,15 @@ public class MainViewPresenter {
     }
 
     public void onClearCache(Component parentComponent) {
+        String statusMessage = statusMessageLoader.getString("clear.cache.success");
+
         try {
             FileUtils.cleanDirectory(new File("cache-serialized"));
             responseCacheIO.clear();
         } catch (IOException e) {
-            Error error = CleaningErrorBuilder.buildCleaningError(model.getLanguage());
-            showError(parentComponent, error);
+            statusMessage = statusMessageLoader.getString("clear.cache.error");
+        } finally {
+            this.view.setStatusMessage(statusMessage);
         }
     }
 
