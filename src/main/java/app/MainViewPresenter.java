@@ -4,7 +4,6 @@ import app.GUI.MainView;
 import app.cache.CacheService;
 import app.dto.raw_data.RawWeatherData;
 import app.errorBuilders.*;
-import app.errorBuilders.Error;
 import app.fileIO.IconReader;
 import app.fileIO.LastSearchFiles;
 import app.language.Language;
@@ -174,13 +173,5 @@ public class MainViewPresenter {
         } catch (IOException e) {
             this.view.setStatusMessage(statusMessageLoader.getString("reading.error"));
         }
-    }
-
-    private void showError(Component parentComponent, String errorMessage) {
-        JOptionPane.showMessageDialog(parentComponent, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void showError(Component parentComponent, Error error) {
-        JOptionPane.showMessageDialog(parentComponent, error.text(), error.title(), JOptionPane.ERROR_MESSAGE);
     }
 }
