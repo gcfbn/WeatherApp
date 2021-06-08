@@ -63,6 +63,8 @@ public class MainView extends JFrame {
     private JLabel statusMessage;
     private JButton clearCacheButton;
 
+    // TODO use status bar
+
     public MainView() {
         setContentPane(this.mainPanel);
         setTitle("Weather app");
@@ -102,6 +104,8 @@ public class MainView extends JFrame {
                 presenter.onReset();
             } else if (lastSearchButton == actionSource) {
                 presenter.onLastSearch((java.awt.Component) arg0.getSource());
+            } else if (clearCacheButton == actionSource) {
+                presenter.onClearCache((java.awt.Component) arg0.getSource());
             }
         }
     }
@@ -115,6 +119,7 @@ public class MainView extends JFrame {
         searchButton.addActionListener(mainActionListener);
         resetButton.addActionListener(mainActionListener);
         lastSearchButton.addActionListener(mainActionListener);
+        clearCacheButton.addActionListener(mainActionListener);
     }
 
     public void setPresenter(MainViewPresenter presenter) {

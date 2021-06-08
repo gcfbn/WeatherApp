@@ -19,9 +19,12 @@ import app.query.Units;
 import app.resultPreparing.ResultsFormatter;
 import app.weatherAPI.results.Response;
 import app.weatherAPI.weatherAPICaller.OpenWeatherMapCaller;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 public class MainViewPresenter {
@@ -130,6 +133,15 @@ public class MainViewPresenter {
         this.view.setEnabledForLastSearchButton(true);
 
         this.view.viewResults(resultsFormatter);
+    }
+
+    public void onClearCache(Component parentComponent) {
+        try {
+            FileUtils.cleanDirectory(new File("cache-serialized"));
+        } catch (IOException e) {
+            Error error = CleaningErrorBuilder.buildCleaningError(model.getLanguage());
+            showError(parentComponent, error);
+        }
     }
 
     private void showError(Component parentComponent, String errorMessage) {
