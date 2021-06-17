@@ -44,9 +44,54 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "17:7626934109722876534",
+      "lastPropertyId": "3:4167872975766431542",
+      "name": "LanguageUnits",
+      "properties": [
+        {
+          "id": "1:329178341006302455",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7407814524360936170",
+          "name": "language",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:4167872975766431542",
+          "name": "units",
+          "type": 5,
+          "flags": 2
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "18:742714997800900457",
+      "lastPropertyId": "2:5136222524240458241",
+      "name": "LastSearch",
+      "properties": [
+        {
+          "id": "1:2740394983274346870",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5136222524240458241",
+          "name": "city",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "16:5971051621562768408",
+  "lastEntityId": "18:742714997800900457",
   "lastIndexId": "1:3090295589691215635",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
