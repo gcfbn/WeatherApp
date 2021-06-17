@@ -3,12 +3,16 @@ package app.objectBox.responseCache;
 import app.objectBox.MyObjectBox;
 import app.objectBox.converters.LanguageConverter;
 import app.objectBox.converters.UnitsConverter;
+import app.query.HexSpaceConverter;
 import app.query.Query;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
+import io.objectbox.query.PropertyQuery;
 import io.objectbox.query.QueryBuilder;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResponseCacheIO {
 
@@ -44,5 +48,17 @@ public class ResponseCacheIO {
 
         // skip 0 elements and return at most 1 result
         return objectBoxQuery.find(0, 1);
+    }
+
+    public List<String> readCities() {
+        // build PropertyQuery returning distinct city names
+        PropertyQuery propertyQuery = box.query().build().property(ResponseRecord_.cityName);
+
+        // get cities from objectbox database
+        String[] cities = propertyQuery.distinct().findStrings();
+
+        // replace hex space characters with ' ' space characters
+        // and return as list
+        return Arrays.stream(cities).map(HexSpaceConverter::hexToSpaces).collect(Collectors.toList());
     }
 }

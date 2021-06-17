@@ -48,7 +48,7 @@ public class ResultsFormatter {
     }
 
     public String pressure() {
-        return results.mainData().tempFeelsLike() + " hPa";
+        return results.mainData().pressure() + " hPa";
     }
 
     public String description() {

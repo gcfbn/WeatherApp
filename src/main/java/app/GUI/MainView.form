@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="11" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="3" vgap="5">
     <margin top="10" left="5" bottom="5" right="5"/>
     <constraints>
-      <xy x="20" y="25" width="1005" height="476"/>
+      <xy x="20" y="25" width="1088" height="478"/>
     </constraints>
     <properties>
       <font name="Arial" size="16" style="0"/>
@@ -127,16 +127,6 @@
         <properties>
           <icon value="empty.png"/>
           <text value=""/>
-        </properties>
-      </component>
-      <component id="3376b" class="javax.swing.JTextField" binding="city">
-        <constraints>
-          <grid row="1" column="0" row-span="2" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <font name="Arial" size="32" style="0"/>
         </properties>
       </component>
       <component id="867a" class="javax.swing.JTextField" binding="description">
@@ -454,6 +444,12 @@
           <name value="clear.cache"/>
           <text value="Clear Cache"/>
         </properties>
+      </component>
+      <component id="e30d1" class="app.utils.AutoCompleteComboBox" binding="city">
+        <constraints>
+          <grid row="1" column="0" row-span="2" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>
