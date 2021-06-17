@@ -74,7 +74,6 @@ public class MainViewPresenter {
             model.setLastSearchCity(lastSearchCity.get().city);
         }
 
-
         view.setVisible(true);
     }
 
@@ -146,11 +145,11 @@ public class MainViewPresenter {
             responseCacheIO.write(new ResponseRecord(query, filePath, rawWeatherData.dt().getEpochSecond()));
 
             this.view.setStatusMessage(statusMessageLoader.getString("result.from.api"));
+        }
 
-            // add searched city name to combo set and update combobox if necessary
-            if (cityComboSet.add(HexSpaceConverter.hexToSpaces(query.city()))) {
-                view.updateCityCombo(HexSpaceConverter.hexToSpaces(query.city()));
-            }
+        // add searched city name to combo set and update combobox if necessary
+        if (cityComboSet.add(HexSpaceConverter.hexToSpaces(query.city()))) {
+            view.updateCityCombo(HexSpaceConverter.hexToSpaces(query.city()));
         }
 
         // create ResultsFormatter

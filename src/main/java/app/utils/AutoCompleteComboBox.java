@@ -74,6 +74,7 @@ public class AutoCompleteComboBox<E> extends JComboBox {
     // my own method, every object from array will be added as possibility
     // in autocompletion
     public void setModel(Object[] array) {
+        this.removeAllItems();
         for (Object o : array) this.addItem(o.toString());
     }
 }
