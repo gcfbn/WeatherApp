@@ -37,7 +37,7 @@ public class MainViewPresenter {
     private final ResponseCacheIO responseCacheIO;
     private final LastSearchIO lastSearchIO;
 
-    private final String filePathBegin = "cache-serialized/";
+    private final File serializationDirectory = new File("cache-serialized");
 
     private ResourceBundleLoader statusMessageLoader;
     private final String statusMessageBundleName = "statusMessages";
@@ -72,6 +72,12 @@ public class MainViewPresenter {
         if (lastSearchCity.isPresent()) {
             view.setEnabledForLastSearchButton(true);
             model.setLastSearchCity(lastSearchCity.get().city);
+        }
+
+        // check if directory containing .ser files exists
+        // if not, create it
+        if (!serializationDirectory.exists()) {
+            serializationDirectory.mkdir();
         }
 
         view.setVisible(true);
@@ -138,7 +144,10 @@ public class MainViewPresenter {
 
             // write results
             String filePath =
-                    filePathBegin + rawWeatherData.name() + "_" + rawWeatherData.dt().getEpochSecond() + ".ser";
+                    serializationDirectory.getPath()
+                            + "/" + rawWeatherData.name()
+                            + "_" + rawWeatherData.dt().getEpochSecond()
+                            + ".ser";
             LastSearchFiles.writeWeatherData(rawWeatherData, filePath);
 
             // write record containing results filepath to ObjectBox database
