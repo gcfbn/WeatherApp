@@ -4,8 +4,10 @@ import app.objectBox.MyObjectBox;
 import app.objectBox.converters.LanguageConverter;
 import app.objectBox.converters.UnitsConverter;
 import app.query.Query;
+import app.weatherAPI.results.Response;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
+import io.objectbox.query.PropertyQuery;
 import io.objectbox.query.QueryBuilder;
 
 import java.util.List;
@@ -44,5 +46,11 @@ public class ResponseCacheIO {
 
         // skip 0 elements and return at most 1 result
         return objectBoxQuery.find(0, 1);
+    }
+
+    public String[] readCities() {
+        // build PropertyQuery returning distinct city names
+        PropertyQuery propertyQuery = box.query().build().property(ResponseRecord_.cityName);
+        return propertyQuery.distinct().findStrings();
     }
 }
