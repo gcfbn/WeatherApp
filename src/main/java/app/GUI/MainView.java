@@ -5,6 +5,7 @@ import app.MainViewPresenter;
 import app.language.Language;
 import app.language.ResourceBundleLoader;
 import app.query.*;
+import app.utils.AutoCompleteComboBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class MainView extends JFrame {
     private MainViewPresenter presenter;
 
     private JLabel cityLabel;
-    private JTextField city;
+    private AutoCompleteComboBox<String> city;
     private JLabel units;
     private JLabel language;
     private JRadioButton metricUnits;
@@ -72,6 +73,9 @@ public class MainView extends JFrame {
         // resize the window
         pack();
 
+        // set font for city combobox, GUI builder does not support properties for custom components
+        setFontForCityCombo();
+
         // add ActionListeners to buttons and radiobuttons
         addActionListeners();
     }
@@ -93,7 +97,7 @@ public class MainView extends JFrame {
             } else if (imperialUnits == actionSource) {
                 presenter.onSettingsSwitch((Component) arg0.getSource(), selectedUnits(), selectedLanguage());
             } else if (searchButton == actionSource) {
-                presenter.onSearch((java.awt.Component) arg0.getSource(), city.getText(), selectedUnits(), selectedLanguage());
+                presenter.onSearch((java.awt.Component) arg0.getSource(), city.getSelectedItem(), selectedUnits(), selectedLanguage());
             } else if (resetButton == actionSource) {
                 presenter.onReset();
             } else if (lastSearchButton == actionSource) {
@@ -121,7 +125,7 @@ public class MainView extends JFrame {
     }
 
     public void setCity(String city) {
-        this.city.setText(city);
+        this.city.setSelectedItem(city);
     }
 
     public void selectLanguage(Language language) {
@@ -139,6 +143,12 @@ public class MainView extends JFrame {
 
             case IMPERIAL -> imperialUnits.setSelected(true);
         }
+    }
+
+    // GUI builder does not support properties for custom Swing components
+    // so this method must be called in constructor
+    private void setFontForCityCombo() {
+        city.setFont(new Font("Arial", Font.PLAIN, 32));
     }
 
     private void setLanguage(Language language) {
@@ -160,7 +170,7 @@ public class MainView extends JFrame {
     }
 
     public void reset() {
-        city.setText("");
+        city.setSelectedItem("");
         description.setText("");
         setVisibilityOfResults(false);
     }
