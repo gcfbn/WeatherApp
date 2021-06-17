@@ -143,12 +143,7 @@ public class MainViewPresenter {
             rawWeatherData = response.getJsonResults().get();
 
             // write results
-            String filePath =
-                    serializationDirectory.getPath()
-                            + "/" + rawWeatherData.name()
-                            + "_" + rawWeatherData.dt().getEpochSecond()
-                            + ".ser";
-            LastSearchFiles.writeWeatherData(rawWeatherData, filePath);
+            String filePath = writeResultsAndGetPath(rawWeatherData);
 
             // write record containing results filepath to ObjectBox database
             responseCacheIO.write(new ResponseRecord(query, filePath, rawWeatherData.dt().getEpochSecond()));
@@ -156,10 +151,8 @@ public class MainViewPresenter {
             this.view.setStatusMessage(statusMessageLoader.getString("result.from.api"));
         }
 
-        // add searched city name to combo set and update combobox if necessary
-        if (cityComboSet.add(HexSpaceConverter.hexToSpaces(query.city()))) {
-            view.updateCityCombo(HexSpaceConverter.hexToSpaces(query.city()));
-        }
+        // update city combobox
+        updateComboBox(query.city());
 
         // create ResultsFormatter
         ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), rawWeatherData);
@@ -195,6 +188,23 @@ public class MainViewPresenter {
             iconLabel.setVisible(true);
         } catch (IOException e) {
             this.view.setStatusMessage(statusMessageLoader.getString("reading.error"));
+        }
+    }
+
+    private String writeResultsAndGetPath(RawWeatherData rawWeatherData) {
+        String filePath =
+                serializationDirectory.getPath()
+                        + "/" + rawWeatherData.name()
+                        + "_" + rawWeatherData.dt().getEpochSecond()
+                        + ".ser";
+        LastSearchFiles.writeWeatherData(rawWeatherData, filePath);
+        return filePath;
+    }
+
+    private void updateComboBox(String cityName) {
+        // add searched city name to combo set and update combobox if necessary
+        if (cityComboSet.add(HexSpaceConverter.hexToSpaces(cityName))) {
+            view.updateCityCombo(HexSpaceConverter.hexToSpaces(cityName));
         }
     }
 }
