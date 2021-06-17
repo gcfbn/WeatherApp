@@ -145,6 +145,20 @@ public class MainView extends JFrame {
         }
     }
 
+    public void setModelForCityCombo(Object[] items) {
+        city.setModel(items);
+    }
+
+    public void updateCityCombo(String cityName) {
+        city.addItem(cityName);
+    }
+
+    public void clearCityCombo() {
+        city.removeAllItems();
+        // add empty string, so city text won't be null
+        city.addItem("");
+    }
+
     // GUI builder does not support properties for custom Swing components
     // so this method must be called in constructor
     private void setFontForCityCombo() {

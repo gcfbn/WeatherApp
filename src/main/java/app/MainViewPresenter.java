@@ -26,6 +26,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Optional;
 
 public class MainViewPresenter {
@@ -40,6 +41,8 @@ public class MainViewPresenter {
 
     private ResourceBundleLoader statusMessageLoader;
     private final String statusMessageBundleName = "statusMessages";
+
+    private HashSet<String> cityComboSet;
 
     public MainViewPresenter(MainView view, MainViewModel model) {
         this.view = view;
@@ -60,6 +63,9 @@ public class MainViewPresenter {
 
         statusMessageLoader = new ResourceBundleLoader(statusMessageBundleName, model.getLanguage());
 
+        // get cities from cache and create ComboBoxModel
+        cityComboSet = new HashSet<>(responseCacheIO.readCities());
+
         this.initView();
 
         Optional<LastSearch> lastSearchCity = lastSearchIO.readLast();
@@ -68,12 +74,14 @@ public class MainViewPresenter {
             model.setLastSearchCity(lastSearchCity.get().city);
         }
 
+
         view.setVisible(true);
     }
 
     private void initView() {
         view.selectLanguage(model.getLanguage());
         view.selectUnits(model.getUnits());
+        view.setModelForCityCombo(cityComboSet.toArray(new String[0]));
     }
 
     public void onReset() {
@@ -138,6 +146,11 @@ public class MainViewPresenter {
             responseCacheIO.write(new ResponseRecord(query, filePath, rawWeatherData.dt().getEpochSecond()));
 
             this.view.setStatusMessage(statusMessageLoader.getString("result.from.api"));
+
+            // add searched city name to combo set and update combobox if necessary
+            if (cityComboSet.add(HexSpaceConverter.hexToSpaces(query.city()))) {
+                view.updateCityCombo(HexSpaceConverter.hexToSpaces(query.city()));
+            }
         }
 
         // create ResultsFormatter
@@ -164,6 +177,8 @@ public class MainViewPresenter {
         } finally {
             this.view.setStatusMessage(statusMessage);
         }
+
+        view.clearCityCombo();
     }
 
     public void setIconInView(JLabel iconLabel, String icon) {

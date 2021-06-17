@@ -10,8 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
@@ -70,6 +69,12 @@ public class AutoCompleteComboBox<E> extends JComboBox {
     @Override
     public E getSelectedItem() {
         return (E) super.getSelectedItem();
+    }
+
+    // my own method, every object from array will be added as possibility
+    // in autocompletion
+    public void setModel(Object[] array) {
+        for (Object o : array) this.addItem(o.toString());
     }
 }
 
