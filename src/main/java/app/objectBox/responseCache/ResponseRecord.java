@@ -34,6 +34,14 @@ public class ResponseRecord {
         this.timestamp = timestamp;
     }
 
+    public ResponseRecord(Language l, Units u, String responseFilePath, String cityName, long timestamp) {
+        this.language = l;
+        this.units = u;
+        this.responseFilePath = responseFilePath;
+        this.cityName = cityName;
+        this.timestamp = timestamp;
+    }
+
     public ResponseRecord() {
     }
 }

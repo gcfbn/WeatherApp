@@ -145,22 +145,25 @@ public class MainViewPresenter {
             // write results
             String filePath = writeResultsAndGetPath(rawWeatherData);
 
-            // write record containing results filepath to ObjectBox database
-            responseCacheIO.write(new ResponseRecord(query, filePath, rawWeatherData.dt().getEpochSecond()));
+            // write record containing results filepath and parameters to ObjectBox database
+            responseCacheIO.write(new ResponseRecord(language, units, filePath,
+                    rawWeatherData.name(), rawWeatherData.dt().getEpochSecond()));
 
             this.view.setStatusMessage(statusMessageLoader.getString("result.from.api"));
         }
 
+        String responseCityName = rawWeatherData.name();
+
         // update city combobox
-        updateComboBox(query.city());
+        updateComboBox(responseCityName);
 
         // create ResultsFormatter
         ResultsFormatter resultsFormatter = new ResultsFormatter(query.units(), rawWeatherData);
 
-        this.model.setCity(rawWeatherData.name());
+        this.model.setCity(responseCityName);
 
-        this.lastSearchIO.writeLast(new LastSearch(rawWeatherData.name()));
-        this.model.setLastSearchCity(rawWeatherData.name());
+        this.lastSearchIO.writeLast(new LastSearch(responseCityName));
+        this.model.setLastSearchCity(responseCityName);
 
         this.view.setEnabledForLastSearchButton(true);
 
