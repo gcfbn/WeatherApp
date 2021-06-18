@@ -183,6 +183,7 @@ public class MainViewPresenter {
         }
 
         view.clearCityCombo();
+        this.cityComboSet.clear();
     }
 
     public void setIconInView(JLabel iconLabel, String icon) {
